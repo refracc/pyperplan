@@ -96,8 +96,32 @@ class Action:
         self.effect = effect
 
 
+class MultiAgentAction(Action):
+    def __init__(self, name, signature, precondition, effect, agents):
+        """
+        name: The name identifying the action
+        signature: A list of tuples (name, [types]) to represent a list of
+                   parameters and their type(s).
+        precondition: A list of predicates that have to be true before the
+                      action can be applied
+        effect: An effect instance specifying the postcondition of the action
+        agents: A list of agents that can perform the action
+        """
+        super().__init__(name, signature, precondition, effect)
+        self.agents = agents
+
+    def can_be_performed_by(self, agent):
+        """
+        Check if the action can be performed by the given agent.
+
+        agent: The agent to check
+        return: Boolean indicating if the agent can perform the action
+        """
+        return agent in self.agents
+
+
 class Domain:
-    def __init__(self, name, types, predicates, actions, constants=None):
+    def __init__(self, name, types, predicates, actions, constants=None, ma_actions=None):
         """
         name: The name of the domain
         types: A dict of typename->Type instances in the domain
@@ -107,20 +131,26 @@ class Domain:
         """
         if constants is None:
             constants = {}
-        self.name = name
-        self.types = types
-        self.predicates = predicates
-        self.actions = actions
-        self.constants = constants
+
+        if ma_actions is None:
+            ma_actions = {}
+
+            self.name = name
+            self.types = types
+            self.predicates = predicates
+            self.actions = actions
+            self.constants = constants
+            self.ma_actions = ma_actions
 
     def __repr__(self):
         return (
-                "< Domain definition: %s Predicates: %s Actions: %s "
+                "< Domain definition: %s Predicates: %s Actions: %s Multi-Agent Actions: %s "
                 "Constants: %s >"
                 % (
                     self.name,
                     [str(p) for p in self.predicates],
                     [str(a) for a in self.actions],
+                    [str(m) for m in self.ma_actions],
                     [str(c) for c in self.constants],
                 )
         )

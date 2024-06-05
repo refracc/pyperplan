@@ -85,7 +85,7 @@ class Action:
         """
         name: The name identifying the action
         signature: A list of tuples (name, [types]) to represent a list of
-                   parameters an their type(s).
+                   parameters and their type(s).
         precondition: A list of predicates that have to be true before the
                       action can be applied
         effect: An effect instance specifying the postcondition of the action
@@ -97,7 +97,7 @@ class Action:
 
 
 class Domain:
-    def __init__(self, name, types, predicates, actions, constants={}):
+    def __init__(self, name, types, predicates, actions, constants=None):
         """
         name: The name of the domain
         types: A dict of typename->Type instances in the domain
@@ -105,6 +105,8 @@ class Domain:
         actions: A list of actions in the domain
         constants: A dict of name->type pairs of the constants in the domain
         """
+        if constants is None:
+            constants = {}
         self.name = name
         self.types = types
         self.predicates = predicates

@@ -338,7 +338,7 @@ class hSAHeuristic(_RelaxationHeuristic):
         # Add the current operator to the set and return it together with the
         # heuristic value.
         unioned_sets.add(operator.name)
-        return (unioned_sets, cost + operator.cost)
+        return unioned_sets, cost + operator.cost
 
     def calc_goal_h(self):
         """
@@ -435,7 +435,7 @@ class hFFHeuristic(_RelaxationHeuristic):
                 # is not already expanded
                 if (
                         fact.cheapest_achiever is not None
-                        and not fact.cheapest_achiever in relaxed_plan
+                        and fact.cheapest_achiever not in relaxed_plan
                 ):
                     # Add all preconditions of the cheapest achiever to the
                     # queue.

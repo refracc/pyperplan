@@ -56,9 +56,7 @@ def get_heuristics():
             [
                 getattr(module, cls)
                 for cls in dir(module)
-                if cls.endswith("Heuristic")
-                   and cls != "Heuristic"
-                   and not cls.startswith("_")
+                if cls.endswith("Heuristic") and cls != "Heuristic" and not cls.startswith("_")
             ]
         )
     return heuristics
@@ -172,7 +170,7 @@ def search_plan(
     problem = _parse(domain_file, problem_file)
     task = _ground(problem)
     heuristic = None
-    if not heuristic_class is None:
+    if heuristic_class is not None:
         heuristic = heuristic_class(task)
     search_start_time = time.process_time()
     if use_preferred_ops and isinstance(heuristic, heuristics.hFFHeuristic):

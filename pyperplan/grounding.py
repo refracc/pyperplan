@@ -158,7 +158,7 @@ def _relevance_analysis(operators, goals):
     if debug:
         logging.info("Relevance analysis removed %d facts" % len(debug_pruned_op))
     # remove completely irrelevant operators
-    return [op for op in operators if not op in del_operators]
+    return [op for op in operators if op not in del_operators]
 
 
 def _get_statics(predicates, actions):

@@ -44,7 +44,8 @@ class CnfWriter:
             number = -number
         return number
 
-    def _get_aux_clauses_for_iff(self, iff):
+    @staticmethod
+    def _get_aux_clauses_for_iff(iff):
         a2, a1 = iff.split("<->")
         return [
             [iff, a2, a1],

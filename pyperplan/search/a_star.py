@@ -31,13 +31,13 @@ def ordered_node_astar(node, h, node_tiebreaker):
     itself and an ordering) for A* search.
 
     @param node The node itself.
-    @param heuristic A heuristic function to be applied.
+    @param h A heuristic function to be applied.
     @param node_tiebreaker An increasing value to prefer the value first
                            inserted if the ordering is the same.
     @returns A tuple to be inserted into priority queues.
     """
     f = node.g + h
-    return (f, h, node_tiebreaker, node)
+    return f, h, node_tiebreaker, node
 
 
 def ordered_node_weighted_astar(weight):
@@ -80,7 +80,7 @@ def ordered_node_greedy_best_first(node, h, node_tiebreaker):
     @returns A tuple to be inserted into priority queues.
     """
     f = h
-    return (f, h, node_tiebreaker, node)
+    return f, h, node_tiebreaker, node
 
 
 def greedy_best_first_search(task, heuristic, use_relaxed_plan=False):
@@ -165,7 +165,7 @@ def astar_search(
 
             for op, succ_state in task.get_successor_states(pop_state):
                 if use_relaxed_plan:
-                    if rplan and not op.name in rplan:
+                    if rplan and op.name not in rplan:
                         # ignore this operator if we use the relaxed plan
                         # criterion
                         logging.debug(

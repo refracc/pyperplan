@@ -1,8 +1,6 @@
 from pyperplan import grounding
 from pyperplan.pddl.parser import Parser
 from pyperplan.search import astar_search, enforced_hillclimbing_search, searchspace
-from pyperplan.task import Operator, Task
-
 
 blocks_dom = """\
 (define (domain BLOCKS)
@@ -53,7 +51,6 @@ blocks_dom = """\
                  )
 """
 
-
 blocks_problem_1 = """\
 (define (problem BLOCKS-4-0)
 (:domain BLOCKS)
@@ -76,7 +73,7 @@ def _gen_h_values(initial_state, plan, heuristic):
 
 
 def gen_heuristic_test(
-    dom, prob, search_class, heuristic_class, h_values_plan, plan_length=None
+        dom, prob, search_class, heuristic_class, h_values_plan, plan_length=None
 ):
     parser = Parser("")
     parser.domInput = dom

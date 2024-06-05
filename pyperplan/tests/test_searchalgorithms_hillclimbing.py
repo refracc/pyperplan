@@ -3,7 +3,6 @@ Unit test for searchalgorithms_hillclimbing.py
 """
 
 from pyperplan.search import enforced_hillclimbing_search
-from pyperplan.task import *
 
 from . import dummy_task
 

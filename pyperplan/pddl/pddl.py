@@ -113,14 +113,14 @@ class Domain:
 
     def __repr__(self):
         return (
-            "< Domain definition: %s Predicates: %s Actions: %s "
-            "Constants: %s >"
-            % (
-                self.name,
-                [str(p) for p in self.predicates],
-                [str(a) for a in self.actions],
-                [str(c) for c in self.constants],
-            )
+                "< Domain definition: %s Predicates: %s Actions: %s "
+                "Constants: %s >"
+                % (
+                    self.name,
+                    [str(p) for p in self.predicates],
+                    [str(a) for a in self.actions],
+                    [str(c) for c in self.constants],
+                )
         )
 
     __str__ = __repr__
@@ -143,15 +143,15 @@ class Problem:
 
     def __repr__(self):
         return (
-            "< Problem definition: %s "
-            "Domain: %s Objects: %s Initial State: %s Goal State : %s >"
-            % (
-                self.name,
-                self.domain.name,
-                sorted(self.objects),
-                [str(p) for p in self.initial_state],
-                [str(p) for p in self.goal],
-            )
+                "< Problem definition: %s "
+                "Domain: %s Objects: %s Initial State: %s Goal State : %s >"
+                % (
+                    self.name,
+                    self.domain.name,
+                    sorted(self.objects),
+                    [str(p) for p in self.initial_state],
+                    [str(p) for p in self.goal],
+                )
         )
 
     __str__ = __repr__

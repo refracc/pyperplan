@@ -16,11 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-from .errors import *
 from .lisp_parser import parse_lisp_iterator
 from .parser_common import *
 from .tree_visitor import TraversePDDLDomain, TraversePDDLProblem, Visitable
-
 
 """
 This module contains the main parser logic.
@@ -31,6 +29,7 @@ and called recursively to construct a complete parse.
 # This emulates an c/c++ enum to distinguish between formulas variables and
 # constants in formulas.
 (TypeFormula, TypeVariable, TypeConstant) = range(3)
+
 
 ###
 ### Definitions of AST nodes
@@ -232,13 +231,13 @@ class DomainDef(Visitable):
     """This class represents the AST node for a pddl domain."""
 
     def __init__(
-        self,
-        name,
-        requirements=None,
-        types=None,
-        predicates=None,
-        actions=None,
-        constants=None,
+            self,
+            name,
+            requirements=None,
+            types=None,
+            predicates=None,
+            actions=None,
+            constants=None,
     ):
         """Construct a new Domain AST node.
 

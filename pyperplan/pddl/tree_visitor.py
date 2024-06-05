@@ -357,7 +357,7 @@ class TraversePDDLDomain(PDDLVisitor):
             raise SemanticError(
                 "Error: wrong number of arguments for "
                 "predicate " + c.key + " in precondition of "
-                "action"
+                                       "action"
             )
         # Apply to all arguments.
         for v in c.children:
@@ -629,7 +629,7 @@ class TraversePDDLProblem(PDDLVisitor):
             if not (o in self._objects or o in self._domain.constants):
                 raise SemanticError(
                     "Error: object " + o + " referenced in "
-                    "problem definition - but not defined"
+                                           "problem definition - but not defined"
                 )
             elif o in self._objects:
                 o_type = self._objects[o]

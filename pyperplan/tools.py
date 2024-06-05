@@ -15,12 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-import importlib
-import logging
 import os
 import subprocess
-import sys
-import traceback
 
 
 def command_available(command):

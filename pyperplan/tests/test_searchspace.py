@@ -4,7 +4,6 @@ Unit Testing for the search space module
 
 from pyperplan.search.searchspace import make_child_node, make_root_node
 
-
 # Construct a small tree in order to perform some needed test methods
 
 root = make_root_node("state1")
@@ -38,7 +37,6 @@ def test_states():
     assert root.state == "state1"
     assert child2.state == "state3"
     assert grandchild1.state == "state4"
-
 
 # Hint: We do not need a test method to check whether the node contains the
 # right action since this is done implicitly by the test_extract_solution

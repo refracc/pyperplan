@@ -3,15 +3,13 @@ import pytest
 from pyperplan import grounding
 from pyperplan.heuristics.lm_cut import LmCutHeuristic
 from pyperplan.pddl.parser import Parser
-from pyperplan.search import astar_search, enforced_hillclimbing_search, make_root_node
+from pyperplan.search import make_root_node
 from pyperplan.task import Operator, Task
-
 from .heuristic_test_instances import (
     blocks_dom,
     blocks_problem_1,
     gen_blocks_test_astar,
 )
-
 
 """
 Test problems

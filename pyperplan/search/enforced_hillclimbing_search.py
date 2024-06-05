@@ -19,8 +19,8 @@
 Implements the enforced hill climbing search algorithm.
 """
 
-from collections import deque
 import logging
+from collections import deque
 
 from . import searchspace
 

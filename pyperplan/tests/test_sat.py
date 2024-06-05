@@ -7,13 +7,11 @@ from pyperplan import tools
 from pyperplan.search import minisat, sat
 from pyperplan.task import Operator, Task
 
-
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s %(levelname)-8s %(message)s",
     stream=sys.stdout,
 )
-
 
 fact1 = "at-station"
 

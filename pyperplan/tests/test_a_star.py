@@ -2,7 +2,6 @@ from pyperplan.search import a_star, searchspace
 
 from . import dummy_task
 
-
 # create 4 dummy tasks
 task1 = dummy_task.get_search_space_at_goal()
 task2 = dummy_task.get_simple_search_space()
@@ -91,28 +90,28 @@ def test_ordered_node_greedy_best_first4():
 def test_astar_search1():
     """The initial state is the goal state, so the plan is an empty list"""
     assert (
-        a_star.astar_search(task1, h1, make_open_entry=a_star.ordered_node_astar) == []
+            a_star.astar_search(task1, h1, make_open_entry=a_star.ordered_node_astar) == []
     )
 
 
 def test_astar_search2():
     """The plan has length 3"""
     assert (
-        len(a_star.astar_search(task2, h2, make_open_entry=a_star.ordered_node_astar))
-        == 3
+            len(a_star.astar_search(task2, h2, make_open_entry=a_star.ordered_node_astar))
+            == 3
     )
 
 
 def test_astar_search3():
     assert (
-        len(a_star.astar_search(task3, h3, make_open_entry=a_star.ordered_node_astar))
-        == 4
+            len(a_star.astar_search(task3, h3, make_open_entry=a_star.ordered_node_astar))
+            == 4
     )
 
 
 def test_astar_search4():
     """The task is unsolvable"""
     assert (
-        a_star.astar_search(task4, h4, make_open_entry=a_star.ordered_node_astar)
-        is None
+            a_star.astar_search(task4, h4, make_open_entry=a_star.ordered_node_astar)
+            is None
     )

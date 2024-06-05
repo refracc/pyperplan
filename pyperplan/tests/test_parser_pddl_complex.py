@@ -1,6 +1,5 @@
 from pytest import raises
 
-from pyperplan.pddl.lisp_parser import parse_lisp_iterator
 from pyperplan.pddl.parser import *
 
 
@@ -90,11 +89,11 @@ def test_parsePredicates():
         "?x",
     ]
     assert [
-        p.parameters[0].types[0] for p in pred.predicates if p.parameters != []
-    ] == ["block", "block", "plane", "block"]
+               p.parameters[0].types[0] for p in pred.predicates if p.parameters != []
+           ] == ["block", "block", "plane", "block"]
     assert [
-        p.parameters[1].types[0] for p in pred.predicates if len(p.parameters) > 1
-    ] == ["block"]
+               p.parameters[1].types[0] for p in pred.predicates if len(p.parameters) > 1
+           ] == ["block"]
 
 
 def test_parseTypes():
@@ -154,8 +153,8 @@ def test_parsePredicatesLogistics():
         "?pkg",
     ]
     assert [
-        p.parameters[0].types[0] for p in pred.predicates if p.parameters != []
-    ] == ["place", "physobj", "package"]
+               p.parameters[0].types[0] for p in pred.predicates if p.parameters != []
+           ] == ["place", "physobj", "package"]
 
 
 def test_parseDomainDef():
@@ -228,11 +227,11 @@ def test_parseDomainDef():
         "?x",
     ]
     assert [
-        p.parameters[0].types[0] for p in pred.predicates if p.parameters != []
-    ] == ["block", "block", "block", "block"]
+               p.parameters[0].types[0] for p in pred.predicates if p.parameters != []
+           ] == ["block", "block", "block", "block"]
     assert [
-        p.parameters[1].types[0] for p in pred.predicates if len(p.parameters) > 1
-    ] == ["block"]
+               p.parameters[1].types[0] for p in pred.predicates if len(p.parameters) > 1
+           ] == ["block"]
     assert len(dom.actions) == 4
     action = dom.actions[3]
     assert action.name == "unstack"
@@ -349,10 +348,10 @@ def test_predList2():
         "?l1",
     ]
     assert [
-        p.parameters[0].types[0]
-        for p in pred.predicates
-        if p.parameters[0].types != None
-    ] == ["person", "person", "aircraft", "flevel"]
+               p.parameters[0].types[0]
+               for p in pred.predicates
+               if p.parameters[0].types != None
+           ] == ["person", "person", "aircraft", "flevel"]
 
 
 def test_predList3():

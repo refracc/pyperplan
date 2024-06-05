@@ -64,10 +64,10 @@ class Operator:
 
     def __eq__(self, other):
         return (
-            self.name == other.name
-            and self.preconditions == other.preconditions
-            and self.add_effects == other.add_effects
-            and self.del_effects == other.del_effects
+                self.name == other.name
+                and self.preconditions == other.preconditions
+                and self.add_effects == other.add_effects
+                and self.del_effects == other.del_effects
         )
 
     def __hash__(self):

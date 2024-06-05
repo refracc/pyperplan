@@ -196,11 +196,11 @@ def test_heuristics():
     for task, expected_landmarks, expected_lmc, exptected_h in expected:
         assert landmarks.get_landmarks(task) == expected_landmarks
         assert (
-            landmarks.compute_landmark_costs(task, expected_landmarks) == expected_lmc
+                landmarks.compute_landmark_costs(task, expected_landmarks) == expected_lmc
         )
         assert (
-            landmarks.LandmarkHeuristic(task)(make_root_node(task.initial_state))
-            == exptected_h
+                landmarks.LandmarkHeuristic(task)(make_root_node(task.initial_state))
+                == exptected_h
         )
 
 

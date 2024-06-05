@@ -207,7 +207,6 @@ def test_collect_facts():
 
 
 def test_operators():
-
     # action with signature with 2 types
     action_drive_vehicle = get_action(
         "DRIVE-VEHICLE",
@@ -337,8 +336,8 @@ def test_create_operator():
 def test_get_grounded_string():
     grounded_string = "(DRIVE-CAR ford freiburg berlin)"
     assert (
-        grounding._get_grounded_string("DRIVE-CAR", ["ford", "freiburg", "berlin"])
-        == grounded_string
+            grounding._get_grounded_string("DRIVE-CAR", ["ford", "freiburg", "berlin"])
+            == grounded_string
     )
 
 

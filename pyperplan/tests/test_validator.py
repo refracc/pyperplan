@@ -7,12 +7,10 @@ import pytest
 from pyperplan import tools
 from pyperplan.planner import validate_solution, validator_available
 
-
 DOMAIN_FILE = "DOMAIN.TEST"
 PROBLEM_FILE = "PROBLEM.TEST"
 CORRECT_SOLN_FILE = "CORRECT.SOLN.TEST"
 FALSE_SOLN_FILE = "FALSE.SOLN.TEST"
-
 
 DOMAIN = """\
 (define (domain gripper-strips)
@@ -47,7 +45,6 @@ DOMAIN = """\
             (not (carry ?obj ?gripper)))))
 """
 
-
 PROBLEM = """\
 (define (problem strips-gripper-x-1)
    (:domain gripper-strips)
@@ -73,7 +70,6 @@ PROBLEM = """\
                (at ball1 roomb))))
 """
 
-
 CORRECT_SOLN = """\
 (pick ball1 rooma right)
 (pick ball2 rooma left)
@@ -87,7 +83,6 @@ CORRECT_SOLN = """\
 (drop ball3 roomb right)
 (drop ball4 roomb left)
 """
-
 
 FALSE_SOLN = """\
 (pick ball1 rooma right)

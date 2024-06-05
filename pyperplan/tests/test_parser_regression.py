@@ -1,6 +1,5 @@
 from pyperplan.pddl.parser import *
 
-
 _parser = Parser("")
 
 

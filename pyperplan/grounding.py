@@ -20,20 +20,19 @@ Classes and methods for grounding a schematic PDDL task to a STRIPS planning
 task.
 """
 
-from collections import defaultdict
 import itertools
 import logging
 import re
+from collections import defaultdict
 
 from .task import Operator, Task
-
 
 # controls mass log output
 verbose_logging = False
 
 
 def ground(
-    problem, remove_statics_from_initial_state=True, remove_irrelevant_operators=True
+        problem, remove_statics_from_initial_state=True, remove_irrelevant_operators=True
 ):
     """
     This is the main method that grounds the PDDL task and returns an

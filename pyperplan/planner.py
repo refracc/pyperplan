@@ -26,7 +26,6 @@ import time
 from . import grounding, heuristics, search, tools
 from .pddl.parser import Parser
 
-
 SEARCHES = {
     "astar": search.astar_search,
     "wastar": search.weighted_astar_search,
@@ -36,7 +35,6 @@ SEARCHES = {
     "ids": search.iterative_deepening_search,
     "sat": search.sat_solve,
 }
-
 
 NUMBER = re.compile(r"\d+")
 
@@ -59,8 +57,8 @@ def get_heuristics():
                 getattr(module, cls)
                 for cls in dir(module)
                 if cls.endswith("Heuristic")
-                and cls != "Heuristic"
-                and not cls.startswith("_")
+                   and cls != "Heuristic"
+                   and not cls.startswith("_")
             ]
         )
     return heuristics
@@ -123,7 +121,7 @@ def _parse(domain_file, problem_file):
 
 
 def _ground(
-    problem, remove_statics_from_initial_state=True, remove_irrelevant_operators=True
+        problem, remove_statics_from_initial_state=True, remove_irrelevant_operators=True
 ):
     logging.info(f"Grounding start: {problem.name}")
     task = grounding.ground(
@@ -156,7 +154,7 @@ def write_solution(solution, filename):
 
 
 def search_plan(
-    domain_file, problem_file, search, heuristic_class, use_preferred_ops=False
+        domain_file, problem_file, search, heuristic_class, use_preferred_ops=False
 ):
     """
     Parses the given input files to a specific planner task and then tries to

@@ -2,14 +2,13 @@
 Tests for parsing and grounding all problems
 """
 
-from glob import glob
 import os
+from glob import glob
 
 import pytest
 
 from pyperplan import planner
 from pyperplan.search import breadth_first_search
-
 
 benchmarks = os.path.abspath(
     os.path.join(os.path.abspath(__file__), "../../../benchmarks")
@@ -40,8 +39,8 @@ def run_planner(problem_file):
     domain_file = planner.find_domain(problem_file)
     print("Searching solution for", domain_file, problem_file)
     assert (
-        planner.search_plan(domain_file, problem_file, breadth_first_search, None)
-        is not None
+            planner.search_plan(domain_file, problem_file, breadth_first_search, None)
+            is not None
     )
 
 

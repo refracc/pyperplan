@@ -35,6 +35,8 @@ def ground(problem, remove_statics_from_initial_state=True, remove_irrelevant_op
     Ground the PDDL task and return an instance of the Task class.
 
     :param problem: A pddl.Problem instance describing the parsed problem
+    :param remove_statics_from_initial_state: Remove static variables from initial state
+    :param remove_irrelevant_operators: Remove irrelevant operators
     :return: A task.Task instance with the grounded problem
     """
     domain = problem.domain
@@ -135,7 +137,7 @@ def _map_params_to_objects(signature, type_map):
     """Map each parameter to its corresponding objects."""
     param_to_objects = {}
     for param_name, param_types in signature:
-        objects = set(itertools.chain.from_iterable(type_map[type] for type in param_types))
+        objects = set(itertools.chain.from_iterable(type_map[_type] for _type in param_types))
         param_to_objects[param_name] = objects
     return param_to_objects
 

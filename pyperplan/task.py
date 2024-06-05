@@ -93,19 +93,21 @@ class Task:
     A STRIPS planning task
     """
 
-    def __init__(self, name, facts, initial_state, goals, operators):
+    def __init__(self, name, facts, initial_state, goals, operators, agents=None):
         """
         @param name The task's name
         @param facts A set of all the fact names that are valid in the domain
         @param initial_state A set of fact names that are true at the beginning
         @param goals A set of fact names that must be true to solve the problem
         @param operators A set of operator instances for the domain
+        @param agents A list of agents involved in the task
         """
         self.name = name
         self.facts = facts
         self.initial_state = initial_state
         self.goals = goals
         self.operators = operators
+        self.agents = agents or []
 
     def goal_reached(self, state):
         """
@@ -125,15 +127,16 @@ class Task:
         return [(op, op.apply(state)) for op in self.operators if op.applicable(state)]
 
     def __str__(self):
-        s = "Task {0}\n  Vars:  {1}\n  Init:  {2}\n  Goals: {3}\n  Ops:   {4}"
+        s = "Task {0}\n  Vars:  {1}\n  Init:  {2}\n  Goals: {3}\n  Ops:   {4}\n  Agents: {5}"
         return s.format(
             self.name,
             ", ".join(self.facts),
             self.initial_state,
             self.goals,
             "\n".join(map(repr, self.operators)),
+            ", ".join(agent.name for agent in self.agents),
         )
 
     def __repr__(self):
-        string = "<Task {0}, vars: {1}, operators: {2}>"
-        return string.format(self.name, len(self.facts), len(self.operators))
+        string = "<Task {0}, vars: {1}, operators: {2}, agents: {3}>"
+        return string.format(self.name, len(self.facts), len(self.operators), len(self.agents))

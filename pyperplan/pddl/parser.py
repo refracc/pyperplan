@@ -46,6 +46,7 @@ class Keyword(Visitable):
         name -- the name of the keyword e.g. 'typed' if the keyword
                 were ':typed'
         """
+        super().__init__()
         self._visitorName = "visit_keyword"
         self.name = name
 
@@ -63,9 +64,10 @@ class Variable(Visitable):
                  NOTE: checks that these types actually exist are implemented
                  in the TreeVisitor
         """
+        super().__init__()
         self._visitorName = "visit_variable"
         self.name = name
-        self.typed = types != None  # either True or False
+        self.typed = types is not None  # either True or False
         self.types = types  # either None or a List of Types
 
 
@@ -80,6 +82,7 @@ class Type(Visitable):
         parent -- a string that denotes the Typ instance that is the parent of
                   this type or None
         """
+        super().__init__()
         self._visitorName = "visit_type"
         self.name = name
         self.parent = parent  # either None or a Type
@@ -95,6 +98,7 @@ class Predicate(Visitable):
         name -- the name of the Predicate
         parameters -- a list of parameters described as variables
         """
+        super().__init__()
         self._visitorName = "visit_predicate"
         self.name = name
         self.parameters = parameters or []  # a list of Variables
@@ -103,13 +107,16 @@ class Predicate(Visitable):
 class PredicateInstance(Visitable):
     """This class represents the AST node for a pddl predicate instance."""
 
-    def __init__(self, name, parameters=[]):
+    def __init__(self, name, parameters=None):
         """Construct a new Predicate.
 
         Keyword arguments:
         name -- the name of the Predicate
         parameters -- a list of parameters described as variables
         """
+        super().__init__()
+        if parameters is None:
+            parameters = []
         self._visitorName = "visit_predicate_instance"
         self.name = name
         self.parameters = parameters  # a list of object names
@@ -124,6 +131,7 @@ class RequirementsStmt(Visitable):
         Keyword arguments:
         keywords -- the list of requirements, represented as keywords
         """
+        super().__init__()
         self._visitorName = "visit_requirements_stmt"
         self.keywords = keywords or []  # a list of keywords
 
@@ -137,6 +145,7 @@ class DomainStmt(Visitable):
         Keyword arguments:
         name -- the domain name as a string
         """
+        super().__init__()
         self._visitorName = "visit_domain_stmt"
         self.name = name
 
@@ -152,6 +161,7 @@ class PreconditionStmt(Visitable):
                    NOTE: Arbitrary formulas are allowed here. STRIPS
                    compatibility etc. is checked later by the TreeVisitor
         """
+        super().__init__()
         self._visitorName = "visit_precondition_stmt"
         self.formula = formula  # a Formula
 
@@ -167,6 +177,7 @@ class EffectStmt(Visitable):
                    NOTE: Arbitrary formulas are allowed here. STRIPS
                    compatibility etc. is checked later by the TreeVisitor
         """
+        super().__init__()
         self._visitorName = "visit_effect_stmt"
         self.formula = formula  # a Formula
 
@@ -187,6 +198,7 @@ class Formula(Visitable):
         type -- the type of this formulas key --> one of
                 (TypeFormula, TypeVariable, TypeConstant)
         """
+        super().__init__()
         self._visitorName = "visit_formula"
         self.key = key
         self.children = children or []  # a list of Formulas
@@ -205,6 +217,7 @@ class ActionStmt(Visitable):
         precond -- the precondition of the action given as a Formula
         effect -- the effect of the action given as a Formula
         """
+        super().__init__()
         self._visitorName = "visit_action_stmt"
         self.name = name
         self.parameters = parameters  # a list of parameters
@@ -223,6 +236,7 @@ class PredicatesStmt(Visitable):
         Keyword arguments:
         predicates -- a list of predicates
         """
+        super().__init__()
         self._visitorName = "visit_predicates_stmt"
         self.predicates = predicates  # a list of Predicates
 
@@ -230,15 +244,7 @@ class PredicatesStmt(Visitable):
 class DomainDef(Visitable):
     """This class represents the AST node for a pddl domain."""
 
-    def __init__(
-            self,
-            name,
-            requirements=None,
-            types=None,
-            predicates=None,
-            actions=None,
-            constants=None,
-    ):
+    def __init__(self, name, requirements=None, types=None, predicates=None, actions=None, constants=None):
         """Construct a new Domain AST node.
 
         Keyword arguments:
@@ -248,12 +254,13 @@ class DomainDef(Visitable):
         actions -- a list of Action AST nodes
         constants -- a list of Constants, as Object AST nodes
         """
+        super().__init__()
         self._visitorName = "visit_domain_def"
         self.name = name
         self.requirements = requirements  # a RequirementsStmt
         self.types = types  # a list of Types
         self.predicates = predicates  # a PredicatesStmt
-        if actions == None:
+        if actions is None:
             self.actions = []
         else:
             self.actions = actions  # a list of ActionStmt
@@ -273,6 +280,7 @@ class ProblemDef(Visitable):
         init -- an initial condition represented by an InitStmt
         goal -- a  goal condition represented by an GoalStmt
         """
+        super().__init__()
         self._visitorName = "visit_problem_def"
         self.name = name
         self.domainName = domainName
@@ -291,6 +299,7 @@ class Object(Visitable):
         name -- the name of the object
         type -- the name of this objects Type
         """
+        super().__init__()
         self._visitorName = "visit_object"
         self.name = name
         self.typeName = type
@@ -307,6 +316,7 @@ class InitStmt(Visitable):
         Keyword arguments:
         predicates -- a list of predicates denoting the initial codition
         """
+        super().__init__()
         self._visitorName = "visit_init_stmt"
         self.predicates = predicates
 
@@ -320,6 +330,7 @@ class GoalStmt(Visitable):
         Keyword arguments:
         predicates -- a list of predicates denoting the goal codition
         """
+        super().__init__()
         self._visitorName = "visit_goal_stmt"
         self.formula = formula
 
@@ -346,7 +357,7 @@ def parse_list_template(f, iter):
     # parse all possible occurences up to the end of the substring
     for elem in iter:
         var = f(elem)
-        if var != None:
+        if var is not None:
             result.append(var)
     return result
 
@@ -373,7 +384,7 @@ def _parse_type_helper(iter, type_class):
     # hence we need to store each parsed object in a list and attach a new type
     # instance whenever a type is specified
     result = list()
-    tmpList = list()
+    tmp_list = list()
     while not iter.empty():
         var = next(iter).get_word()
         # print('VAR:', var)
@@ -389,27 +400,27 @@ def _parse_type_helper(iter, type_class):
                         "Error multiple parent definition must " 'start with "either"'
                     )
                 tlist = parse_list_template(_parse_string_helper, types_iter)
-                while len(tmpList) != 0:
-                    result.append(type_class(tmpList.pop(), tlist))
+                while len(tmp_list) != 0:
+                    result.append(type_class(tmp_list.pop(), tlist))
             else:
                 # found type information --> flush objects into result list
                 ctype = next(iter).get_word()
-                while len(tmpList) != 0:
+                while len(tmp_list) != 0:
                     if type_class == Variable:
-                        result.append(type_class(tmpList.pop(), [ctype]))
+                        result.append(type_class(tmp_list.pop(), [ctype]))
                     else:
-                        result.append(type_class(tmpList.pop(), ctype))
-        elif var != None and var != "":
+                        result.append(type_class(tmp_list.pop(), ctype))
+        elif var is not None and var != "":
             # found new object definition --> enqueue
             if type_class == Variable:
                 if var[0] != "?":
                     raise ValueError('Error variables must start with a "?"')
-                tmpList.insert(0, var)
+                tmp_list.insert(0, var)
             else:
-                tmpList.insert(0, var)
-    while len(tmpList) != 0:
+                tmp_list.insert(0, var)
+    while len(tmp_list) != 0:
         # append all left over objects --> these are untyped !!
-        result.append(type_class(tmpList.pop(), None))
+        result.append(type_class(tmp_list.pop(), None))
     return result
 
 
@@ -522,8 +533,12 @@ def _parse_domain_helper(iter, keyword):
     return DomainStmt(name)
 
 
-parse_domain_stmt = lambda it: _parse_domain_helper(it, "domain")
-parse_problem_domain_stmt = lambda it: _parse_domain_helper(it, ":domain")
+def parse_domain_stmt(it):
+    return _parse_domain_helper(it, "domain")
+
+
+def parse_problem_domain_stmt(it):
+    return _parse_domain_helper(it, ":domain")
 
 
 def parse_predicate(iter):
@@ -785,7 +800,8 @@ class Parser:
         self.domInput = ""
         self.probInput = ""
 
-    def _read_input(self, source):
+    @staticmethod
+    def _read_input(source):
         """Reads the lisp input from a given source and normalizes it.
 
         Returns the LispIterator that is read from the source.
@@ -849,7 +865,7 @@ if __name__ == "__main__":
     argparser.add_argument(dest="domain", help="specify domain file")
     argparser.add_argument(dest="problem", help="specify problem file", nargs="?")
     options = argparser.parse_args()
-    if options.domain == None:
+    if options.domain is None:
         parser.print_usage()
         parser.error("Error domain file must be specified")
     pddlParser = Parser(options.domain)
@@ -857,7 +873,7 @@ if __name__ == "__main__":
     domain = pddlParser.parse_domain()
     print("++++++++ parsed domain file successfully")
     print(domain)
-    if options.problem != None:
+    if options.problem is not None:
         print("-------- Starting to parse supplied problem file!")
         pddlParser.set_prob_file(options.problem)
         problem = pddlParser.parse_problem(domain)

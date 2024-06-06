@@ -21,9 +21,9 @@ task.
 import itertools
 import logging
 import re
-from pddl.pddl import MultiAgentAction
 from collections import defaultdict
 
+from .pddl.pddl import MultiAgentAction
 from .task import Operator, Task
 
 # controls mass log output
@@ -162,7 +162,7 @@ def _find_pred_in_init(pred_name, param, sig_pos, init):
     return any(match_init.match(string) for string in init)
 
 
-def _create_operator(action, assignment, agent, statics, init):
+def _create_operator(action, assignment, agent, statics, init=None):
     """Create an operator for the given action and assignment."""
     precondition_facts = set()
     for precondition in action.precondition:

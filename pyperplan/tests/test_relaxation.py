@@ -3,6 +3,7 @@ import pytest
 from pyperplan.heuristics.relaxation import *
 from pyperplan.search import make_root_node
 from .heuristic_test_instances import *
+from ..task import Operator, Task
 
 
 def test_relaxation_heuristic_constructor():

@@ -205,7 +205,7 @@ def test_lm_cut_relaxed_operators():
     assert heuristic.relaxed_ops["op3"].cost == 1
     assert [f.name for f in heuristic.relaxed_ops["op3"].precondition] == ["var2"]
     assert [f.name for f in heuristic.relaxed_ops["op3"].effects] == ["var1"]
-    assert not "ALWAYSTRUE" in heuristic.relaxed_facts
+    assert "ALWAYSTRUE" not in heuristic.relaxed_facts
 
 
 def test_lm_cut_relaxed_operators2():

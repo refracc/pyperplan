@@ -263,7 +263,7 @@ class LmCutHeuristic(Heuristic):
                             heappush(unexpanded, eff)
 
     @staticmethod
-    def compute_hmax_from_last_cut(self, state, last_cut):
+    def compute_hmax_from_last_cut(state, last_cut=None):
         """This computes hmax values starting from the last cut.
 
         This saves us from recomputing the hmax values of all facts/operators
@@ -271,6 +271,8 @@ class LmCutHeuristic(Heuristic):
         NOTE: a complete cut procedure needs to be finished (i.e. one cut must
         be computed) for this to work!
         """
+        if last_cut is None:
+            last_cut = {}
         unexpanded = []
         # add all operators from the last cut
         # to the queue of operators for which the hmax value needs to be

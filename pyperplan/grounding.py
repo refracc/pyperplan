@@ -123,7 +123,7 @@ def _ground_action(action, type_map, statics, init):
         assignments = ((assign, agent) for assign in assignments for agent in agents if
                        action.can_be_performed_by(agent))
         ops = [
-            _create_operator(action, dict(assign), agent, statics, init) for assign, agent in assignments
+            _create_multi_agent_operator(action, dict(assign), agent, statics, init) for assign, agent in assignments
         ]
     else:
         ops = [
@@ -131,6 +131,71 @@ def _ground_action(action, type_map, statics, init):
         ]
 
     return list(filter(None, ops))
+
+
+def _ground_preconditions(preconditions, assignment, statics, init):
+    """Ground preconditions and return the set of facts or None if any static precondition is not met."""
+    precondition_facts = set()
+    for precondition in preconditions:
+        fact = _ground_atom(precondition, assignment)
+        if precondition.name in statics and fact not in init:
+            return None
+        precondition_facts.add(fact)
+    return precondition_facts
+
+
+def _ground_effects(effects, assignment, precondition_facts):
+    """Ground effects and return add and delete sets of facts."""
+    add_effects = _ground_atoms(effects.addlist, assignment)
+    del_effects = _ground_atoms(effects.dellist, assignment) - add_effects
+    add_effects -= precondition_facts
+    return add_effects, del_effects
+
+
+def _create_operator(action, assignment, agent, statics, init=None):
+    """Create an operator for the given action and assignment."""
+    precondition_facts = _ground_preconditions(action.precondition, assignment, statics, init)
+    if precondition_facts is None:
+        return None
+
+    add_effects, del_effects = _ground_effects(action.effect, assignment, precondition_facts)
+
+    args = [assignment[name] for name, types in action.signature]
+    name = _get_grounded_string(action.name, args)
+    if agent:
+        name += f" {agent}"
+
+    return Operator(name, precondition_facts, add_effects, del_effects)
+
+
+def _create_multi_agent_operator(action, assignment, agent, statics, init=None):
+    """Create an operator for the given multi-agent action and assignment."""
+    precondition_facts = _ground_preconditions(action.precondition, assignment, statics, init)
+    if precondition_facts is None:
+        return None
+
+    add_effects, del_effects = _ground_effects(action.effect, assignment, precondition_facts)
+
+    # Handle agent-specific preconditions and effects
+    if hasattr(action, 'agent_preconditions'):
+        agent_preconditions = action.agent_preconditions.get(agent, [])
+        agent_precondition_facts = _ground_preconditions(agent_preconditions, assignment, statics, init)
+        if agent_precondition_facts is None:
+            return None
+        precondition_facts |= agent_precondition_facts
+
+    if hasattr(action, 'agent_effects'):
+        agent_effects = action.agent_effects.get(agent, action.effect)
+        agent_add_effects, agent_del_effects = _ground_effects(agent_effects, assignment, precondition_facts)
+        add_effects |= agent_add_effects
+        del_effects |= agent_del_effects
+
+    args = [assignment[name] for name, types in action.signature]
+    name = _get_grounded_string(action.name, args)
+    if agent:
+        name += f" {agent}"
+
+    return Operator(name, precondition_facts, add_effects, del_effects)
 
 
 def _map_params_to_objects(signature, type_map):

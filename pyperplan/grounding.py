@@ -40,8 +40,16 @@ def ground(problem, remove_statics_from_initial_state=True, remove_irrelevant_op
     :return: A task.Task instance with the grounded problem
     """
     domain = problem.domain
-    actions = domain.actions.values()
-    predicates = domain.predicates.values()
+
+    if isinstance(domain.actions, dict):
+        actions = domain.actions.values()
+    else:
+        actions = domain.actions
+
+    if isinstance(domain.predicates, dict):
+        predicates = domain.predicates.values()
+    else:
+        predicates = domain.predicates
 
     objects = _collect_objects(problem)
     statics = _get_statics(predicates, actions)

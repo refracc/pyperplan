@@ -1,68 +1,67 @@
-from pyperplan.pddl.pddl import Type, Predicate, Effect, Action, Domain, Problem, Agent
-from pyperplan.grounding import ground
-from pyperplan.search.a_star import astar_search
-from pyperplan.heuristics.relaxation import hMaxHeuristic
+from pyperplan.pddl.pddl import Agent, Type, Predicate, Effect, Domain, Problem, MultiAgentAction
 
 # Define types
-object_type = Type("object", None)
+object_type = Type('object', None)
+agent_type = Type('agent', object_type)
+block_type = Type('block', object_type)
 
 # Define predicates
-holding_predicate = Predicate("holding", [("obj", [object_type])])
-
-# Define effects
-pickup_effect = Effect()
-pickup_effect.addlist.add(holding_predicate)
-
-putdown_effect = Effect()
-putdown_effect.dellist.add(holding_predicate)
+on = Predicate('on', [('x', [block_type]), ('y', [block_type])])
+ontable = Predicate('ontable', [('x', [block_type])])
+clear = Predicate('clear', [('x', [block_type])])
+holding = Predicate('holding', [('a', [agent_type]), ('x', [block_type])])
+handempty = Predicate('handempty', [('a', [agent_type])])
 
 # Define actions
-pickup_action = Action("pickup", [("obj", [object_type])], [], pickup_effect)
-putdown_action = Action("putdown", [("obj", [object_type])], [holding_predicate], putdown_effect)
+pick_up_effect = Effect()
+pick_up_effect.add_effect(ontable)
+pick_up_effect.add_effect(clear)
+pick_up_effect.del_effect(handempty)
+pick_up_effect.add_effect(holding)
 
-# Define the domain
-domain = Domain("simple_domain", {"object": object_type}, [holding_predicate], [pickup_action, putdown_action])
+put_down_effect = Effect()
+put_down_effect.del_effect(holding)
+put_down_effect.add_effect(clear)
+put_down_effect.add_effect(handempty)
+put_down_effect.add_effect(ontable)
 
-# Define objects
-obj1 = "obj1"
-obj2 = "obj2"
+stack_effect = Effect()
+stack_effect.del_effect(holding)
+stack_effect.del_effect(clear)
+stack_effect.add_effect(clear)
+stack_effect.add_effect(handempty)
+stack_effect.add_effect(on)
 
-# Define initial state
-initial_state = [holding_predicate]
+unstack_effect = Effect()
+unstack_effect.add_effect(holding)
+unstack_effect.add_effect(clear)
+unstack_effect.del_effect(clear)
+unstack_effect.del_effect(handempty)
+unstack_effect.del_effect(on)
 
-# Define goal state
-goal_state = [holding_predicate]
+pick_up = MultiAgentAction('pick-up', 'agent', [('x', [block_type])], [clear, ontable, handempty], pick_up_effect)
+put_down = MultiAgentAction('put-down', 'agent', [('x', [block_type])], [holding], put_down_effect)
+stack = MultiAgentAction('stack', 'agent', [('x', [block_type]), ('y', [block_type])], [holding, clear], stack_effect)
+unstack = MultiAgentAction('unstack', 'agent', [('x', [block_type]), ('y', [block_type])], [on, clear, handempty],
+                           unstack_effect)
 
-# Define the problem
-problem = Problem("simple_problem", domain, {obj1: object_type, obj2: object_type}, initial_state, goal_state)
+# Define agents
+agent1 = Agent('agent1', 'agent')
+agent2 = Agent('agent2', 'agent')
 
-print(problem.__repr__())
-print(domain.__repr__())
+# Assign private predicates to agents
+agent1.add_private_predicate(holding)
+agent1.add_private_predicate(handempty)
+agent2.add_private_predicate(holding)
+agent2.add_private_predicate(handempty)
 
-task = ground(problem)
+# Define domain
+domain = Domain('blocks', {'object': object_type, 'agent': agent_type, 'block': block_type},
+                [on, ontable, clear, holding, handempty], [pick_up, put_down, stack, unstack])
 
-solution = astar_search(task, heuristic=hMaxHeuristic(task))
+# Define problem (this is a simple example, and you'd typically fill in with actual initial state and goal)
+problem = Problem('blockworld', domain, {'block1': block_type, 'block2': block_type},
+                  [ontable, clear, handempty], [on])
 
-print(solution)
-
-# Define some predicates
-predicate_at = Predicate('at', [('x', ['location'])])
-predicate_has_key = Predicate('has_key', [('x', ['key'])])
-
-# Create agents
-robot_agent = Agent('Robot1', 'robot')
-human_agent = Agent('Human1', 'human')
-
-# Add private predicates to agents
-robot_agent.add_private_predicate(predicate_at)
-human_agent.add_private_predicate(predicate_has_key)
-
-# Check if agents know certain predicates
-print(robot_agent.knows_predicate(predicate_at))  # True
-print(robot_agent.knows_predicate(predicate_has_key))  # False
-print(human_agent.knows_predicate(predicate_at))  # False
-print(human_agent.knows_predicate(predicate_has_key))  # True
-
-# Print agents to see their private knowledge
-print(robot_agent.__repr__())  # Agent(name=Robot1, type=robot, private_predicates={'at[('x', ['location'])]'})
-print(human_agent.__repr__())  # Agent(name=Human1, type=human, private_predicates={'has_key[('x', ['key'])]'})
+print(domain)
+print(problem)

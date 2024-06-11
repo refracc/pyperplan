@@ -79,6 +79,12 @@ class Effect:
         self.addlist = set()
         self.dellist = set()
 
+    def add_effect(self, predicate):
+        self.addlist.add(predicate)
+
+    def del_effect(self, predicate):
+        self.dellist.add(predicate)
+
 
 class Action:
     def __init__(self, name, signature, precondition, effect):
@@ -95,29 +101,32 @@ class Action:
         self.precondition = precondition
         self.effect = effect
 
+    def __repr__(self):
+        return f"Action({self.name}, {self.signature}, {self.precondition}, {self.effect})"
+
+    def __str__(self):
+        return self.__repr__()
+
 
 class MultiAgentAction(Action):
-    def __init__(self, name, signature, precondition, effect, agents):
+    def __init__(self, name, agent, signature, precondition, effect):
         """
         name: The name identifying the action
-        signature: A list of tuples (name, [types]) to represent a list of
-                   parameters and their type(s).
+        agent: The agent performing the action
+        parameters: A list of tuples (name, [types]) to represent a list of
+                    parameters and their type(s).
         precondition: A list of predicates that have to be true before the
                       action can be applied
-        effect: An effect instance specifying the postcondition of the action
-        agents: A list of agents that can perform the action
+        effect: An effect instance specifying the list of predicates to be added and removed.
         """
         super().__init__(name, signature, precondition, effect)
-        self.agents = agents
+        self.agent = agent
 
-    def can_be_performed_by(self, agent):
-        """
-        Check if the action can be performed by the given agent.
+    def __repr__(self):
+        return f"Action({self.name}, {self.agent}, {self.signature}, {self.precondition}, {self.effect})"
 
-        agent: The agent to check
-        return: Boolean indicating if the agent can perform the action
-        """
-        return agent in self.agents
+    def __str__(self):
+        return self.__repr__()
 
 
 class Domain:

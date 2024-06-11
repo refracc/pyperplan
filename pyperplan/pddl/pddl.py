@@ -187,3 +187,67 @@ class Problem:
         )
 
     __str__ = __repr__
+
+
+class Agent:
+    """
+    This class represents an agent in a PDDL domain.
+    """
+
+    def __init__(self, name, agent_type):
+        """
+        name: The name of the agent.
+        agent_type: The type of the agent.
+        """
+        self.name = name
+        self.agent_type = agent_type
+        self.private_predicates = set()
+
+    def __repr__(self):
+        return f"Agent(name={self.name}, type={self.agent_type}, private_predicates={self.private_predicates})"
+
+    def __str__(self):
+        return self.name
+
+    def can_perform(self, action):
+        """
+        Check if the agent can perform the given action.
+
+        action: An instance of MultiAgentAction.
+        return: Boolean indicating if the agent can perform the action.
+        """
+        return self.agent_type in action.agents
+
+    def get_possible_actions(self, actions):
+        """
+        Get a list of actions that this agent can perform from a list of actions.
+
+        actions: A list of MultiAgentAction instances.
+        return: A list of actions this agent can perform.
+        """
+        return [action for action in actions if self.can_perform(action)]
+
+    def add_private_predicate(self, predicate):
+        """
+        Add a private predicate to the agent's knowledge.
+
+        predicate: A predicate instance.
+        """
+        self.private_predicates.add(predicate)
+
+    def remove_private_predicate(self, predicate):
+        """
+        Remove a private predicate from the agent's knowledge.
+
+        predicate: A predicate instance.
+        """
+        self.private_predicates.discard(predicate)
+
+    def knows_predicate(self, predicate):
+        """
+        Check if the agent knows a given predicate.
+
+        predicate: A predicate instance.
+        return: Boolean indicating if the agent knows the predicate.
+        """
+        return predicate in self.private_predicates

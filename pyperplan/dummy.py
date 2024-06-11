@@ -1,4 +1,4 @@
-from pyperplan.pddl.pddl import Type, Predicate, Effect, Action, Domain, Problem
+from pyperplan.pddl.pddl import Type, Predicate, Effect, Action, Domain, Problem, Agent
 from pyperplan.grounding import ground
 from pyperplan.search.a_star import astar_search
 from pyperplan.heuristics.relaxation import hMaxHeuristic
@@ -44,3 +44,25 @@ task = ground(problem)
 solution = astar_search(task, heuristic=hMaxHeuristic(task))
 
 print(solution)
+
+# Define some predicates
+predicate_at = Predicate('at', [('x', ['location'])])
+predicate_has_key = Predicate('has_key', [('x', ['key'])])
+
+# Create agents
+robot_agent = Agent('Robot1', 'robot')
+human_agent = Agent('Human1', 'human')
+
+# Add private predicates to agents
+robot_agent.add_private_predicate(predicate_at)
+human_agent.add_private_predicate(predicate_has_key)
+
+# Check if agents know certain predicates
+print(robot_agent.knows_predicate(predicate_at))  # True
+print(robot_agent.knows_predicate(predicate_has_key))  # False
+print(human_agent.knows_predicate(predicate_at))  # False
+print(human_agent.knows_predicate(predicate_has_key))  # True
+
+# Print agents to see their private knowledge
+print(robot_agent.__repr__())  # Agent(name=Robot1, type=robot, private_predicates={'at[('x', ['location'])]'})
+print(human_agent.__repr__())  # Agent(name=Human1, type=human, private_predicates={'has_key[('x', ['key'])]'})

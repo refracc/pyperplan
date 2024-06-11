@@ -109,24 +109,33 @@ class Action:
 
 
 class MultiAgentAction(Action):
-    def __init__(self, name, agent, signature, precondition, effect):
+    def __init__(self, name, signature, precondition, effect, agents):
         """
         name: The name identifying the action
-        agent: The agent performing the action
-        parameters: A list of tuples (name, [types]) to represent a list of
-                    parameters and their type(s).
+        signature: A list of tuples (name, [types]) to represent a list of
+                   parameters and their type(s).
         precondition: A list of predicates that have to be true before the
                       action can be applied
-        effect: An effect instance specifying the list of predicates to be added and removed.
+        effect: An effect instance specifying the postcondition of the action
+        agents: A list of agents that can perform the action
         """
         super().__init__(name, signature, precondition, effect)
-        self.agent = agent
+        self.agents = agents
 
     def __repr__(self):
-        return f"Action({self.name}, {self.agent}, {self.signature}, {self.precondition}, {self.effect})"
+        return f"MultiAgentAction({self.name}, {self.signature}, {self.precondition}, {self.effect}, {self.agents})"
 
     def __str__(self):
         return self.__repr__()
+
+    def can_be_performed_by(self, agent):
+        """
+        Check if the action can be performed by the given agent.
+
+        agent: The agent to check
+        return: Boolean indicating if the agent can perform the action
+        """
+        return agent in self.agents
 
 
 class Domain:

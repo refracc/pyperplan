@@ -9,28 +9,13 @@ block_type = Type('block', object_type)
 on = Predicate('on', [('x', [block_type]), ('y', [block_type])])
 ontable = Predicate('ontable', [('x', [block_type])])
 clear = Predicate('clear', [('x', [block_type])])
-holding = Predicate('holding', [('a', [agent_type]), ('x', [block_type])])
-handempty = Predicate('handempty', [('a', [agent_type])])
+holding = Predicate('holding', [('x', [block_type])], True)
+handempty = Predicate('handempty', [], True)
 
 # Define actions
-pick_up_effect = Effect()
-pick_up_effect.add_effect(ontable)
-pick_up_effect.add_effect(clear)
-pick_up_effect.del_effect(handempty)
-pick_up_effect.add_effect(holding)
-
-put_down_effect = Effect()
-put_down_effect.del_effect(holding)
-put_down_effect.add_effect(clear)
-put_down_effect.add_effect(handempty)
-put_down_effect.add_effect(ontable)
-
-stack_effect = Effect()
-stack_effect.del_effect(holding)
-stack_effect.del_effect(clear)
-stack_effect.add_effect(clear)
-stack_effect.add_effect(handempty)
-stack_effect.add_effect(on)
+pick_up_effect = Effect([ontable, clear, holding], [handempty])
+put_down_effect = Effect([clear, handempty, ontable], [holding])
+stack_effect = Effect([clear, handempty, on], [holding, clear])
 
 unstack_effect = Effect()
 unstack_effect.add_effect(holding)
@@ -39,15 +24,20 @@ unstack_effect.del_effect(clear)
 unstack_effect.del_effect(handempty)
 unstack_effect.del_effect(on)
 
-pick_up = MultiAgentAction('pick-up', 'agent', [('x', [block_type])], [clear, ontable, handempty], pick_up_effect)
-put_down = MultiAgentAction('put-down', 'agent', [('x', [block_type])], [holding], put_down_effect)
-stack = MultiAgentAction('stack', 'agent', [('x', [block_type]), ('y', [block_type])], [holding, clear], stack_effect)
-unstack = MultiAgentAction('unstack', 'agent', [('x', [block_type]), ('y', [block_type])], [on, clear, handempty],
+pick_up = MultiAgentAction('pick-up', [('x', [block_type])], [clear, ontable, handempty], pick_up_effect)
+put_down = MultiAgentAction('put-down', [('x', [block_type])], [holding], put_down_effect)
+stack = MultiAgentAction('stack', [('x', [block_type]), ('y', [block_type])], [holding, clear], stack_effect)
+unstack = MultiAgentAction('unstack', [('x', [block_type]), ('y', [block_type])], [on, clear, handempty],
                            unstack_effect)
 
 # Define agents
 agent1 = Agent('agent1', 'agent')
 agent2 = Agent('agent2', 'agent')
+
+pick_up.add_agent(agent1)
+put_down.add_agent(agent2)
+stack.add_agent(agent1)
+unstack.add_agent(agent2)
 
 # Assign private predicates to agents
 agent1.add_private_predicate(holding)

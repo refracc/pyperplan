@@ -38,7 +38,7 @@ class Type:
 
 
 class Predicate:
-    def __init__(self, name, signature):
+    def __init__(self, name, signature, private=False):
         """
         name: The name of the predicate.
         signature: A list of tuples (name, [types]) to represent a list of
@@ -46,6 +46,7 @@ class Predicate:
         """
         self.name = name
         self.signature = signature
+        self.private = private
 
     def __repr__(self):
         return self.name + str(self.signature)
@@ -71,13 +72,20 @@ class Predicate:
 
 
 class Effect:
-    def __init__(self):
+    def __init__(self, addlist=None, dellist=None):
         """
         addlist: Set of predicates that have to be true after the action
         dellist: Set of predicates that have to be false after the action
         """
-        self.addlist = set()
-        self.dellist = set()
+        if addlist is not None:
+            self.addlist = addlist
+        else:
+            self.addlist = set()
+
+        if dellist is not None:
+            self.dellist = dellist
+        else:
+            self.dellist = set()
 
     def add_effect(self, predicate):
         self.addlist.add(predicate)
@@ -109,7 +117,7 @@ class Action:
 
 
 class MultiAgentAction(Action):
-    def __init__(self, name, signature, precondition, effect, agents):
+    def __init__(self, name, signature, precondition, effect):
         """
         name: The name identifying the action
         signature: A list of tuples (name, [types]) to represent a list of
@@ -120,7 +128,7 @@ class MultiAgentAction(Action):
         agents: A list of agents that can perform the action
         """
         super().__init__(name, signature, precondition, effect)
-        self.agents = agents
+        self.agents = set()
 
     def __repr__(self):
         return f"MultiAgentAction({self.name}, {self.signature}, {self.precondition}, {self.effect}, {self.agents})"
@@ -136,6 +144,9 @@ class MultiAgentAction(Action):
         return: Boolean indicating if the agent can perform the action
         """
         return agent in self.agents
+
+    def add_agent(self, agent):
+        self.agents.add(agent)
 
 
 class Domain:

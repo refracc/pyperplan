@@ -162,13 +162,12 @@ class Domain:
 
     def __repr__(self):
         return (
-                "< Domain definition: %s Predicates: %s Actions: %s Multi-Agent Actions: %s "
+                "< Domain definition: %s Predicates: %s Actions: %s"
                 "Constants: %s >"
                 % (
                     self.name,
                     [str(p) for p in self.predicates],
                     [str(a) for a in self.actions],
-                    [str(m) for m in self.ma_actions],
                     [str(c) for c in self.constants],
                 )
         )

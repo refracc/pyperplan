@@ -23,7 +23,7 @@ import logging
 import re
 from collections import defaultdict
 
-from .pddl.pddl import MultiAgentAction
+from .pddl.pddl import Action
 from .task import Operator, Task
 
 # controls mass log output
@@ -126,7 +126,7 @@ def _ground_action(action, type_map, statics, init):
     ]
     assignments = itertools.product(*domain_lists)
 
-    if isinstance(action, MultiAgentAction):
+    if len(action.agents) > 0:
         agents = action.agents
         assignments = ((assign, agent) for assign in assignments for agent in agents if
                        action.can_be_performed_by(agent))

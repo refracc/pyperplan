@@ -95,7 +95,7 @@ class Effect:
 
 
 class Action:
-    def __init__(self, name, signature, precondition, effect):
+    def __init__(self, name, signature, precondition, effect, agents=None):
         """
         name: The name identifying the action
         signature: A list of tuples (name, [types]) to represent a list of
@@ -108,30 +108,10 @@ class Action:
         self.signature = signature
         self.precondition = precondition
         self.effect = effect
+        self.agents = agents if agents is not None else set()
 
     def __repr__(self):
         return f"Action({self.name}, {self.signature}, {self.precondition}, {self.effect})"
-
-    def __str__(self):
-        return self.__repr__()
-
-
-class MultiAgentAction(Action):
-    def __init__(self, name, signature, precondition, effect):
-        """
-        name: The name identifying the action
-        signature: A list of tuples (name, [types]) to represent a list of
-                   parameters and their type(s).
-        precondition: A list of predicates that have to be true before the
-                      action can be applied
-        effect: An effect instance specifying the postcondition of the action
-        agents: A list of agents that can perform the action
-        """
-        super().__init__(name, signature, precondition, effect)
-        self.agents = set()
-
-    def __repr__(self):
-        return f"MultiAgentAction({self.name}, {self.signature}, {self.precondition}, {self.effect}, {self.agents})"
 
     def __str__(self):
         return self.__repr__()

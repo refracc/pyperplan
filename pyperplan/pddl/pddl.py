@@ -26,7 +26,7 @@ class Type:
     This class represents a PDDL type.
     """
 
-    def __init__(self, name, parent):
+    def __init__(self, name, parent=None):
         self.name = name.lower()
         self.parent = parent
 
@@ -130,7 +130,7 @@ class Action:
 
 
 class Domain:
-    def __init__(self, name, types, predicates, actions, constants=None, ma_actions=None):
+    def __init__(self, name, types, predicates, actions, constants=None):
         """
         name: The name of the domain
         types: A dict of typename->Type instances in the domain
@@ -138,23 +138,16 @@ class Domain:
         actions: A list of actions in the domain
         constants: A dict of name->type pairs of the constants in the domain
         """
-        if constants is None:
-            constants = {}
 
-        if ma_actions is None:
-            ma_actions = {}
-
-            self.name = name
-            self.types = types
-            self.predicates = predicates
-            self.actions = actions
-            self.constants = constants
-            self.ma_actions = ma_actions
+        self.name = name
+        self.types = types
+        self.predicates = predicates
+        self.actions = actions
+        self.constants = constants if constants is not None else set()
 
     def __repr__(self):
         return (
-                "< Domain definition: %s Predicates: %s Actions: %s"
-                "Constants: %s >"
+                "< Domain definition: %s Predicates: %s Actions: %s Constants: %s >"
                 % (
                     self.name,
                     [str(p) for p in self.predicates],

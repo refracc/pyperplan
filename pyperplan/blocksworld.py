@@ -125,11 +125,13 @@ goal_state = [
 
 problem = Problem("bw-1", domain, public_objects, initial_state, goal_state, private_objects)
 
-print(problem)
-print(domain)
+# print(problem)
+# print(domain)
 
 # Ground the problem
 grounded_problem = ground(problem)
+
+print(grounded_problem)
 
 # Perform A* search to solve the problem
 solution = astar_search(grounded_problem, heuristic=hMaxHeuristic(grounded_problem))

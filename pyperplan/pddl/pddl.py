@@ -160,31 +160,34 @@ class Domain:
 
 
 class Problem:
-    def __init__(self, name, domain, objects, init, goal):
+    def __init__(self, name, domain, objects, init, goal, private_objects=None):
         """
         name: The name of the problem
         domain: The domain in which the problem has to be solved
-        objects: A dict name->type of objects that are used in the problem
+        objects: A dict name->type of public objects that are used in the problem
         init: A list of predicates describing the initial state
         goal: A list of predicates describing the goal state
+        private_objects: A dict of agent->dict(name->type) of private objects for each agent (optional)
         """
         self.name = name
         self.domain = domain
         self.objects = objects
+        self.private_objects = private_objects if private_objects is not None else {}
         self.initial_state = init
         self.goal = goal
 
     def __repr__(self):
         return (
-                "< Problem definition: %s "
-                "Domain: %s Objects: %s Initial State: %s Goal State : %s >"
-                % (
-                    self.name,
-                    self.domain.name,
-                    sorted(self.objects),
-                    [str(p) for p in self.initial_state],
-                    [str(p) for p in self.goal],
-                )
+            "< Problem definition: %s "
+            "Domain: %s Public Objects: %s Private Objects: %s Initial State: %s Goal State: %s >"
+            % (
+                self.name,
+                self.domain.name,
+                self.objects,
+                self.private_objects if self.private_objects else "None",
+                [str(p) for p in self.initial_state],
+                [str(p) for p in self.goal],
+            )
         )
 
     __str__ = __repr__

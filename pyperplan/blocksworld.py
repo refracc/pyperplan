@@ -1,4 +1,8 @@
+from pyperplan.grounding import ground
+from pyperplan.heuristics.relaxation import hMaxHeuristic
 from pyperplan.pddl.pddl import *
+from pyperplan.search.a_star import *
+from pyperplan.heuristics import *
 
 agent_type = Type("agent")
 block_type = Type("block")
@@ -124,3 +128,16 @@ problem = Problem("bw-1", domain, public_objects, initial_state, goal_state, pri
 print(problem)
 print(domain)
 
+# Ground the problem
+grounded_problem = ground(problem)
+
+# Perform A* search to solve the problem
+solution = astar_search(grounded_problem, heuristic=hMaxHeuristic(grounded_problem))
+
+# Print the solution
+if solution:
+    print("Solution found:")
+    for step in solution:
+        print(step)
+else:
+    print("No solution found.")

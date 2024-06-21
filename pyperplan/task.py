@@ -100,14 +100,14 @@ class Task:
         @param initial_state A set of fact names that are true at the beginning
         @param goals A set of fact names that must be true to solve the problem
         @param operators A set of operator instances for the domain
-        @param agents A list of agents involved in the task
+        @param agents A dictionary of agents involved in the task
         """
         self.name = name
         self.facts = facts
         self.initial_state = initial_state
         self.goals = goals
         self.operators = operators
-        self.agents = agents or []
+        self.agents = agents or {}
 
     def goal_reached(self, state):
         """
@@ -134,9 +134,10 @@ class Task:
             self.initial_state,
             self.goals,
             "\n".join(map(repr, self.operators)),
-            ", ".join(agent.name for agent in self.agents),
+            ", ".join(self.agents.keys()),  # Use agent names (keys) directly
         )
 
     def __repr__(self):
         string = "<Task {0}, vars: {1}, operators: {2}, agents: {3}>"
         return string.format(self.name, len(self.facts), len(self.operators), len(self.agents))
+

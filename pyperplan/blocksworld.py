@@ -83,7 +83,7 @@ public_objects = {
 }
 
 # Define private objects (optional)
-private_objects = {
+agents = {
     "a1": agent_type,
     "a2": agent_type,
     "a3": agent_type,
@@ -109,7 +109,6 @@ initial_state = [
     Predicate("on", [("d", block_type), ("i", block_type)]),
 ]
 
-# Define goal state predicates using Type instances
 goal_state = [
     Predicate("on", [("d", block_type), ("c", block_type)]),
     Predicate("on", [("c", block_type), ("f", block_type)]),
@@ -123,20 +122,18 @@ goal_state = [
 ]
 
 
-problem = Problem("bw-1", domain, public_objects, initial_state, goal_state, private_objects)
+problem = Problem("bw-1", domain, public_objects, initial_state, goal_state, agents)
 
-# print(problem)
-# print(domain)
+print(problem)
+print()
+print(domain)
 
-# Ground the problem
+
 grounded_problem = ground(problem)
-
 print(grounded_problem)
 
-# Perform A* search to solve the problem
 solution = astar_search(grounded_problem, heuristic=hMaxHeuristic(grounded_problem))
 
-# Print the solution
 if solution:
     print("Solution found:")
     for step in solution:

@@ -24,28 +24,31 @@ import itertools
 import logging
 import re
 
-from .task import Operator, Task
+from pyperplan.pddl.pddl import Agent
+from pyperplan.task import Operator, Task
 
 # controls mass log output
 verbose_logging = True
 
 
-def process_private_information(problem, agent):
+def process_private_information(problem, agent_name, agent_type):
     """
     Process private predicates and actions for the given agent.
 
     :param problem: A pddl.Problem instance describing the parsed problem
-    :param agent: An instance of the Agent class
+    :param agent_name: The name of the agent
+    :param agent_type: The type of the agent
     :return: A dictionary with grounded private predicates and actions
     """
-    private_predicates = {pred.name for pred in problem.domain.predicates if agent.knows_predicate(pred.name)}
-    private_actions = [action for action in problem.domain.actions.values() if
-                       any(agent.knows_predicate(pred.name) for pred in action.precondition)]
+    agent_instance = Agent(agent_name, agent_type)
+    private_predicates = {pred.name for pred in problem.domain.predicates if agent_instance.knows_predicate(pred.name)}
+    private_actions = [action for action in problem.domain.actions if
+                       any(agent_instance.knows_predicate(pred.name) for pred in action.precondition)]
 
     # Ground private actions
     type_map = _create_type_map(problem.objects)
     init = _get_partial_state(problem.initial_state)
-    statics = _get_statics(problem.domain.predicates.values(), problem.domain.actions.values())
+    statics = _get_statics(problem.domain.predicates, problem.domain.actions)
 
     grounded_private_actions = _ground_actions(private_actions, type_map, statics, init)
 
@@ -55,12 +58,11 @@ def process_private_information(problem, agent):
     }
 
 
-def ground(problem, agent=None, remove_statics_from_initial_state=True, remove_irrelevant_operators=True):
+def ground(problem, remove_statics_from_initial_state=True, remove_irrelevant_operators=True):
     """
     Ground the PDDL task and return an instance of the task.Task class.
 
     :param problem: A pddl.Problem instance describing the parsed problem
-    :param agent: An optional Agent instance describing the agent's private information
     :param remove_statics_from_initial_state: Flag to remove static predicates from the initial state
     :param remove_irrelevant_operators: Flag to remove irrelevant operators
     :return: A task.Task instance with the grounded problem
@@ -71,61 +73,62 @@ def ground(problem, agent=None, remove_statics_from_initial_state=True, remove_i
 
     # Objects
     objects = problem.objects
+    objects.update(domain.constants)
     if verbose_logging:
-        logging.debug("Objects:\n%s" % objects)
+        print("Objects:\n%s" % objects)
 
     # Get the names of the static predicates
     statics = _get_statics(predicates, actions)
     if verbose_logging:
-        logging.debug("Static predicates:\n%s" % statics)
+        print("Static predicates:\n%s" % statics)
 
     # Create a map from types to objects
     type_map = _create_type_map(objects)
     if verbose_logging:
-        logging.debug("Type to object map:\n%s" % type_map)
+        print("Type to object map:\n%s" % type_map)
 
     # Transform initial state into a specific
     init = _get_partial_state(problem.initial_state)
     if verbose_logging:
-        logging.debug("Initial state with statics:\n%s" % init)
+        print("Initial state with statics:\n%s" % init)
 
     # Ground actions
     operators = _ground_actions(actions, type_map, statics, init)
     if verbose_logging:
-        logging.debug("Operators:\n%s" % "\n".join(map(str, operators)))
+        print("Operators:\n%s" % "\n".join(map(str, operators)))
 
-    # Process private information if an agent is provided
-    if agent:
-        private_info = process_private_information(problem, agent)
-        private_predicates = private_info["private_predicates"]
-        private_actions = private_info["private_actions"]
-
-        # Merge private predicates and actions into the public ones
-        predicates.update(private_predicates)
-        operators.extend(private_actions)
+    # TODO: Process private information for each agent if agents are provided
+    private_info_all_agents = {}
+    if problem.agents:
+        for agent_name, agent_type in problem.agents.items():
+            private_info = process_private_information(problem, agent_name, agent_type)
+            private_info_all_agents[agent_name] = private_info
+            if verbose_logging:
+                print(f"Private information for agent {agent_name}:\n{private_info}")
 
     # Ground goal
     goals = _get_partial_state(problem.goal)
     if verbose_logging:
-        logging.debug("Goal:\n%s" % goals)
+        print("Goal:\n%s" % goals)
 
     # Collect facts from operators and include the ones from the goal
     facts = _collect_facts(operators) | goals
     if verbose_logging:
-        logging.debug("All grounded facts:\n%s" % facts)
+        print("All grounded facts:\n%s" % facts)
 
     # Remove statics from initial state
     if remove_statics_from_initial_state:
         init &= facts
         if verbose_logging:
-            logging.debug("Initial state without statics:\n%s" % init)
+            print("Initial state without statics:\n%s" % init)
 
     # Perform relevance analysis
     if remove_irrelevant_operators:
         operators = _relevance_analysis(operators, goals)
 
     name = problem.name
-    return Task(name, facts, init, goals, operators)
+    return Task(name, facts, init, goals, operators, problem.agents)
+
 
 def _relevance_analysis(operators, goals):
     """This implements a relevance analysis of operators.
@@ -157,7 +160,7 @@ def _relevance_analysis(operators, goals):
                 relevant_facts |= op.preconditions
         changed = old_relevant_facts != relevant_facts
 
-    # delete all irrellevant effects
+    # delete all irrelevant effects
     del_operators = set()
     for op in operators:
         # calculate new effects
@@ -171,10 +174,10 @@ def _relevance_analysis(operators, goals):
         op.del_effects = new_dellist
         if not new_addlist and not new_dellist:
             if verbose_logging:
-                logging.debug("Relevance analysis removed oparator %s" % op.name)
+                print("Relevance analysis removed oparator %s" % op.name)
             del_operators.add(op)
     if debug:
-        logging.info("Relevance analysis removed %d facts" % len(debug_pruned_op))
+        print("Relevance analysis removed %d facts" % len(debug_pruned_op))
     # remove completely irrelevant operators
     return [op for op in operators if not op in del_operators]
 
@@ -245,7 +248,7 @@ def _ground_actions(actions, type_map, statics, init):
 
 
 def _ground_action(action, type_map, statics, init):
-    logging.debug("Grounding %s" % action.name)
+    print("Grounding %s" % action.name)
     param_to_objects = {}
 
     for param_name, param_types in action.signature:
@@ -271,7 +274,7 @@ def _ground_action(action, type_map, statics, init):
                                 remove_debug += 1
                             objects.remove(o)
     if verbose_logging:
-        logging.info(
+        print(
             "Static precondition analysis removed %d possible objects" % remove_debug
         )
 
@@ -308,64 +311,6 @@ def _find_pred_in_init(pred_name, param, sig_pos, init):
         match_init = re.compile(reg_ex)
     assert match_init is not None
     return any([match_init.match(string) for string in init])
-
-#
-# def _ground_action(action, type_map, statics, init):
-#     """
-#     Ground the action and return the resulting list of operators.
-#     """
-#     logging.debug("Grounding %s" % action.name)
-#     param_to_objects = {}
-#
-#     for param_name, param_types in action.signature:
-#         # List of sets of objects for this parameter
-#         objects = [type_map[type] for type in param_types]
-#         # Combine the sets into one set
-#         objects = set(itertools.chain(*objects))
-#         param_to_objects[param_name] = objects
-#
-#     # For each parameter that is not constant,
-#     # remove all invalid static preconditions
-#     remove_debug = 0
-#     for param, objects in param_to_objects.items():
-#         for pred in action.precondition:
-#             # if a static predicate is present in the precondition
-#             if pred.name in statics:
-#                 sig_pos = -1
-#                 count = 0
-#                 # check if there is an instantiation with the current parameter
-#                 for var, _ in pred.signature:
-#                     if var == param:
-#                         sig_pos = count
-#                     count += 1
-#                 if sig_pos != -1:
-#                     # remove if no instantiation present in initial state
-#                     obj_copy = objects.copy()
-#                     for o in obj_copy:
-#                         if not _find_pred_in_init(pred.name, o, sig_pos, init):
-#                             if verbose_logging:
-#                                 remove_debug += 1
-#                             objects.remove(o)
-#     if verbose_logging:
-#         logging.info(
-#             "Static precondition analysis removed %d possible objects" % remove_debug
-#         )
-#
-#     # save a list of possible assignment tuples (param_name, object)
-#     domain_lists = [
-#         [(name, obj) for obj in objects] for name, objects in param_to_objects.items()
-#     ]
-#     # Calculate all possible assignments
-#     assignments = itertools.product(*domain_lists)
-#
-#     # Create a new operator for each possible assignment of parameters
-#     ops = [
-#         _create_operator(action, dict(assign), statics, init) for assign in assignments
-#     ]
-#     # Filter out the None values
-#     ops = filter(bool, ops)
-#
-#     return ops
 
 
 def _create_operator(action, assignment, statics, init):

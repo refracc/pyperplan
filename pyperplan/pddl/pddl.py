@@ -160,19 +160,19 @@ class Domain:
 
 
 class Problem:
-    def __init__(self, name, domain, objects, init, goal, private_objects=None):
+    def __init__(self, name, domain, objects, init, goal, agents=None):
         """
         name: The name of the problem
         domain: The domain in which the problem has to be solved
         objects: A dict name->type of public objects that are used in the problem
         init: A list of predicates describing the initial state
         goal: A list of predicates describing the goal state
-        private_objects: A dict of agent->dict(name->type) of private objects for each agent (optional)
+        agents: A dict of agent->dict(name->type) of agents for each agent (optional)
         """
         self.name = name
         self.domain = domain
         self.objects = objects
-        self.private_objects = private_objects if private_objects is not None else {}
+        self.agents = agents if agents is not None else {}
         self.initial_state = init
         self.goal = goal
 
@@ -184,7 +184,7 @@ class Problem:
                 self.name,
                 self.domain.name,
                 self.objects,
-                self.private_objects if self.private_objects else "None",
+                self.agents if self.agents else "None",
                 [str(p) for p in self.initial_state],
                 [str(p) for p in self.goal],
             )

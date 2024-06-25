@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
+#
 
 """
 Classes and methods for grounding a schematic PDDL task to a STRIPS planning
@@ -24,48 +25,31 @@ import itertools
 import logging
 import re
 
-from pyperplan.pddl.pddl import Agent
-from pyperplan.task import Operator, Task
+from .task import Operator, Task
 
 # controls mass log output
-verbose_logging = True
+verbose_logging = False
 
 
-def process_private_information(problem, agent_name, agent_type):
+def ground(
+        problem, remove_statics_from_initial_state=True, remove_irrelevant_operators=True
+):
     """
-    Process private predicates and actions for the given agent.
+    This is the main method that grounds the PDDL task and returns an
+    instance of the task.Task class.
 
-    :param problem: A pddl.Problem instance describing the parsed problem
-    :param agent_name: The name of the agent
-    :param agent_type: The type of the agent
-    :return: A dictionary with grounded private predicates and actions
+    @note Assumption: only PDDL problems with types at the moment.
+
+    @param problem A pddl.Problem instance describing the parsed problem
+    @return A task.Task instance with the grounded problem
     """
-    agent_instance = Agent(agent_name, agent_type)
-    private_predicates = {pred.name for pred in problem.domain.predicates if agent_instance.knows_predicate(pred.name)}
-    private_actions = [action for action in problem.domain.actions if
-                       any(agent_instance.knows_predicate(pred.name) for pred in action.precondition)]
 
-    # Ground private actions
-    type_map = _create_type_map(problem.objects)
-    init = _get_partial_state(problem.initial_state)
-    statics = _get_statics(problem.domain.predicates, problem.domain.actions)
-
-    grounded_private_actions = _ground_actions(private_actions, type_map, statics, init)
-
-    return {
-        "private_predicates": private_predicates,
-        "private_actions": grounded_private_actions
-    }
-
-
-def ground(problem, remove_statics_from_initial_state=True, remove_irrelevant_operators=True):
     """
-    Ground the PDDL task and return an instance of the task.Task class.
-
-    :param problem: A pddl.Problem instance describing the parsed problem
-    :param remove_statics_from_initial_state: Flag to remove static predicates from the initial state
-    :param remove_irrelevant_operators: Flag to remove irrelevant operators
-    :return: A task.Task instance with the grounded problem
+    Overview of variable names in pddl.py, grounding.py and task.py:
+    Problem.initial_state       -> init         -> Task.initial_state
+    Problem.goal                -> goal         -> Task.goal
+    Problem.domain.actions      -> operators    -> Task.operators
+    Problem.domain.predicates   -> variables    -> Task.facts
     """
     domain = problem.domain
     actions = domain.actions.values() if isinstance(domain.actions, dict) else domain.actions
@@ -75,59 +59,54 @@ def ground(problem, remove_statics_from_initial_state=True, remove_irrelevant_op
     objects = problem.objects
     objects.update(domain.constants)
     if verbose_logging:
-        print("Objects:\n%s" % objects)
+        logging.debug("Objects:\n%s" % objects)
 
     # Get the names of the static predicates
     statics = _get_statics(predicates, actions)
     if verbose_logging:
-        print("Static predicates:\n%s" % statics)
+        logging.debug("Static predicates:\n%s" % statics)
 
     # Create a map from types to objects
     type_map = _create_type_map(objects)
     if verbose_logging:
-        print("Type to object map:\n%s" % type_map)
+        logging.debug("Type to object map:\n%s" % type_map)
 
     # Transform initial state into a specific
     init = _get_partial_state(problem.initial_state)
     if verbose_logging:
-        print("Initial state with statics:\n%s" % init)
+        logging.debug("Initial state with statics:\n%s" % init)
 
     # Ground actions
     operators = _ground_actions(actions, type_map, statics, init)
     if verbose_logging:
-        print("Operators:\n%s" % "\n".join(map(str, operators)))
-
-    # TODO: Process private information for each agent if agents are provided
-    private_info_all_agents = {}
-    if problem.agents:
-        for agent_name, agent_type in problem.agents.items():
-            private_info = process_private_information(problem, agent_name, agent_type)
-            private_info_all_agents[agent_name] = private_info
-            if verbose_logging:
-                print(f"Private information for agent {agent_name}:\n{private_info}")
+        logging.debug("Operators:\n%s" % "\n".join(map(str, operators)))
 
     # Ground goal
+    # TODO: Remove facts that can only become true and are true in the
+    #       initial state
+    # TODO: Return simple unsolvable problem if goal contains a fact that can
+    #       only become false and is false in the initial state
     goals = _get_partial_state(problem.goal)
     if verbose_logging:
-        print("Goal:\n%s" % goals)
+        logging.debug("Goal:\n%s" % goals)
 
     # Collect facts from operators and include the ones from the goal
     facts = _collect_facts(operators) | goals
     if verbose_logging:
-        print("All grounded facts:\n%s" % facts)
+        logging.debug("All grounded facts:\n%s" % facts)
 
     # Remove statics from initial state
     if remove_statics_from_initial_state:
         init &= facts
         if verbose_logging:
-            print("Initial state without statics:\n%s" % init)
+            logging.debug("Initial state without statics:\n%s" % init)
 
-    # Perform relevance analysis
+    # perform relevance analysis
     if remove_irrelevant_operators:
         operators = _relevance_analysis(operators, goals)
 
     name = problem.name
-    return Task(name, facts, init, goals, operators, problem.agents)
+    return Task(name, facts, init, goals, operators)
 
 
 def _relevance_analysis(operators, goals):
@@ -160,7 +139,7 @@ def _relevance_analysis(operators, goals):
                 relevant_facts |= op.preconditions
         changed = old_relevant_facts != relevant_facts
 
-    # delete all irrelevant effects
+    # delete all irrellevant effects
     del_operators = set()
     for op in operators:
         # calculate new effects
@@ -174,10 +153,10 @@ def _relevance_analysis(operators, goals):
         op.del_effects = new_dellist
         if not new_addlist and not new_dellist:
             if verbose_logging:
-                print("Relevance analysis removed oparator %s" % op.name)
+                logging.debug("Relevance analysis removed oparator %s" % op.name)
             del_operators.add(op)
     if debug:
-        print("Relevance analysis removed %d facts" % len(debug_pruned_op))
+        logging.info("Relevance analysis removed %d facts" % len(debug_pruned_op))
     # remove completely irrelevant operators
     return [op for op in operators if not op in del_operators]
 
@@ -242,53 +221,17 @@ def _collect_facts(operators):
 
 
 def _ground_actions(actions, type_map, statics, init):
+    """
+    Ground a list of actions and return the resulting list of operators.
+
+    @param actions: List of actions
+    @param type_map: Mapping from type to objects of that type
+    @param statics: Names of the static predicates
+    @param init: Grounded initial state
+    """
     op_lists = [_ground_action(action, type_map, statics, init) for action in actions]
     operators = list(itertools.chain(*op_lists))
     return operators
-
-
-def _ground_action(action, type_map, statics, init):
-    print("Grounding %s" % action.name)
-    param_to_objects = {}
-
-    for param_name, param_types in action.signature:
-        objects = [type_map[type] for type in param_types]
-        objects = set(itertools.chain(*objects))
-        param_to_objects[param_name] = objects
-
-    remove_debug = 0
-    for param, objects in param_to_objects.items():
-        for pred in action.precondition:
-            if pred.name in statics:
-                sig_pos = -1
-                count = 0
-                for var, _ in pred.signature:
-                    if var == param:
-                        sig_pos = count
-                    count += 1
-                if sig_pos != -1:
-                    obj_copy = objects.copy()
-                    for o in obj_copy:
-                        if not _find_pred_in_init(pred.name, o, sig_pos, init):
-                            if verbose_logging:
-                                remove_debug += 1
-                            objects.remove(o)
-    if verbose_logging:
-        print(
-            "Static precondition analysis removed %d possible objects" % remove_debug
-        )
-
-    domain_lists = [
-        [(name, obj) for obj in objects] for name, objects in param_to_objects.items()
-    ]
-    assignments = itertools.product(*domain_lists)
-
-    ops = [
-        _create_operator(action, dict(assign), statics, init) for assign in assignments
-    ]
-    ops = filter(bool, ops)
-
-    return ops
 
 
 def _find_pred_in_init(pred_name, param, sig_pos, init):
@@ -311,6 +254,64 @@ def _find_pred_in_init(pred_name, param, sig_pos, init):
         match_init = re.compile(reg_ex)
     assert match_init is not None
     return any([match_init.match(string) for string in init])
+
+
+def _ground_action(action, type_map, statics, init):
+    """
+    Ground the action and return the resulting list of operators.
+    """
+    logging.debug("Grounding %s" % action.name)
+    param_to_objects = {}
+
+    for param_name, param_types in action.signature:
+        # List of sets of objects for this parameter
+        objects = [type_map[type] for type in param_types]
+        # Combine the sets into one set
+        objects = set(itertools.chain(*objects))
+        param_to_objects[param_name] = objects
+
+    # For each parameter that is not constant,
+    # remove all invalid static preconditions
+    remove_debug = 0
+    for param, objects in param_to_objects.items():
+        for pred in action.precondition:
+            # if a static predicate is present in the precondition
+            if pred.name in statics:
+                sig_pos = -1
+                count = 0
+                # check if there is an instantiation with the current parameter
+                for var, _ in pred.signature:
+                    if var == param:
+                        sig_pos = count
+                    count += 1
+                if sig_pos != -1:
+                    # remove if no instantiation present in initial state
+                    obj_copy = objects.copy()
+                    for o in obj_copy:
+                        if not _find_pred_in_init(pred.name, o, sig_pos, init):
+                            if verbose_logging:
+                                remove_debug += 1
+                            objects.remove(o)
+    if verbose_logging:
+        logging.info(
+            "Static precondition analysis removed %d possible objects" % remove_debug
+        )
+
+    # save a list of possible assignment tuples (param_name, object)
+    domain_lists = [
+        [(name, obj) for obj in objects] for name, objects in param_to_objects.items()
+    ]
+    # Calculate all possible assignments
+    assignments = itertools.product(*domain_lists)
+
+    # Create a new operator for each possible assignment of parameters
+    ops = [
+        _create_operator(action, dict(assign), statics, init) for assign in assignments
+    ]
+    # Filter out the None values
+    ops = filter(bool, ops)
+
+    return ops
 
 
 def _create_operator(action, assignment, statics, init):

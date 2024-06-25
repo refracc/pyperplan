@@ -77,29 +77,16 @@ class Effect:
         addlist: Set of predicates that have to be true after the action
         dellist: Set of predicates that have to be false after the action
         """
-        if addlist is not None:
-            self.addlist = addlist
-        else:
-            self.addlist = set()
-
-        if dellist is not None:
-            self.dellist = dellist
-        else:
-            self.dellist = set()
-
-    def add_effect(self, predicate):
-        self.addlist.add(predicate)
-
-    def del_effect(self, predicate):
-        self.dellist.add(predicate)
+        self.addlist = addlist if addlist is not None else set()
+        self.dellist = dellist if dellist is not None else set()
 
 
 class Action:
-    def __init__(self, name, signature, precondition, effect, agents=None):
+    def __init__(self, name, signature, precondition, effect):
         """
         name: The name identifying the action
         signature: A list of tuples (name, [types]) to represent a list of
-                   parameters and their type(s).
+                   parameters an their type(s).
         precondition: A list of predicates that have to be true before the
                       action can be applied
         effect: An effect instance specifying the postcondition of the action
@@ -108,29 +95,10 @@ class Action:
         self.signature = signature
         self.precondition = precondition
         self.effect = effect
-        self.agents = agents if agents is not None else set()
-
-    def __repr__(self):
-        return f"Action({self.name}, {self.signature}, {self.precondition}, {self.effect})"
-
-    def __str__(self):
-        return self.__repr__()
-
-    def can_be_performed_by(self, agent):
-        """
-        Check if the action can be performed by the given agent.
-
-        agent: The agent to check
-        return: Boolean indicating if the agent can perform the action
-        """
-        return agent in self.agents
-
-    def add_agent(self, agent):
-        self.agents.add(agent)
 
 
 class Domain:
-    def __init__(self, name, types, predicates, actions, constants=None):
+    def __init__(self, name, types, predicates, actions, constants={}):
         """
         name: The name of the domain
         types: A dict of typename->Type instances in the domain
@@ -138,16 +106,16 @@ class Domain:
         actions: A list of actions in the domain
         constants: A dict of name->type pairs of the constants in the domain
         """
-
         self.name = name
         self.types = types
         self.predicates = predicates
         self.actions = actions
-        self.constants = constants if constants is not None else set()
+        self.constants = constants
 
     def __repr__(self):
         return (
-                "< Domain definition: %s Predicates: %s Actions: %s Constants: %s >"
+                "< Domain definition: %s Predicates: %s Actions: %s "
+                "Constants: %s >"
                 % (
                     self.name,
                     [str(p) for p in self.predicates],
@@ -164,94 +132,28 @@ class Problem:
         """
         name: The name of the problem
         domain: The domain in which the problem has to be solved
-        objects: A dict name->type of public objects that are used in the problem
+        objects: A dict name->type of objects that are used in the problem
         init: A list of predicates describing the initial state
         goal: A list of predicates describing the goal state
-        agents: A dict of agent->dict(name->type) of agents for each agent (optional)
         """
         self.name = name
         self.domain = domain
         self.objects = objects
-        self.agents = agents if agents is not None else {}
         self.initial_state = init
         self.goal = goal
+        self.agents = agents if agents is not None else set()
 
     def __repr__(self):
         return (
-            "< Problem definition: %s "
-            "Domain: %s Public Objects: %s Private Objects: %s Initial State: %s Goal State: %s >"
-            % (
-                self.name,
-                self.domain.name,
-                self.objects,
-                self.agents if self.agents else "None",
-                [str(p) for p in self.initial_state],
-                [str(p) for p in self.goal],
-            )
+                "< Problem definition: %s "
+                "Domain: %s Objects: %s Initial State: %s Goal State : %s >"
+                % (
+                    self.name,
+                    self.domain.name,
+                    sorted(self.objects),
+                    [str(p) for p in self.initial_state],
+                    [str(p) for p in self.goal],
+                )
         )
 
     __str__ = __repr__
-
-
-class Agent:
-    """
-    This class represents an agent in a PDDL domain.
-    """
-
-    def __init__(self, name, agent_type):
-        """
-        name: The name of the agent.
-        agent_type: The type of the agent.
-        """
-        self.name = name
-        self.agent_type = agent_type
-        self.private_predicates = set()
-
-    def __repr__(self):
-        return f"Agent(name={self.name}, type={self.agent_type}, private_predicates={self.private_predicates})"
-
-    def __str__(self):
-        return self.name
-
-    def can_perform(self, action):
-        """
-        Check if the agent can perform the given action.
-
-        action: An instance of MultiAgentAction.
-        return: Boolean indicating if the agent can perform the action.
-        """
-        return self.agent_type in action.agents
-
-    def get_possible_actions(self, actions):
-        """
-        Get a list of actions that this agent can perform from a list of actions.
-
-        actions: A list of MultiAgentAction instances.
-        return: A list of actions this agent can perform.
-        """
-        return [action for action in actions if self.can_perform(action)]
-
-    def add_private_predicate(self, predicate):
-        """
-        Add a private predicate to the agent's knowledge.
-
-        predicate: A predicate instance.
-        """
-        self.private_predicates.add(predicate)
-
-    def remove_private_predicate(self, predicate):
-        """
-        Remove a private predicate from the agent's knowledge.
-
-        predicate: A predicate instance.
-        """
-        self.private_predicates.discard(predicate)
-
-    def knows_predicate(self, predicate):
-        """
-        Check if the agent knows a given predicate.
-
-        predicate: A predicate instance.
-        return: Boolean indicating if the agent knows the predicate.
-        """
-        return predicate in self.private_predicates

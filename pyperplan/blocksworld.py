@@ -121,13 +121,11 @@ goal_state = [
     Predicate("on", [("g", block_type), ("i", block_type)]),
 ]
 
-
 problem = Problem("bw-1", domain, public_objects, initial_state, goal_state, agents)
 
 print(problem)
 print()
 print(domain)
-
 
 grounded_problem = ground(problem)
 print(grounded_problem)

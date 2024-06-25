@@ -98,7 +98,7 @@ class Action:
 
 
 class Domain:
-    def __init__(self, name, types, predicates, actions, constants={}):
+    def __init__(self, name, types, predicates, actions, constants=None):
         """
         name: The name of the domain
         types: A dict of typename->Type instances in the domain
@@ -110,7 +110,7 @@ class Domain:
         self.types = types
         self.predicates = predicates
         self.actions = actions
-        self.constants = constants
+        self.constants = constants if constants is not None else set()
 
     def __repr__(self):
         return (
@@ -157,3 +157,20 @@ class Problem:
         )
 
     __str__ = __repr__
+
+class Agent:
+
+    def __init__(self, name):
+        """
+        :param name: The name of the agent.
+        """
+        self.name = name
+        self.distributed_open_list = list()
+        self.local_open_list = list()
+        self.closed_list = list()
+        self.busy = False
+        self.search = True
+        self.distributed_estimator = 0
+        self.local_estimator = 0
+        self.mapping = dict
+        self.plans = set()

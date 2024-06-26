@@ -2,7 +2,6 @@ from pyperplan.grounding import ground
 from pyperplan.heuristics.relaxation import hMaxHeuristic
 from pyperplan.pddl.pddl import *
 from pyperplan.search.a_star import *
-from pyperplan.heuristics import *
 
 agent_type = Type("agent")
 block_type = Type("block")

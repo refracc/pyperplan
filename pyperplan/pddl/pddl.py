@@ -158,6 +158,7 @@ class Problem:
 
     __str__ = __repr__
 
+
 class Agent:
 
     def __init__(self, name):
@@ -174,3 +175,5 @@ class Agent:
         self.local_estimator = 0
         self.mapping = dict
         self.plans = set()
+
+    

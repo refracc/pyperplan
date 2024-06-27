@@ -26,9 +26,21 @@ class Type:
     This class represents a PDDL type.
     """
 
+    # Class-level attribute to store the "object" type
+    _object_type = None
+
     def __init__(self, name, parent=None):
         self.name = name.lower()
-        self.parent = parent
+
+        # Ensure the "object" type is initialized only once
+        if Type._object_type is None:
+            Type._object_type = self if name.lower() == "object" else Type._object_type == Type("object")
+
+        # Assign the parent type
+        if parent is None:
+            self.parent = Type._object_type
+        else:
+            self.parent = parent
 
     def __repr__(self):
         return self.name
@@ -161,11 +173,12 @@ class Problem:
 
 class Agent:
 
-    def __init__(self, name):
+    def __init__(self, name, type):
         """
         :param name: The name of the agent.
         """
         self.name = name
+        self.type = type
         self.distributed_open_list = list()
         self.local_open_list = list()
         self.closed_list = list()
@@ -175,5 +188,43 @@ class Agent:
         self.local_estimator = 0
         self.mapping = dict
         self.plans = set()
+        self.public_actions = set()
+        self.private_actions = set()
 
-    
+
+    def heuristic(self, node):
+        # Define your heuristic function here
+        pass
+
+    def local_heuristic(self, state):
+        # Define local heuristic function here
+        pass
+
+    def distributed_heuristic(self, state):
+        # Define distributed heuristic function here
+        pass
+
+    def process_comm(self):
+        # Define communication processing logic here
+        pass
+
+    def send_plan_found_message(self):
+        # Logic to send PLANFOUND message to all agents
+        pass
+
+    def reconstruct_plan(self, u, cost):
+        # Define your plan reconstruction logic here
+        pass
+
+    def apply_action_to_state(self, action, state):
+        # Apply the action to the state and return the new state
+        pass
+
+    def update_private_parts(self, private_parts, action):
+        # Update the private parts based on the action
+        pass
+
+    def send_state_message(self, state, private_parts, heuristic, distributed):
+        # Send the state message
+        pass
+

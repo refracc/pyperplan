@@ -19,6 +19,7 @@
 This module contains all data structures needed to represent a PDDL domain and
 possibly a task definition.
 """
+from pyperplan.ma.node import SearchNode
 
 
 class Type:
@@ -98,7 +99,7 @@ class Action:
         """
         name: The name identifying the action
         signature: A list of tuples (name, [types]) to represent a list of
-                   parameters an their type(s).
+                   parameters and their type(s).
         precondition: A list of predicates that have to be true before the
                       action can be applied
         effect: An effect instance specifying the postcondition of the action
@@ -171,26 +172,32 @@ class Problem:
     __str__ = __repr__
 
 
-class Agent:
+def send_message(message_type, content, recipient):
+    """
+    Send a message to another agent.
 
-    def __init__(self, name, type):
-        """
-        :param name: The name of the agent.
-        """
+    :param message_type: The type of the message to send.
+    :param content: The content of the message.
+    :param recipient: The agent to receive the message.
+    """
+    message = {'type': message_type, 'content': content, 'recipient': recipient}
+    recipient.message_queue.put(message)
+
+
+class Agent:
+    def __init__(self, name, initial_node):
         self.name = name
-        self.type = type
-        self.distributed_open_list = list()
-        self.local_open_list = list()
-        self.closed_list = list()
-        self.busy = False
-        self.search = True
-        self.distributed_estimator = 0
-        self.local_estimator = 0
-        self.mapping = dict
-        self.plans = set()
+        self.initial_node = initial_node
         self.public_actions = set()
         self.private_actions = set()
-
+        self.state_mapping = {}
+        self.message_queue = []  # Queue for incoming messages
+        self.distributed_open_list = set()
+        self.local_open_list = set()
+        self.closed_list = set()
+        self.search_active = True
+        self.plans = set()
+        self.busy = False
 
     def heuristic(self, node):
         # Define your heuristic function here
@@ -198,33 +205,104 @@ class Agent:
 
     def local_heuristic(self, state):
         # Define local heuristic function here
+        # TODO: This thing.
         pass
 
     def distributed_heuristic(self, state):
         # Define distributed heuristic function here
+        # TODO: This thing.
         pass
 
-    def process_comm(self):
-        # Define communication processing logic here
+    def process_comm(self, problem):
+        """
+        Process communication messages received from other agents.
+        """
+        for m in self.message_queue:
+            if m['type'] == 'M_state':
+                s_public_projected, delta_tuple = m['content']
+                u_sent = self.state_mapping[(s_public_projected, delta_tuple[self.name])]
+                s_public_projected = u_sent.projected_state
+                u = SearchNode(s_public_projected, m['sender'], None, u_sent.h, u_sent.g, self.name, delta_tuple)
+
+                if m['distributed']:
+                    self.distributed_open_list.add(u)
+                else:
+                    u.h = self.local_heuristic(u.projected_state)  # Local heuristic recomputed
+                    self.local_open_list.add(u)
+
+            elif m['type'] == 'M_plan_found':
+                self.search_active = False
+                self.plans.add((m['sender'], set()))
+
+            elif m['type'] == 'M_reconstruct':
+                s_public_projected, delta_i, t, alpha_k = m['content']
+                u = self.state_mapping[(s_public_projected, delta_i)]
+                self.reconstruct(u, t, alpha_k, problem)
+
+            elif m['type'] == 'M_terminate':
+                alpha_k = m['content']  # find out what tf this is...
+                received_terminate_from_all = all(
+                    alpha_j in self.plans for alpha_j in problem.agents if alpha_j.name is not self.name
+                )
+                if received_terminate_from_all:
+                    minimal_plan = min(self.plans, key=lambda x: len(x[1]))
+                    self.report_solution(minimal_plan[1])
+                    self.terminate()
+
+            else:
+                self.forward_to_distributed_heuristic(m)
+
+    def forward_to_distributed_heuristic(self, message):
+        """
+        Forward message to distributed heuristic evaluator.
+        """
+        # Placeholder for actual forwarding logic
         pass
 
-    def send_plan_found_message(self):
-        # Logic to send PLANFOUND message to all agents
+    def reconstruct(self, u, t, alpha_k, problem):
+        """
+        Reconstruct the plan from the given node.
+
+        :param u: The node from which the plan reconstruction starts.
+        :param t: The current time step in the plan.
+        :param alpha_k: The agent involved in the reconstruction.
+        :param problem: The problem instance.
+        """
+        plan_entry = next((plan for plan in self.plans if plan[0] == alpha_k), None)
+        if plan_entry is None:
+            self.plans.add((alpha_k, {}))
+            plan_entry = next((plan for plan in self.plans if plan[0] == alpha_k), None)
+
+        plan_dict = plan_entry[1]
+        plan_dict[t] = u.action
+        for t_prime in range(t + 1, len(plan_dict)):
+            if t_prime not in plan_dict:
+                plan_dict[t_prime] = None
+
+        t -= 1
+
+        if u == self.initial_node:
+            for agent in problem.agents:
+                if agent.name != self.name:
+                    send_message('M_terminate', alpha_k, agent)
+        else:
+            if u.action is None:
+                send_message('M_reconstruct', (u.projected_state, u.private_parts[self.name], t, alpha_k), u.parent)
+            else:
+                self.reconstruct(u.parent, t, alpha_k, problem)
+
+    def report_solution(self, plan):
+        """
+        Report the found solution.
+
+        :param plan: The plan to be reported.
+        """
+        # Placeholder for report solution logic
         pass
 
-    def reconstruct_plan(self, u, cost):
-        # Define your plan reconstruction logic here
+    def terminate(self):
+        """
+        Terminate the search process.
+        """
+        # Placeholder for terminate logic
         pass
-
-    def apply_action_to_state(self, action, state):
-        # Apply the action to the state and return the new state
-        pass
-
-    def update_private_parts(self, private_parts, action):
-        # Update the private parts based on the action
-        pass
-
-    def send_state_message(self, state, private_parts, heuristic, distributed):
-        # Send the state message
-        pass
-

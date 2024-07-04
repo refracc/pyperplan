@@ -1,6 +1,3 @@
-from pyperplan.pddl.pddl import Agent
-
-
 class SearchNode:
     def __init__(self, projected_state, parent, action, h, g, agent, private_parts):
         """
@@ -53,6 +50,7 @@ class SearchNode:
     def get_public_projection(self, state):
         """
         Get the public projection of the state.
+        TODO: This thing.
 
         :param state: The state to be projected.
         :return: The public projection of the state.
@@ -89,64 +87,10 @@ class SearchNode:
                 else:
                     continue
 
-                SearchNode.process_node(agent, u, goal)
+                agent.process_node(u, goal)
 
             # Local search loop
             while (not agent.distributed_open_list or agent.busy) and agent.local_open_list:
                 u = min(agent.local_open_list, key=lambda node: node.h)
-                SearchNode.process_node(agent, u, goal)
+                agent.process_node(u, goal)
                 agent.process_comm()
-
-    @staticmethod
-    def process_node(agent, u, goal):
-        """
-        Process a search node.
-
-        :param agent: The agent performing the search.
-        :param u: The search node to process.
-        :param goal: The goal state.
-        :return: None
-        """
-        if u not in agent.closed_list:
-            agent.closed_list.add(u)  # Close the search node
-            if goal.issubset(u.projected_state):
-                agent.search_active = False  # End search
-                agent.send_plan_found_message()
-                agent.reconstruct_plan(u, u.g)
-            else:
-                agent.expand(u, agent.distributed_open_list)
-
-    @staticmethod
-    def expand(agent: Agent, u, d):
-        """
-        Expand a search node.
-
-        :param agent: The agent performing the search.
-        :param u: The search node to expand.
-        :param d: Boolean indicating whether this is a distributed search.
-        :return: None
-        """
-        if not d:
-            u.h = agent.local_heuristic(u.projected_state)
-        else:
-            u.h = agent.distributed_heuristic(u.projected_state)
-            agent.busy = True  # Set busy when distributed heuristic starts evaluation
-
-        if u.action in agent.public_actions:
-            public_node = u.to_public_node()
-            agent.send_state_message(public_node.projected_state, public_node.private_parts, public_node.h, d)
-            agent.mapping[(public_node.projected_state, public_node.private_parts[agent.name])] = public_node
-
-            e = set()
-            for action in agent.private_actions:
-                if action.preconditions.issubset(u.projected_state):
-                    new_proj_state = agent.apply_action_to_state(action, u.projected_state)
-                    new_priv_parts = agent.update_private_parts(u.private_parts, action)
-                    new_node = u.apply_action(action, new_proj_state, new_priv_parts)
-                    new_node.g = u.g + 1
-                    e.add(new_node)
-
-            agent.local_open_list.update([node for node in e if node not in agent.closed_list])
-
-            if d:
-                agent.distributed_open_list.update([node for node in e if node not in agent.closed_list])

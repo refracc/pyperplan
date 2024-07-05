@@ -55,8 +55,8 @@ class SearchNode:
         :param state: The state to be projected.
         :return: The public projection of the state.
         """
-        # This method should be implemented to return the public part of the state.
-        pass
+
+        return tuple()
 
     @staticmethod
     def search(agent, initial_node, goal):

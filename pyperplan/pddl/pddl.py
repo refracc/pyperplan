@@ -109,6 +109,9 @@ class Action:
         self.precondition = precondition
         self.effect = effect
 
+    def project(self, domain, agent):
+        return self.precondition.intersection(domain.predicates), self.effect.addlist.intersection(domain.predicates), self.effect.dellist.intersection(domain.predicates), self.name, agent
+
 
 class Domain:
     def __init__(self, name, types, predicates, actions, constants=None):

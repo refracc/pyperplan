@@ -187,12 +187,22 @@ def send_message(message_type, content, recipient):
     recipient.message_queue.put(message)
 
 
+def report_solution(plan):
+    print(plan)
+    pass
+
+
+def send_message(message_type, content, recipient):
+    message = {'type': message_type, 'content': content, 'recipient': recipient}
+    recipient.message_queue.put(message)
+
+
 class Agent:
-    def __init__(self, name, initial_node):
-        self.name = name
+    def __init__(self, id, initial_node, num_agents, public_predicates):
+        self.id = id
         self.initial_node = initial_node
-        self.public_actions = set()
-        self.private_actions = set()
+        self.number_of_agents = num_agents
+        self.public_predicates = public_predicates  # Set of public predicates relevant to this agent
         self.state_mapping = {}
         self.message_queue = []  # Queue for incoming messages
         self.distributed_open_list = set()
@@ -208,29 +218,24 @@ class Agent:
 
     def local_heuristic(self, state):
         # Define local heuristic function here
-        # TODO: This thing.
         pass
 
     def distributed_heuristic(self, state):
         # Define distributed heuristic function here
-        # TODO: This thing.
         pass
 
-    def process_comm(self, problem):
-        """
-        Process communication messages received from other agents.
-        """
+    def process_comm(self):
         for m in self.message_queue:
             if m['type'] == 'M_state':
                 s_public_projected, delta_tuple = m['content']
-                u_sent = self.state_mapping[(s_public_projected, delta_tuple[self.name])]
+                u_sent = self.state_mapping[(s_public_projected, delta_tuple[self.id])]
                 s_public_projected = u_sent.projected_state
-                u = SearchNode(s_public_projected, m['sender'], None, u_sent.h, u_sent.g, self.name, delta_tuple)
+                u = SearchNode(s_public_projected, m['sender'], None, u_sent.h, u_sent.g, self.id, delta_tuple)
 
                 if m['distributed']:
                     self.distributed_open_list.add(u)
                 else:
-                    u.h = self.local_heuristic(u.projected_state)  # Local heuristic recomputed
+                    u.h = self.local_heuristic(u.projected_state)
                     self.local_open_list.add(u)
 
             elif m['type'] == 'M_plan_found':
@@ -240,37 +245,27 @@ class Agent:
             elif m['type'] == 'M_reconstruct':
                 s_public_projected, delta_i, t, alpha_k = m['content']
                 u = self.state_mapping[(s_public_projected, delta_i)]
-                self.reconstruct(u, t, alpha_k, problem)
+                self.reconstruct(u, t, alpha_k)
 
             elif m['type'] == 'M_terminate':
-                alpha_k = m['content']  # find out what tf this is...
+                alpha_k = m['content'] # where is alpha k?
                 received_terminate_from_all = all(
-                    alpha_j in self.plans for alpha_j in problem.agents if alpha_j.name is not self.name
+                    (alpha_j, pi) in self.plans for alpha_j in range(self.number_of_agents) if alpha_j != self.id
+                    # need to find out where pi came from in the algorithm again
                 )
                 if received_terminate_from_all:
                     minimal_plan = min(self.plans, key=lambda x: len(x[1]))
-                    self.report_solution(minimal_plan[1])
+                    report_solution(minimal_plan[1])
                     self.terminate()
 
             else:
                 self.forward_to_distributed_heuristic(m)
 
     def forward_to_distributed_heuristic(self, message):
-        """
-        Forward message to distributed heuristic evaluator.
-        """
         # Placeholder for actual forwarding logic
         pass
 
-    def reconstruct(self, u, t, alpha_k, problem):
-        """
-        Reconstruct the plan from the given node.
-
-        :param u: The node from which the plan reconstruction starts.
-        :param t: The current time step in the plan.
-        :param alpha_k: The agent involved in the reconstruction.
-        :param problem: The problem instance.
-        """
+    def reconstruct(self, u, t, alpha_k):
         plan_entry = next((plan for plan in self.plans if plan[0] == alpha_k), None)
         if plan_entry is None:
             self.plans.add((alpha_k, {}))
@@ -285,27 +280,91 @@ class Agent:
         t -= 1
 
         if u == self.initial_node:
-            for agent in problem.agents:
-                if agent.name != self.name:
+            for agent in range(self.number_of_agents):
+                if agent != self.id:
                     send_message('M_terminate', alpha_k, agent)
         else:
             if u.action is None:
-                send_message('M_reconstruct', (u.projected_state, u.private_parts[self.name], t, alpha_k), u.parent)
+                send_message('M_reconstruct', (u.projected_state, u.private_parts[self.id], t, alpha_k), u.parent)
             else:
-                self.reconstruct(u.parent, t, alpha_k, problem)
-
-    def report_solution(self, plan):
-        """
-        Report the found solution.
-
-        :param plan: The plan to be reported.
-        """
-        # Placeholder for report solution logic
-        pass
+                self.reconstruct(u.parent, t, alpha_k)
 
     def terminate(self):
-        """
-        Terminate the search process.
-        """
         # Placeholder for terminate logic
+        pass
+
+    def expand(self, u, distributed):
+        if not distributed:
+            u.h = self.local_heuristic(u.projected_state)
+        else:
+            u.h = self.distributed_heuristic(u.projected_state)
+            self.busy = True
+
+        if u.action in self.public_predicates:
+            send_message('M_state', (u.projected_state, u.private_parts, u.h, distributed), u.agent)
+            self.state_mapping[(u.projected_state, u.private_parts[self.id])] = u
+            E = set()
+
+            for action in self.applicable_actions(u.projected_state):
+                new_node = u.apply_action(action, self.resulting_state(u.projected_state, action), u.private_parts)
+                new_node.g = u.g + 1
+                E.add(new_node)
+
+            self.local_open_list.update({node for node in E if node not in self.closed_list})
+
+            if distributed:
+                self.distributed_open_list.update({node for node in E if node not in self.closed_list})
+
+    def search(self, initial_node, goal):
+        self.distributed_open_list = {initial_node}
+        self.local_open_list = {initial_node}
+        self.closed_list = set()
+        initial_node.g = 0
+        initial_node.h = self.heuristic(initial_node)
+        self.busy = False
+        search_active = True
+
+        while search_active:
+            self.process_comm()
+
+            if not self.busy:
+                if self.distributed_open_list:
+                    u = min(self.distributed_open_list, key=lambda node: node.h)
+                elif self.local_open_list:
+                    u = min(self.local_open_list, key=lambda node: node.h)
+                else:
+                    continue
+
+                self.process_node(u, goal)
+
+            while (not self.distributed_open_list or self.busy) and self.local_open_list:
+                u = min(self.local_open_list, key=lambda node: node.h)
+                self.process_node(u, goal)
+                self.process_comm()
+
+    def process_node(self, u, goal):
+        if u not in self.closed_list:
+            self.closed_list.add(u)
+            if goal.issubset(u.projected_state):
+                self.search_active = False
+                self.send_plan_found_message()
+                self.reconstruct_plan(u, u.g)
+            else:
+                self.expand(u, u in self.distributed_open_list)
+
+    def applicable_actions(self, state):
+        # Return a set of actions applicable to the given state
+        pass
+
+    def resulting_state(self, state, action):
+        # Return the resulting state after applying the given action to the given state
+        pass
+
+    def send_plan_found_message(self):
+        for agent in range(self.number_of_agents):
+            if agent != self.id:
+                send_message('M_plan_found', None, agent)
+
+    def reconstruct_plan(self, u, g):
+        # Placeholder for reconstruct plan logic
         pass

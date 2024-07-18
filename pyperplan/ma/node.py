@@ -8,11 +8,11 @@ class SearchNode:
         self.agent = agent
         self.private_parts = private_parts
 
-    def apply_action(self, axn, new_proj_state, new_priv_parts):
+    def apply_action(self, action, new_proj_state, new_priv_parts):
         return SearchNode(
             new_proj_state,
             self,
-            axn,
+            action,
             self.h,
             self.g + 1,
             self.agent,
@@ -20,7 +20,11 @@ class SearchNode:
         )
 
     def to_public_node(self):
-        return SearchNode(self.get_public_projection(self.projected_state), self.parent, self.action, self.h, self.g, self.agent, self.private_parts)
+        public_state = self.get_public_projection(self.projected_state)
+        return SearchNode(public_state, self.parent, self.action, self.h, self.g, self.agent, self.private_parts)
 
     def get_public_projection(self, state):
-        return {pred for pred in state if pred in self.agent.public_predicates}
+        return state & self.agent.public_predicates
+
+    def __repr__(self):
+        return f"SearchNode({self.projected_state}, {self.action}, {self.h}, {self.g}, {self.agent})"

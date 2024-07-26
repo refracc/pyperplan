@@ -27,21 +27,9 @@ class Type:
     This class represents a PDDL type.
     """
 
-    # Class-level attribute to store the "object" type
-    _object_type = None
-
-    def __init__(self, name, parent=None):
+    def __init__(self, name, parent):
         self.name = name.lower()
-
-        # Ensure the "object" type is initialized only once
-        if Type._object_type is None:
-            Type._object_type = self if name.lower() == "object" else Type._object_type == Type("object")
-
-        # Assign the parent type
-        if parent is None:
-            self.parent = Type._object_type
-        else:
-            self.parent = parent
+        self.parent = parent
 
     def __repr__(self):
         return self.name

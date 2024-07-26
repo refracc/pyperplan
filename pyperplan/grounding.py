@@ -158,7 +158,7 @@ def _relevance_analysis(operators, goals):
     if debug:
         logging.info("Relevance analysis removed %d facts" % len(debug_pruned_op))
     # remove completely irrelevant operators
-    return [op for op in operators if not op in del_operators]
+    return [op for op in operators if op not in del_operators]
 
 
 def _get_statics(predicates, actions):
@@ -242,7 +242,6 @@ def _find_pred_in_init(pred_name, param, sig_pos, init):
 
     Useful to evaluate static preconditions efficiently.
     """
-    match_init = None
     if sig_pos == 0:
         match_init = re.compile(rf"\({pred_name} {param}.*")
     else:

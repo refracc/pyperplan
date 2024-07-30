@@ -20,6 +20,7 @@ This module contains all data structures needed to represent a PDDL domain and
 possibly a task definition.
 """
 from pyperplan.ma.node import SearchNode
+from heapq import heappop, heappush
 
 
 class Type:
@@ -27,7 +28,7 @@ class Type:
     This class represents a PDDL type.
     """
 
-    def __init__(self, name, parent):
+    def __init__(self, name, parent=None):
         self.name = name.lower()
         self.parent = parent
 
@@ -199,7 +200,7 @@ def send_message(message_type, content, recipient):
 
 
 class Agent:
-    def __init__(self, id, initial_node, public_predicates):
+    def __init__(self, id, initial_node, public_predicates, domain, goal_state):
         self.id = id
         self.initial_node = initial_node
         self.public_predicates = public_predicates
@@ -211,6 +212,8 @@ class Agent:
         self.search_active = True
         self.plans = {}
         self.busy = False
+        self.domain = domain
+        self.goal_state = goal_state
 
     def applicable_actions(self, state, domain):
         """
@@ -237,7 +240,8 @@ class Agent:
             new_node = node.apply_action(action, new_proj_state, new_priv_parts)
             new_node.g = node.g + 1  # Increment the cost
             new_node.h = self.local_heuristic(
-                new_proj_state) if not distributed else self.dist_heuristic(new_proj_state)  # Update heuristic if needed
+                new_proj_state) if not distributed else self.dist_heuristic(
+                new_proj_state)  # Update heuristic if needed
             new_nodes.add(new_node)
 
         self.local_open_list.update(new_nodes)
@@ -291,8 +295,52 @@ class Agent:
                 raise LookupError("The message type provided does not exist.")
 
     def local_heuristic(self, state):
-        # TODO: Write heuristic.
-        pass
+        """
+        Computes the FF heuristic for the given state in the agent's i-projected problem.
+        :param state: The current state (set of predicates).
+        :return: The heuristic value (integer).
+        """
+        relaxed_plan = self._compute_relaxed_plan(state)
+        heuristic_value = len(relaxed_plan)
+
+        return heuristic_value
+
+    def _compute_relaxed_plan(self, state):
+        """
+        Computes a relaxed plan from the given state by ignoring delete effects.
+        :param state: The current state (set of predicates).
+        :return: A set of actions representing the relaxed plan.
+        """
+        open_list = [(0, state)]
+        closed_list = set()
+        action_plan = []
+
+        while open_list:
+            cost, current_state = heappop(open_list)
+
+            if self._goal_reached(current_state):
+                return action_plan
+
+            if current_state in closed_list:
+                continue
+
+            closed_list.add(current_state)
+
+            for action in self.applicable_actions(current_state, self.domain):
+                new_state = action.apply(current_state)
+                if new_state not in closed_list:
+                    heappush(open_list, (cost + 1, new_state))
+                    action_plan.append(action)
+
+        return action_plan
+
+    def _goal_reached(self, state):
+        """
+        Checks if the given state satisfies the goal condition.
+        :param state: The current state (set of predicates).
+        :return: True if the goal is reached, False otherwise.
+        """
+        return self.goal_state.issubset(state)
 
     def dist_heuristic(self, agent, projected_state, tuple_):
         # TODO: Write heuristic.

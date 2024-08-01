@@ -19,8 +19,9 @@
 This module contains all data structures needed to represent a PDDL domain and
 possibly a task definition.
 """
-from pyperplan.ma.node import SearchNode
 from heapq import heappop, heappush
+
+from pyperplan.ma.node import SearchNode
 
 
 class Type:
@@ -85,14 +86,6 @@ class Effect:
 
 class Action:
     def __init__(self, name, signature, precondition, effect):
-        """
-        name: The name identifying the action
-        signature: A list of tuples (name, [types]) to represent a list of
-                   parameters and their type(s).
-        precondition: A list of predicates that have to be true before the
-                      action can be applied
-        effect: An effect instance specifying the postcondition of the action
-        """
         self.name = name
         self.signature = signature
         self.precondition = precondition
@@ -108,16 +101,16 @@ class Action:
         return new_state
 
     def project(self, domain, agent):
-        """
-        Project the action to the given domain and agent.
-
-        :param domain: The domain containing predicates.
-        :param agent: The agent identifier.
-        :return: A tuple of projected preconditions, add effects, delete effects, action name, and agent.
-        """
         projected_preconditions = self.precondition.intersection(domain.predicates)
         projected_add_effects = self.effect.addlist.intersection(domain.predicates)
         projected_remove_effects = self.effect.dellist.intersection(domain.predicates)
+
+        # Debug information
+        print(f"Preconditions: {self.precondition}")
+        print(f"Domain Predicates: {domain.predicates}")
+        print(f"Projected Preconditions: {projected_preconditions}")
+        print(f"Projected Add Effects: {projected_add_effects}")
+        print(f"Projected Remove Effects: {projected_remove_effects}")
 
         return projected_preconditions, projected_add_effects, projected_remove_effects, self.name, agent
 
@@ -205,7 +198,7 @@ class Agent:
         self.initial_node = initial_node
         self.public_predicates = public_predicates
         self.state_mapping = {}
-        self.message_queue = []
+        self.message_queue = None
         self.distributed_open_list = set()
         self.local_open_list = set()
         self.closed_list = set()
@@ -228,7 +221,8 @@ class Agent:
         """
         Expand the given search node to generate successor nodes.
         :param node: The search node to expand.
-        :param distributed: Whether the expansion is for the distributed open list.
+        :param distributed: Whether we are using the distributed or local heuristic function.
+        :param domain: The domain for the problem.
         :return: None
         """
         applicable_actions = self.applicable_actions(node.projected_state, domain)
@@ -249,11 +243,16 @@ class Agent:
             self.distributed_open_list.update(new_nodes)
 
     def process_comm(self):
-        for message in self.message_queue:
+        while not self.message_queue.empty():
+            message = self.message_queue.get()
             if message['type'] == 'state':
-                public_state = message['state']
-                unique_ids = message['uids']
-                sender = message['sender']
+                content = message['content']
+                public_state = content['state']
+                unique_ids = content['uids']
+                sender = content['sender']
+
+                if self.id >= len(unique_ids):
+                    continue  # Skip if the index is out of range
 
                 u_sent = self.state_mapping.get((public_state, unique_ids[self.id]))
                 if u_sent:
@@ -261,12 +260,12 @@ class Agent:
                         projected_state=u_sent.projected_state,
                         parent=sender,
                         action=None,
-                        h=message['heuristic'],
+                        h=content['heuristic'],
                         g=u_sent.g,
                         agent=self.id,
                         private_parts=unique_ids
                     )
-                    if message['distributed']:
+                    if content['distributed']:
                         self.distributed_open_list.add(u)
                     else:
                         u.h = self.local_heuristic(u.projected_state)
@@ -277,10 +276,11 @@ class Agent:
                 self.plans[self.id] = message['plan']
 
             elif message['type'] == 'reconstruct':
-                public_state = message['state']
-                uid = message['uid']
-                t = message['time']
-                sender = message['sender']
+                content = message['content']
+                public_state = content['state']
+                uid = content['uid']
+                t = content['time']
+                sender = content['sender']
 
                 u = self.state_mapping.get((public_state, uid))
                 if u:
@@ -306,12 +306,7 @@ class Agent:
         return heuristic_value
 
     def _compute_relaxed_plan(self, state):
-        """
-        Computes a relaxed plan from the given state by ignoring delete effects.
-        :param state: The current state (set of predicates).
-        :return: A set of actions representing the relaxed plan.
-        """
-        open_list = [(0, state)]
+        open_list = [(0, frozenset(state))]  # Convert state to frozenset
         closed_list = set()
         action_plan = []
 
@@ -326,11 +321,12 @@ class Agent:
 
             closed_list.add(current_state)
 
-            for action in self.applicable_actions(current_state, self.domain):
+            applicable_actions = [action for action in self.domain.actions if action.is_applicable(current_state)]
+            for action in applicable_actions:
                 new_state = action.apply(current_state)
-                if new_state not in closed_list:
-                    heappush(open_list, (cost + 1, new_state))
-                    action_plan.append(action)
+                new_state_frozenset = frozenset(new_state)  # Convert new_state to frozenset
+                heappush(open_list, (cost + 1, new_state_frozenset))
+                action_plan.append(action)
 
         return action_plan
 
@@ -342,7 +338,7 @@ class Agent:
         """
         return self.goal_state.issubset(state)
 
-    def dist_heuristic(self, agent, projected_state, tuple_):
+    def dist_heuristic(self, agent, projected_state=None, tuple_=None):
         # TODO: Write heuristic.
         pass
 

@@ -95,10 +95,11 @@ class Action:
         return self.precondition.issubset(state)
 
     def apply(self, state):
-        new_state = state.copy()
+        new_state = set(state)
         new_state.update(self.effect.addlist)
         new_state.difference_update(self.effect.dellist)
-        return new_state
+        return frozenset(new_state)
+
 
     def project(self, domain, agent):
         projected_preconditions = self.precondition.intersection(domain.predicates)

@@ -19,6 +19,7 @@
 This module contains all data structures needed to represent a PDDL domain and
 possibly a task definition.
 """
+from queue import Queue
 from heapq import heappop, heappush
 
 from pyperplan.ma.node import SearchNode
@@ -99,7 +100,6 @@ class Action:
         new_state.update(self.effect.addlist)
         new_state.difference_update(self.effect.dellist)
         return frozenset(new_state)
-
 
     def project(self, domain, agent):
         projected_preconditions = self.precondition.intersection(domain.predicates)
@@ -199,7 +199,7 @@ class Agent:
         self.initial_node = initial_node
         self.public_predicates = public_predicates
         self.state_mapping = {}
-        self.message_queue = None
+        self.message_queue = Queue()
         self.distributed_open_list = set()
         self.local_open_list = set()
         self.closed_list = set()
@@ -350,8 +350,8 @@ class Agent:
         self.plans[sender][t] = u.action
 
         if t == 0:
-            self.message_queue.append({"terminate", u, sender})  # send terminate message.
+            self.message_queue.put({"terminate", u, sender})  # send terminate message.
         elif u.action is None:
-            self.message_queue.append({"reconstruct", u, sender})  # send reconstruct message.
+            self.message_queue.put({"reconstruct", u, sender})  # send reconstruct message.
         else:
             self.reconstruct(u.parent, t - 1, sender)

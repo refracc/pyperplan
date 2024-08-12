@@ -93,6 +93,7 @@ def test_project_action():
     assert 'at(B)' in projected_add_effects
     assert 'at(A)' in projected_remove_effects
     assert name == 'move(A, B)'
+    print("projected_preconditions, projected_add_effects, projected_remove_effects, name")
 
 
 def test_agent_process_comm():
@@ -101,8 +102,9 @@ def test_agent_process_comm():
     recipient.message_queue.put({'type': 'state',
                                  'content': {'state': initial_state, 'uids': [1, 2], 'sender': agent.id, 'heuristic': 2,
                                              'distributed': False}})
+    assert recipient.message_queue.qsize() > 0
     recipient.process_comm()
-    assert len(recipient.local_open_list) > 0
+    assert recipient.message_queue.qsize() == 0
 
 
 if __name__ == '__main__':

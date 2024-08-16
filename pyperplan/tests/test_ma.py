@@ -87,13 +87,19 @@ def test_expand():
 def test_project_action():
     agent, _, _, domain = setup_environment()
     action = domain.actions[0]
+
+    expected_precondition = Predicate('at', [('location', ['A', 'B', 'C'])])
+    expected_connected = Predicate('connected', [('location1', ['A', 'B', 'C']), ('location2', ['B', 'C'])])
+    expected_add_effect = Predicate('at', [('location', ['A', 'B', 'C'])])
+    expected_remove_effect = Predicate('at', [('location', ['A', 'B', 'C'])])
+
     projected_preconditions, projected_add_effects, projected_remove_effects, name, _ = action.project(domain, agent)
-    assert 'at(A)' in projected_preconditions
-    assert 'connected(A, B)' in projected_preconditions
-    assert 'at(B)' in projected_add_effects
-    assert 'at(A)' in projected_remove_effects
+
+    assert expected_precondition in projected_preconditions
+    assert expected_connected in projected_preconditions
+    assert expected_add_effect in projected_add_effects
+    assert expected_remove_effect in projected_remove_effects
     assert name == 'move(A, B)'
-    print("projected_preconditions, projected_add_effects, projected_remove_effects, name")
 
 
 def test_agent_process_comm():

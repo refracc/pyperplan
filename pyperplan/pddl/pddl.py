@@ -58,6 +58,12 @@ class Predicate:
     def __str__(self):
         return self.name + str(self.signature)
 
+    def __eq__(self, other):
+        return isinstance(other, Predicate) and self.name == other.name and self.signature == other.signature
+
+    def __hash__(self):
+        return hash(self.name)
+
 
 # Formula is unused right now!
 # class Formula:

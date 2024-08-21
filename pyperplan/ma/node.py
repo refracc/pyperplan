@@ -10,11 +10,18 @@ class SearchNode:
         self.private_parts = private_parts
 
     def __hash__(self):
-        return hash((frozenset(self.projected_state), self.action, self.h, self.g, self.agent, self.private_parts))
+        return hash((frozenset(self.projected_state), self.action, self.h, self.g, self.agent,
+                     frozenset(self.private_parts.items())))
 
     def __eq__(self, other):
-        return (frozenset(self.projected_state), self.action, self.h, self.g, self.agent, self.private_parts) == \
-               (frozenset(other.projected_state), other.action, other.h, other.g, other.agent, other.private_parts)
+        if not isinstance(other, SearchNode):
+            return False
+        return (self.projected_state == other.projected_state and
+                self.action == other.action and
+                self.h == other.h and
+                self.g == other.g and
+                self.agent == other.agent and
+                self.private_parts == other.private_parts)
 
     def apply_action(self, action, new_proj_state, new_priv_parts):
         return SearchNode(

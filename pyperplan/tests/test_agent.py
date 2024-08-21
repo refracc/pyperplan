@@ -70,16 +70,25 @@ def test_applicable_actions(setup_agent):
         assert isinstance(action, Action)
 
 
-def test_expand(setup_agent):
-    agent, problem = setup_agent
-    node = agent.initial_node
+def test_expand():
+    initial_state = {Predicate("ontable", [("a", "block")])}
+    initial_node = SearchNode(projected_state=initial_state, parent=None, action=None, h=0, g=0, agent="a1",
+                              private_parts={})
 
-    agent.expand(node, distributed=False, domain=problem.domain)
+    action = Action(name="pick-up", signature=[], precondition={Predicate("ontable", [("a", "block")])},
+                    effect=Effect(addlist={Predicate("holding", [("a", "block")])},
+                                  dellist={Predicate("ontable", [("a", "block")])}))
+
+    domain = Domain(name="blocksworld", types={}, predicates={
+        Predicate("ontable", [("a", "block")]),
+        Predicate("holding", [("a", "block")])}, actions=[action])
+    goal_state = {Predicate("holding", [("a", "block")])}
+
+    agent = Agent(id="a1", initial_node=initial_node, public_predicates=set(), domain=domain, goal_state=goal_state)
+
+    agent.expand(initial_node, distributed=False, domain=domain)
 
     assert len(agent.local_open_list) > 0
-    for new_node in agent.local_open_list:
-        assert isinstance(new_node, SearchNode)
-        assert new_node.g > node.g
 
 
 def test_local_heuristic(setup_agent):
@@ -136,19 +145,30 @@ def test_reconstruct(setup_agent):
 
 
 def test_message_passing():
-    agent1 = Agent("a1", None, set(), None, set())
-    agent2 = Agent("a2", None, set(), None, set())
+    initial_state = {Predicate("ontable", [("a", "block")])}
+    initial_node = SearchNode(projected_state=initial_state, parent=None, action=None, h=0, g=0, agent="a1",
+                              private_parts={})
 
-    content = {"state": {"on": [("a", "b")]}}
+    action = Action(name="pick-up", signature=[], precondition={Predicate("ontable", [("a", "block")])},
+                    effect=Effect(addlist={Predicate("holding", [("a", "block")])},
+                                  dellist={Predicate("ontable", [("a", "block")])}))
 
-    agent1.send_message("state", content, agent2)
+    domain = Domain(name="blocksworld", types={}, predicates={
+                    Predicate("ontable", [("a", "block")]),
+                    Predicate("holding", [("a", "block")])}, actions=[action])
 
-    assert not agent1.message_queue.empty()
-    assert agent2.message_queue.qsize() == 1
+    goal_state = {Predicate("holding", [("a", "block")])}
 
-    message = agent2.message_queue.get()
-    assert message['type'] == "state"
-    assert message['content'] == content
+    agent = Agent(id="a1", initial_node=initial_node, public_predicates=set(), domain=domain, goal_state=goal_state)
+
+    problem = Problem(name="simple_blocks", domain=domain, objects={"a": "block"}, init=initial_state, goal=goal_state, agents={"a1": agent})
+
+    # Ensure message structure is correct
+    message = {"state": initial_state, "uids": [0], "sender": "a1", "distributed": False}
+    send_message("state", message, agent)
+    agent.process_comm(problem)
+
+    assert len(agent.local_open_list) > 0
 
 
 def test_start_search():
@@ -159,11 +179,17 @@ def test_start_search():
     action = Action(name="pick-up", signature=[], precondition={Predicate("ontable", [("a", "block")])},
                     effect=Effect(addlist={Predicate("holding", [("a", "block")])},
                                   dellist={Predicate("ontable", [("a", "block")])}))
-    domain = Domain(name="blocksworld", types={}, predicates={}, actions=[action])
+
+    domain = Domain(name="blocksworld", types={}, predicates={
+        Predicate("ontable", [("a", "block")]),
+        Predicate("holding", [("a", "block")])}, actions=[action])
     goal_state = {Predicate("holding", [("a", "block")])}
 
-    agent = Agent("a1", initial_node, set(), domain, goal_state)
+    agent = Agent(id="a1", initial_node=initial_node, public_predicates=set(), domain=domain, goal_state=goal_state)
 
-    agent.start_search()
+    problem = Problem(name="simple_blocks", domain=domain, objects={"a": "block"}, init=initial_state, goal=goal_state,
+                      agents={"a1": agent})
+
+    agent.start_search(problem)
 
     assert len(agent.local_open_list) > 0

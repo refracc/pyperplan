@@ -21,6 +21,8 @@ possibly a task definition.
 """
 from queue import Queue
 from heapq import heappop, heappush
+import threading
+from time import sleep
 
 from pyperplan.ma.node import SearchNode
 
@@ -249,58 +251,6 @@ class Agent:
         if distributed:
             self.distributed_open_list.update(new_nodes)
 
-    def process_comm(self):
-        while not self.message_queue.empty():
-            message = self.message_queue.get()
-            if message['type'] == 'state':
-                content = message['content']
-                public_state = content['state']
-                unique_ids = content['uids']
-                sender = content['sender']
-
-                if self.id >= len(unique_ids):
-                    continue  # Skip if the index is out of range
-
-                u_sent = self.state_mapping.get((public_state, unique_ids[self.id]))
-                if u_sent:
-                    u = SearchNode(
-                        projected_state=u_sent.projected_state,
-                        parent=sender,
-                        action=None,
-                        h=content['heuristic'],
-                        g=u_sent.g,
-                        agent=self.id,
-                        private_parts=unique_ids
-                    )
-                    if content['distributed']:
-                        self.distributed_open_list.add(u)
-                    else:
-                        u.h = self.local_heuristic(u.projected_state)
-                        self.local_open_list.add(u)
-
-            elif message['type'] == 'plan_found':
-                self.search_active = False
-                self.plans[self.id] = message['plan']
-
-            elif message['type'] == 'reconstruct':
-                content = message['content']
-                public_state = content['state']
-                uid = content['uid']
-                t = content['time']
-                sender = content['sender']
-
-                u = self.state_mapping.get((public_state, uid))
-                if u:
-                    self.reconstruct(u, t, sender)
-
-            elif message['type'] == 'terminate':
-                if all(self.plans.values()):
-                    plan = min(self.plans.values(), key=len)
-                    print(plan)
-
-            else:
-                raise LookupError("The message type provided does not exist.")
-
     def local_heuristic(self, state):
         """
         Computes the FF heuristic for the given state in the agent's i-projected problem.
@@ -350,14 +300,141 @@ class Agent:
         pass
 
     def reconstruct(self, u, t, sender):
+        """
+        Reconstruct the plan by tracing back through the search nodes.
+        """
         plan = self.plans.get(sender)
         if plan is None:
             self.plans[sender] = {}
         self.plans[sender][t] = u.action
 
         if t == 0:
-            self.message_queue.put({"terminate", u, sender})  # send terminate message.
+            self.message_queue.put({"type": "terminate", "content": {"u": u, "sender": sender}})
         elif u.action is None:
-            self.message_queue.put({"reconstruct", u, sender})  # send reconstruct message.
+            self.message_queue.put({"type": "reconstruct", "content": {"u": u, "sender": sender}})
         else:
             self.reconstruct(u.parent, t - 1, sender)
+
+    def start_search(self, problem):
+        """
+        Start the search process asynchronously, passing the problem to the search method.
+        """
+        search_thread = threading.Thread(target=self.a_star_search, args=(problem,))
+        search_thread.start()
+
+    def a_star_search(self, problem):
+        """
+        Perform A* search asynchronously for the agent, using the problem information.
+        """
+        open_list = []
+        closed_list = set()
+        initial_node = self.initial_node
+        initial_state = frozenset(initial_node.projected_state)
+        heappush(open_list, (initial_node.g + initial_node.h, initial_node))
+
+        while self.search_active:
+            # Process communication first
+            self.process_comm(problem)
+
+            if not open_list:
+                break  # No more nodes to explore
+
+            _, current_node = heappop(open_list)
+            current_state = frozenset(current_node.projected_state)
+
+            if self._goal_reached(current_state):
+                self.send_message("plan_found", self.reconstruct(current_node, current_node.g, self.id), problem)
+                break
+
+            if current_node in closed_list:
+                continue
+
+            closed_list.add(current_node)
+            self.expand(current_node, distributed=True, domain=problem.domain)
+
+            for successor in self.local_open_list:
+                successor_state = frozenset(successor.projected_state)
+
+                if successor not in closed_list:
+                    heappush(open_list, (successor.g + successor.h, successor))
+
+            # Sleep briefly to simulate asynchronous behavior
+            sleep(0.1)
+
+        # Final message to terminate if a plan is found
+        if self.plans.get(self.id):
+            self.send_message("terminate", self.plans[self.id], problem)
+
+    def send_message(self, message_type, content, problem):
+        """
+        Send a message to all other agents using the agent list from the problem.
+        """
+        for agent in problem.agents:
+            if agent.id != self.id:
+                send_message(message_type, content, agent)
+
+    def process_comm(self, problem):
+        """
+        Process messages in the agent's message queue.
+        """
+        while not self.message_queue.empty():
+            message = self.message_queue.get()
+            if message['type'] == 'state':
+                self.handle_state_message(message['content'])
+            elif message['type'] == 'plan_found':
+                self.search_active = False
+                self.plans[self.id] = message['content']
+            elif message['type'] == 'reconstruct':
+                self.handle_reconstruct_message(message['content'], problem)
+            elif message['type'] == 'terminate':
+                self.handle_terminate_message(message['content'])
+
+    def handle_state_message(self, content):
+        """
+        Handle a state message from another agent.
+        """
+        public_state = content['state']
+        unique_ids = content['uids']
+        sender = content['sender']
+
+        if self.id >= len(unique_ids):
+            return
+
+        u_sent = self.state_mapping.get((public_state, unique_ids[self.id]))
+        if u_sent:
+            u = SearchNode(
+                projected_state=u_sent.projected_state,
+                parent=sender,
+                action=None,
+                h=content['heuristic'],
+                g=u_sent.g,
+                agent=self.id,
+                private_parts=unique_ids
+            )
+            if content['distributed']:
+                self.distributed_open_list.add(u)
+            else:
+                u.h = self.local_heuristic(u.projected_state)
+                self.local_open_list.add(u)
+
+    def handle_reconstruct_message(self, content, problem):
+        """
+        Handle a reconstruct message to backtrack a plan.
+        """
+        public_state = content['state']
+        uid = content['uid']
+        t = content['time']
+        sender = content['sender']
+
+        u = self.state_mapping.get((public_state, uid))
+        if u:
+            self.reconstruct(u, t, sender)
+
+    def handle_terminate_message(self, content):
+        """
+        Handle a termination message indicating the plan is found.
+        """
+        self.search_active = False
+        if content and self.id in self.plans:
+            print(f"Agent {self.id} has received a complete plan: {self.plans[self.id]}")
+

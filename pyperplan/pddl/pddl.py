@@ -21,8 +21,6 @@ possibly a task definition.
 """
 from queue import Queue
 from heapq import heappop, heappush
-import threading
-from time import sleep
 
 from pyperplan.ma.node import SearchNode
 
@@ -206,7 +204,6 @@ class Agent:
         self.id = id
         self.initial_node = initial_node
         self.public_predicates = public_predicates
-        self.state_mapping = {}
         self.message_queue = Queue()
         self.distributed_open_list = set()
         self.local_open_list = set()
@@ -218,13 +215,11 @@ class Agent:
         self.goal_state = goal_state
 
     def applicable_actions(self, state, domain):
-        """
-        Get a set of all applicable actions from the given state.
-        :param state: The current state (set of predicates).
-        :param domain: An instance of the domain
-        :return: A set of applicable actions.
-        """
-        return {action for action in domain.actions if action.is_applicable(state)}
+        applicable = set()
+        for action in domain.actions:
+            if action.precondition.issubset(state):
+                applicable.add(action)
+        return applicable
 
     def expand(self, node, distributed, domain):
         """
@@ -303,63 +298,70 @@ class Agent:
         """
         Reconstruct the plan by tracing back through the search nodes.
         """
-        plan = self.plans.get(sender)
-        if plan is None:
+        if sender not in self.plans:
             self.plans[sender] = {}
+
         self.plans[sender][t] = u.action
 
         if t == 0:
-            self.message_queue.put({"type": "terminate", "content": {"u": u, "sender": sender}})
+            return self.plans[sender]
         elif u.action is None:
-            self.message_queue.put({"type": "reconstruct", "content": {"u": u, "sender": sender}})
+            return None
         else:
-            self.reconstruct(u.parent, t - 1, sender)
+            return self.reconstruct(u.parent, t - 1, sender)
 
     def start_search(self, problem):
         """
-        Start the search process asynchronously, passing the problem to the search method.
+        Start the search process.
         """
-        search_thread = threading.Thread(target=self.a_star_search, args=(problem,))
-        search_thread.start()
+        self.problem = problem
+        self.a_star_search(problem)
 
     def a_star_search(self, problem):
         """
-        Perform A* search asynchronously for the agent, using the problem information.
+        Perform a synchronous A* search for the agent.
         """
         open_list = []
         closed_list = set()
         initial_node = self.initial_node
-        initial_state = frozenset(initial_node.projected_state)
+
+        # Ensure g and h are properly initialized
+        initial_node.g = initial_node.g if initial_node.g is not None else 0
+        initial_node.h = initial_node.h if initial_node.h is not None else self.local_heuristic(
+            initial_node.projected_state)
+
         heappush(open_list, (initial_node.g + initial_node.h, initial_node))
 
-        while self.search_active:
+        while open_list:
             # Process communication first
             self.process_comm(problem)
-
-            if not open_list:
-                break  # No more nodes to explore
 
             _, current_node = heappop(open_list)
             current_state = frozenset(current_node.projected_state)
 
             if self._goal_reached(current_state):
-                self.send_message("plan_found", self.reconstruct(current_node, current_node.g, self.id), problem)
+                # Reconstruct the plan and send the "plan_found" message
+                plan = self.reconstruct(current_node, current_node.g, self.id)
+                self.send_message("plan_found", plan, problem)
                 break
 
-            if current_node in closed_list:
+            if current_state in closed_list:
                 continue
 
-            closed_list.add(current_node)
+            closed_list.add(current_state)
             self.expand(current_node, distributed=True, domain=problem.domain)
 
             for successor in self.local_open_list:
                 successor_state = frozenset(successor.projected_state)
 
-                if successor not in closed_list:
-                    heappush(open_list, (successor.g + successor.h, successor))
+                # Ensure g and h are initialized for the successor
+                successor.g = successor.g if successor.g is not None else current_node.g + problem.cost(current_node,
+                                                                                                        successor)
+                successor.h = successor.h if successor.h is not None else self.local_heuristic(
+                    successor.projected_state)
 
-            # Sleep briefly to simulate asynchronous behavior
-            sleep(0.1)
+                if successor_state not in closed_list:
+                    heappush(open_list, (successor.g + successor.h, successor))
 
         # Final message to terminate if a plan is found
         if self.plans.get(self.id):
@@ -397,25 +399,45 @@ class Agent:
         unique_ids = content['uids']
         sender = content['sender']
 
-        if self.id >= len(unique_ids):
-            return
+        # Debugging statements
+        print(f"Handling state message from {sender}")
+        print(f"Public state: {public_state}")
+        print(f"Unique IDs: {unique_ids}")
 
-        u_sent = self.state_mapping.get((public_state, unique_ids[self.id]))
-        if u_sent:
-            u = SearchNode(
-                projected_state=u_sent.projected_state,
-                parent=sender,
+        # Try to find the node in the open_list
+        u_sent = None
+        for _, node in self.local_open_list:
+            if frozenset(node.projected_state) == frozenset(public_state):
+                u_sent = node
+                break
+
+        # Debugging statements
+        print(f"Found matching node in open_list: {u_sent}")
+
+        if u_sent is None:
+            # If no matching node found, create a new one
+            u_sent = SearchNode(
+                projected_state=public_state,
+                parent=sender,  # Set to sender as the parent
                 action=None,
-                h=content['heuristic'],
-                g=u_sent.g,
+                h=self.local_heuristic(public_state),  # Calculate the heuristic
+                g=0,  # Set appropriate g-value, depending on your context
                 agent=self.id,
                 private_parts=unique_ids
             )
-            if content['distributed']:
-                self.distributed_open_list.add(u)
-            else:
-                u.h = self.local_heuristic(u.projected_state)
-                self.local_open_list.add(u)
+            print(f"Created new SearchNode with calculated heuristic: {u_sent.h}")
+        else:
+            # If node was found, inherit its heuristic value
+            u_sent.h = content.get('heuristic', self.local_heuristic(u_sent.projected_state))
+            print(f"Inherited or updated heuristic value: {u_sent.h}")
+
+        # Add the node to the appropriate list
+        if content['distributed']:
+            self.distributed_open_list.add(u_sent)
+            print(f"Added to distributed_open_list: {u_sent}")
+        else:
+            self.local_open_list.add(u_sent)
+            print(f"Added to local_open_list: {u_sent}")
 
     def handle_reconstruct_message(self, content, problem):
         """
@@ -426,7 +448,12 @@ class Agent:
         t = content['time']
         sender = content['sender']
 
-        u = self.state_mapping.get((public_state, uid))
+        u = None
+        for _, node in self.local_open_list:
+            if frozenset(node.projected_state) == frozenset(public_state):
+                u = node
+                break
+
         if u:
             self.reconstruct(u, t, sender)
 
@@ -437,4 +464,3 @@ class Agent:
         self.search_active = False
         if content and self.id in self.plans:
             print(f"Agent {self.id} has received a complete plan: {self.plans[self.id]}")
-

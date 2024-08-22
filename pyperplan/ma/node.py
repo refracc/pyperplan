@@ -1,7 +1,6 @@
 class SearchNode:
     def __init__(self, projected_state, parent, action, h, g, agent, private_parts):
         self.projected_state = projected_state  # Keep this as a set
-        print(type(projected_state))
         self.parent = parent
         self.action = action
         self.h = h
@@ -11,7 +10,7 @@ class SearchNode:
 
     def __hash__(self):
         return hash((frozenset(self.projected_state), self.action, self.h, self.g, self.agent,
-                     frozenset(self.private_parts.items())))
+                     frozenset(self.private_parts)))
 
     def __eq__(self, other):
         if not isinstance(other, SearchNode):

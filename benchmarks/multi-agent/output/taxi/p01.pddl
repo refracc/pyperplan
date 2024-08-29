@@ -1,44 +1,44 @@
-( DEFINE ( PROBLEM TAXI-01 )
-( :DOMAIN TAXI )
-( :OBJECTS
-	G1 G2 C H1 H2 - LOCATION
-	T1 T2 - TAXI
-	P1 P2 - PASSENGER
-	ACOUNT-1 ACOUNT-2 ACOUNT-3 ACOUNT-4 - AGENT-COUNT
+( define ( problem taxi-01 )
+( :domain taxi )
+( :objects
+	g1 g2 c h1 h2 - location
+	t1 t2 - taxi
+	p1 p2 - passenger
+	acount-1 acount-2 acount-3 acount-4 - agent-count
 )
-( :INIT
-	( DIRECTLY-CONNECTED G1 C )
-	( DIRECTLY-CONNECTED G2 C )
-	( DIRECTLY-CONNECTED C G1 )
-	( DIRECTLY-CONNECTED C G2 )
-	( DIRECTLY-CONNECTED C H1 )
-	( DIRECTLY-CONNECTED C H2 )
-	( DIRECTLY-CONNECTED H1 C )
-	( DIRECTLY-CONNECTED H2 C )
-	( AT T1 G1 )
-	( AT T2 G2 )
-	( EMPTY T1 )
-	( EMPTY T2 )
-	( AT P1 H1 )
-	( AT P2 H2 )
-	( FREE H1 )
-	( FREE H2 )
-	( FREE C )
-	( GOAL-OF P1 C )
-	( GOAL-OF P2 C )
-	( AFREE )
-	( CONSEC ACOUNT-0 ACOUNT-1 )
-	( CONSEC ACOUNT-1 ACOUNT-2 )
-	( CONSEC ACOUNT-2 ACOUNT-3 )
-	( CONSEC ACOUNT-3 ACOUNT-4 )
+( :init
+	( directly-connected g1 c )
+	( directly-connected g2 c )
+	( directly-connected c g1 )
+	( directly-connected c g2 )
+	( directly-connected c h1 )
+	( directly-connected c h2 )
+	( directly-connected h1 c )
+	( directly-connected h2 c )
+	( at t1 g1 )
+	( at t2 g2 )
+	( empty t1 )
+	( empty t2 )
+	( at p1 h1 )
+	( at p2 h2 )
+	( free h1 )
+	( free h2 )
+	( free c )
+	( goal-of p1 c )
+	( goal-of p2 c )
+	( afree )
+	( consec acount-0 acount-1 )
+	( consec acount-1 acount-2 )
+	( consec acount-2 acount-3 )
+	( consec acount-3 acount-4 )
 )
-( :GOAL
-	( AND
-		( AT T1 G1 )
-		( AT T2 G2 )
-		( AT P1 C )
-		( AT P2 C )
-		( AFREE )
+( :goal
+	( and
+		( at t1 g1 )
+		( at t2 g2 )
+		( at p1 c )
+		( at p2 c )
+		( afree )
 	)
 )
 )

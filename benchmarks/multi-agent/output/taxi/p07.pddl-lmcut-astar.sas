@@ -9,8 +9,8 @@ begin_variable
 var0
 -1
 2
-Atom dummy(val1)
-Atom dummy(val2)
+atom dummy(val1)
+atom dummy(val2)
 end_variable
 0
 begin_state

@@ -1,34 +1,34 @@
-( DEFINE ( DOMAIN BLOCKS )
-( :REQUIREMENTS :CONDITIONAL-EFFECTS :TYPING )
-( :TYPES
-	AGENT - OBJECT
-	BLOCK - OBJECT
-	AGENT-COUNT - OBJECT
+( define ( domain blocks )
+( :requirements :conditional-effects :typing )
+( :types
+	agent - object
+	block - object
+	agent-count - object
 )
-( :CONSTANTS
-	ACOUNT-0 - AGENT-COUNT
+( :constants
+	acount-0 - agent-count
 )
-( :PREDICATES
-	( ON ?BLOCK0 - BLOCK ?BLOCK1 - BLOCK )
-	( ONTABLE ?BLOCK0 - BLOCK )
-	( CLEAR ?BLOCK0 - BLOCK )
-	( HOLDING ?AGENT0 - AGENT ?BLOCK1 - BLOCK )
-	( HANDEMPTY ?AGENT0 - AGENT )
-	( AFREE )
-	( ATEMP )
-	( TAKEN ?AGENT0 - AGENT )
-	( CONSEC ?AGENT-COUNT0 - AGENT-COUNT ?AGENT-COUNT1 - AGENT-COUNT )
+( :predicates
+	( on ?block0 - block ?block1 - block )
+	( ontable ?block0 - block )
+	( clear ?block0 - block )
+	( holding ?agent0 - agent ?block1 - block )
+	( handempty ?agent0 - agent )
+	( afree )
+	( atemp )
+	( taken ?agent0 - agent )
+	( consec ?agent-count0 - agent-count ?agent-count1 - agent-count )
 )
-( :ACTION FREE
-  :PARAMETERS ( )
-  :PRECONDITION
-	( AND
-		( ATEMP )
+( :action free
+  :parameters ( )
+  :precondition
+	( and
+		( atemp )
 	)
-  :EFFECT
-	( AND
-		( AFREE )
-		( NOT ( ATEMP ) )
+  :effect
+	( and
+		( afree )
+		( not ( atemp ) )
 	)
 )
 )

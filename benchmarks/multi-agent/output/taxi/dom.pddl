@@ -1,37 +1,37 @@
-( DEFINE ( DOMAIN TAXI )
-( :REQUIREMENTS :CONDITIONAL-EFFECTS :TYPING )
-( :TYPES
-	LOCATION - OBJECT
-	AGENT - OBJECT
-	TAXI - AGENT
-	PASSENGER - AGENT
-	AGENT-COUNT - OBJECT
+( define ( domain taxi )
+( :requirements :conditional-effects :typing )
+( :types
+	location - object
+	agent - object
+	taxi - agent
+	passenger - agent
+	agent-count - object
 )
-( :CONSTANTS
-	ACOUNT-0 - AGENT-COUNT
+( :constants
+	acount-0 - agent-count
 )
-( :PREDICATES
-	( DIRECTLY-CONNECTED ?LOCATION0 - LOCATION ?LOCATION1 - LOCATION )
-	( AT ?AGENT0 - AGENT ?LOCATION1 - LOCATION )
-	( IN ?PASSENGER0 - PASSENGER ?TAXI1 - TAXI )
-	( EMPTY ?TAXI0 - TAXI )
-	( FREE ?LOCATION0 - LOCATION )
-	( GOAL-OF ?PASSENGER0 - PASSENGER ?LOCATION1 - LOCATION )
-	( AFREE )
-	( ATEMP )
-	( TAKEN ?AGENT0 - AGENT )
-	( CONSEC ?AGENT-COUNT0 - AGENT-COUNT ?AGENT-COUNT1 - AGENT-COUNT )
+( :predicates
+	( directly-connected ?location0 - location ?location1 - location )
+	( at ?agent0 - agent ?location1 - location )
+	( in ?passenger0 - passenger ?taxi1 - taxi )
+	( empty ?taxi0 - taxi )
+	( free ?location0 - location )
+	( goal-of ?passenger0 - passenger ?location1 - location )
+	( afree )
+	( atemp )
+	( taken ?agent0 - agent )
+	( consec ?agent-count0 - agent-count ?agent-count1 - agent-count )
 )
-( :ACTION FREE
-  :PARAMETERS ( )
-  :PRECONDITION
-	( AND
-		( ATEMP )
+( :action free
+  :parameters ( )
+  :precondition
+	( and
+		( atemp )
 	)
-  :EFFECT
-	( AND
-		( AFREE )
-		( NOT ( ATEMP ) )
+  :effect
+	( and
+		( afree )
+		( not ( atemp ) )
 	)
 )
 )

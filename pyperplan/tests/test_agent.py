@@ -79,11 +79,11 @@ def test_applicable_actions():
     initial_state = {Predicate("ontable", [("a", "block")])}
     agent = Agent(id="a1", initial_node=None, public_predicates=set(), domain=domain, goal_state=set())
 
-    applicable_actions = agent.applicable_actions(initial_state, domain)
+    applicable = applicable_actions(initial_state, domain)
 
-    print("Applicable Actions:", applicable_actions)  # Debug print
+    print("Applicable Actions:", applicable)  # Debug print
 
-    assert len(applicable_actions) > 0
+    assert len(applicable) > 0
 
 
 def test_expand():

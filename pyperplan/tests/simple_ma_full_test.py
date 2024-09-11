@@ -1,3 +1,4 @@
+from pyperplan.pddl.pddl import applicable_actions
 from pyperplan.pddl.pddl import *
 from pyperplan.ma.node import *
 
@@ -90,9 +91,9 @@ def test_agent_creation():
 
 def test_applicable_actions():
     agent, initial_state, goal_state, domain = setup_environment()
-    applicable_actions = agent.applicable_actions(initial_state, domain)
-    assert len(applicable_actions) > 0
-    action_names = {action.name for action in applicable_actions}
+    applicable = applicable_actions(initial_state, domain)
+    assert len(applicable) > 0
+    action_names = {action.name for action in applicable}
     assert 'move(A, B)' in action_names
 
 
@@ -165,8 +166,8 @@ def test_solve_problem():
             assert len(solution) > 0, "Solution should be found."
             break
 
-        applicable_actions = agent.applicable_actions(current_node.projected_state, domain)
-        for action in applicable_actions:
+        applicable = applicable_actions(current_node.projected_state, domain)
+        for action in applicable:
             new_state = action.apply(current_node.projected_state)
             new_node = SearchNode(projected_state=new_state, parent=current_node, action=action.name, h=0,
                                   g=current_node.g + 1, agent="1", private_parts=[])

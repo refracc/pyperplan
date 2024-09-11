@@ -199,6 +199,14 @@ def send_message(message_type, content, recipient):
     recipient.message_queue.put(message)
 
 
+def applicable_actions(state, domain):
+    applicable = set()
+    for action in domain.actions:
+        if action.precondition.issubset(state):
+            applicable.add(action)
+    return applicable
+
+
 class Agent:
     def __init__(self, id, initial_node, public_predicates, domain, goal_state):
         self.id = id
@@ -214,13 +222,6 @@ class Agent:
         self.domain = domain
         self.goal_state = goal_state
 
-    def applicable_actions(self, state, domain):
-        applicable = set()
-        for action in domain.actions:
-            if action.precondition.issubset(state):
-                applicable.add(action)
-        return applicable
-
     def expand(self, node, distributed, domain):
         """
         Expand the given search node to generate successor nodes.
@@ -229,10 +230,10 @@ class Agent:
         :param domain: The domain for the problem.
         :return: None
         """
-        applicable_actions = self.applicable_actions(node.projected_state, domain)
+        applicable = applicable_actions(node.projected_state, domain)
         new_nodes = set()
 
-        for action in applicable_actions:
+        for action in applicable:
             new_proj_state = action.apply(node.projected_state)
             new_priv_parts = node.private_parts  # Update if necessary for the specific problem
             new_node = node.apply_action(action, new_proj_state, new_priv_parts)
@@ -273,8 +274,8 @@ class Agent:
 
             closed_list.add(current_state)
 
-            applicable_actions = [action for action in self.domain.actions if action.is_applicable(current_state)]
-            for action in applicable_actions:
+            applicable = [action for action in self.domain.actions if action.is_applicable(current_state)]
+            for action in applicable:
                 new_state = action.apply(current_state)
                 new_state_frozenset = frozenset(new_state)  # Convert new_state to frozenset
                 heappush(open_list, (cost + 1, new_state_frozenset))

@@ -199,14 +199,6 @@ def send_message(message_type, content, recipient):
     recipient.message_queue.put(message)
 
 
-def applicable_actions(state, domain):
-    applicable = set()
-    for action in domain.actions:
-        if action.precondition.issubset(state):
-            applicable.add(action)
-    return applicable
-
-
 class Agent:
     def __init__(self, id, initial_node, public_predicates, domain, goal_state):
         self.id = id
@@ -222,15 +214,21 @@ class Agent:
         self.domain = domain
         self.goal_state = goal_state
 
-    def expand(self, node, distributed, domain):
+    def applicable_actions(self, state):
+        applicable = set()
+        for action in self.domain.actions:
+            if action.precondition.issubset(state):
+                applicable.add(action)
+        return applicable
+
+    def expand(self, node, distributed):
         """
         Expand the given search node to generate successor nodes.
         :param node: The search node to expand.
         :param distributed: Whether we are using the distributed or local heuristic function.
-        :param domain: The domain for the problem.
         :return: None
         """
-        applicable = applicable_actions(node.projected_state, domain)
+        applicable = self.applicable_actions(node.projected_state)
         new_nodes = set()
 
         for action in applicable:
@@ -350,7 +348,7 @@ class Agent:
                 continue
 
             closed_list.add(current_state)
-            self.expand(current_node, distributed=True, domain=problem.domain)
+            self.expand(current_node, distributed=True)
 
             for successor in self.local_open_list:
                 successor_state = frozenset(successor.projected_state)

@@ -386,7 +386,7 @@ class Agent:
                 self.search_active = False
                 self.plans[self.id] = message['content']
             elif message['type'] == 'reconstruct':
-                self.handle_reconstruct_message(message['content'], problem)
+                self.handle_reconstruct_message(message['content'])
             elif message['type'] == 'terminate':
                 self.handle_terminate_message(message['content'])
 
@@ -438,12 +438,11 @@ class Agent:
             self.local_open_list.add(u_sent)
             print(f"Added to local_open_list: {u_sent}")
 
-    def handle_reconstruct_message(self, content, problem):
+    def handle_reconstruct_message(self, content):
         """
         Handle a reconstruct message to backtrack a plan.
         """
         public_state = content['state']
-        uid = content['uid']
         t = content['time']
         sender = content['sender']
 
@@ -463,3 +462,5 @@ class Agent:
         self.search_active = False
         if content and self.id in self.plans:
             print(f"Agent {self.id} has received a complete plan: {self.plans[self.id]}")
+
+

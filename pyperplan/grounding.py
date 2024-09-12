@@ -382,3 +382,46 @@ def _get_fact(atom):
 def _get_partial_state(atoms):
     """Return a set of the string representation of the grounded atoms."""
     return frozenset(_get_fact(atom) for atom in atoms)
+
+
+def ground_shared_elements(domain, problem_objects, initial_state):
+    actions = domain.actions.values() if isinstance(domain.actions, dict) else domain.actions
+    predicates = domain.predicates.values() if isinstance(domain.predicates, dict) else domain.predicates
+
+    objects = problem_objects
+    objects.update(domain.constants)
+
+    statics = _get_statics(predicates, actions)
+    type_map = _create_type_map(objects)
+    shared_operators = _ground_actions(actions, type_map, statics, initial_state)
+
+    return shared_operators, statics, type_map
+
+def ground_agent_problem(agent, shared_operators, remove_statics_from_initial_state=True, remove_irrelevant_operators=True):
+    init = _get_partial_state(agent.initial_node.projected_state)
+    goals = _get_partial_state(agent.goal_state)
+    facts = _collect_facts(shared_operators) | goals
+
+    if remove_statics_from_initial_state:
+        init &= facts
+
+    if remove_irrelevant_operators:
+        shared_operators = _relevance_analysis(shared_operators, goals)
+
+    return Task(agent.id, facts, init, goals, shared_operators)
+
+
+def multi_agent_ground(agents, domain, problem_objects, remove_statics_from_initial_state=True, remove_irrelevant_operators=True):
+    initial_state = set()
+    for agent in agents:
+        initial_state |= _get_partial_state(agent.initial_node.projected_state)
+
+    shared_operators, statics, type_map = ground_shared_elements(domain, problem_objects, initial_state)
+
+    all_tasks = []
+    for agent in agents:
+        task = ground_agent_problem(agent, shared_operators, remove_statics_from_initial_state, remove_irrelevant_operators)
+        all_tasks.append(task)
+
+    return all_tasks
+

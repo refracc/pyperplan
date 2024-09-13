@@ -150,6 +150,8 @@ def test_solve_problem():
         agent.process_comm(problem)
 
         if not agent.local_open_list:
+            # An action is being passed in as None type. This needs resolving before continuing.
+            # The communication that is being passed in is not being parsed properly either because of the null list.
             assert False, "No solution found."
 
         current_node = min(agent.local_open_list, key=lambda node: node.g + node.h)

@@ -79,7 +79,7 @@ def test_applicable_actions():
     initial_state = {Predicate("ontable", [("a", "block")])}
     agent = Agent(id="a1", initial_node=None, public_predicates=set(), domain=domain, goal_state=set())
 
-    applicable = applicable_actions(initial_state, domain)
+    applicable = agent.applicable_actions(initial_state)
 
     print("Applicable Actions:", applicable)  # Debug print
 
@@ -102,7 +102,7 @@ def test_expand():
 
     agent = Agent(id="a1", initial_node=initial_node, public_predicates=set(), domain=domain, goal_state=goal_state)
 
-    agent.expand(initial_node, distributed=False, domain=domain)
+    agent.expand(initial_node, distributed=False)
 
     assert len(agent.local_open_list) > 0
 

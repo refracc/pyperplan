@@ -19,13 +19,15 @@ def setup_environment():
                Effect(addlist={Predicate('at', [('C', 'location')])}, dellist={Predicate('at', [('B', 'location')])}))
     ]
     domain = Domain('travel', types, predicates, actions)
-    initial_state = [Predicate('at', [('A', 'location')]),
-                     Predicate('connected', [('A', 'location1'), ('B', 'location2')]),
-                     Predicate('connected', [('B', 'location1'), ('C', 'location2')])]
+    initial_state = frozenset([Predicate('at', [('A', 'location')]),
+                               Predicate('connected', [('A', 'location1'), ('B', 'location2')]),
+                               Predicate('connected', [('B', 'location1'), ('C', 'location2')])])
     goal_state = frozenset([Predicate('at', [('C', 'location')])])
-    agent = Agent(id="1", initial_node=initial_state, public_predicates={'at', 'connected'}, domain=domain,
-                  goal_state=goal_state)
+    agent = Agent(id="1", initial_node=SearchNode(projected_state=initial_state, parent=None, action=None, h=0, g=0,
+                                                  agent="1", private_parts=[]),
+                  public_predicates={'at', 'connected'}, domain=domain, goal_state=goal_state)
     return agent, initial_state, goal_state, domain
+
 
 
 def test_predicate_creation():
@@ -101,7 +103,7 @@ def test_message_passing():
     initial_node = agent.initial_node
     problem = Problem(name="simple_blocks", domain=domain, objects={"A": "location", "B": "location", "C": "location"},
                       init=initial_state, goal=goal_state, agents=[agent])
-    message = {"state": initial_state, "uids": [0], "sender": "1", "distributed": False}
+    message = {"state": initial_state, "uids": [0], "sender": agent, "distributed": False}
     send_message("state", message, agent)
     agent.process_comm(problem)
     assert len(agent.local_open_list) > 0
@@ -138,20 +140,22 @@ def test_search_node_hashing():
 
 def test_solve_problem():
     agent, initial_state, goal_state, domain = setup_environment()
-    problem = Problem(name="travel_problem", domain=domain, objects={'A': 'location', 'B': 'location', 'C': 'location'},
-                      init=initial_state, goal=goal_state, agents=[agent])
+    problem = Problem(
+        name="travel_problem", domain=domain,
+        objects={'A': 'location', 'B': 'location', 'C': 'location'},
+        init=initial_state, goal=goal_state, agents=[agent]
+    )
 
-    # Initialize the search
-    initial_node = SearchNode(projected_state=initial_state, parent=None, action=None, h=0, g=0, agent="1",
-                              private_parts=[])
+    # Initialise the search
+    initial_node = SearchNode(
+        projected_state=initial_state, parent=None, action=None, h=0, g=0, agent="1", private_parts=[]
+    )
     agent.local_open_list.add(initial_node)
 
-    while True:
+    while agent.search_active:
         agent.process_comm(problem)
 
         if not agent.local_open_list:
-            # An action is being passed in as None type. This needs resolving before continuing.
-            # The communication that is being passed in is not being parsed properly either because of the null list.
             assert False, "No solution found."
 
         current_node = min(agent.local_open_list, key=lambda node: node.g + node.h)
@@ -170,6 +174,8 @@ def test_solve_problem():
         applicable = agent.applicable_actions(current_node.projected_state)
         for action in applicable:
             new_state = action.apply(current_node.projected_state)
-            new_node = SearchNode(projected_state=new_state, parent=current_node, action=action.name, h=0,
-                                  g=current_node.g + 1, agent="1", private_parts=[])
+            new_node = SearchNode(
+                projected_state=new_state, parent=current_node, action=action.name, h=0,
+                g=current_node.g + 1, agent="1", private_parts=[]
+            )
             agent.local_open_list.add(new_node)

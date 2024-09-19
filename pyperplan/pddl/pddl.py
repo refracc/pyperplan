@@ -398,40 +398,32 @@ class Agent:
         unique_ids = content['uids']
         sender = content['sender']
 
-        # Debugging statements
         print(f"Handling state message from {sender}")
         print(f"Public state: {public_state}")
         print(f"Unique IDs: {unique_ids}")
 
-        # Try to find the node in the open_list
         u_sent = None
-        for _, node in self.local_open_list:
+        for node in self.local_open_list:
             if frozenset(node.projected_state) == frozenset(public_state):
                 u_sent = node
                 break
 
-        # Debugging statements
-        print(f"Found matching node in open_list: {u_sent}")
-
         if u_sent is None:
-            # If no matching node found, create a new one
             u_sent = SearchNode(
                 projected_state=public_state,
-                parent=sender,  # Set to sender as the parent
+                parent=None,
                 action=None,
-                h=self.local_heuristic(public_state),  # Calculate the heuristic
-                g=0,  # Set appropriate g-value, depending on your context
+                h=self.local_heuristic(public_state),
+                g=0,
                 agent=self.id,
                 private_parts=unique_ids
             )
-            print(f"Created new SearchNode with calculated heuristic: {u_sent.h}")
+            print(f"Created new SearchNode with heuristic: {u_sent.h}")
         else:
-            # If node was found, inherit its heuristic value
             u_sent.h = content.get('heuristic', self.local_heuristic(u_sent.projected_state))
-            print(f"Inherited or updated heuristic value: {u_sent.h}")
+            print(f"Updated heuristic value: {u_sent.h}")
 
-        # Add the node to the appropriate list
-        if content['distributed']:
+        if content.get('distributed', False):
             self.distributed_open_list.add(u_sent)
             print(f"Added to distributed_open_list: {u_sent}")
         else:
@@ -447,7 +439,7 @@ class Agent:
         sender = content['sender']
 
         u = None
-        for _, node in self.local_open_list:
+        for node in self.local_open_list:
             if frozenset(node.projected_state) == frozenset(public_state):
                 u = node
                 break
@@ -462,5 +454,3 @@ class Agent:
         self.search_active = False
         if content and self.id in self.plans:
             print(f"Agent {self.id} has received a complete plan: {self.plans[self.id]}")
-
-

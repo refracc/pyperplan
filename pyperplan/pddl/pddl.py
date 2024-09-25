@@ -324,7 +324,7 @@ class Agent:
         closed_list = set()
         initial_node = self.initial_node
 
-        # Ensure g and h are properly initialized
+        # Ensure g and h are properly initialised
         initial_node.g = initial_node.g if initial_node.g is not None else 0
         initial_node.h = initial_node.h if initial_node.h is not None else self.local_heuristic(
             initial_node.projected_state)
@@ -353,7 +353,7 @@ class Agent:
             for successor in self.local_open_list:
                 successor_state = frozenset(successor.projected_state)
 
-                # Ensure g and h are initialized for the successor
+                # Ensure g and h are initialised for the successor
                 successor.g = successor.g if successor.g is not None else current_node.g + problem.cost(current_node,
                                                                                                         successor)
                 successor.h = successor.h if successor.h is not None else self.local_heuristic(
@@ -398,10 +398,6 @@ class Agent:
         unique_ids = content['uids']
         sender = content['sender']
 
-        print(f"Handling state message from {sender}")
-        print(f"Public state: {public_state}")
-        print(f"Unique IDs: {unique_ids}")
-
         u_sent = None
         for node in self.local_open_list:
             if frozenset(node.projected_state) == frozenset(public_state):
@@ -418,17 +414,13 @@ class Agent:
                 agent=self.id,
                 private_parts=unique_ids
             )
-            print(f"Created new SearchNode with heuristic: {u_sent.h}")
         else:
             u_sent.h = content.get('heuristic', self.local_heuristic(u_sent.projected_state))
-            print(f"Updated heuristic value: {u_sent.h}")
 
         if content.get('distributed', False):
             self.distributed_open_list.add(u_sent)
-            print(f"Added to distributed_open_list: {u_sent}")
         else:
             self.local_open_list.add(u_sent)
-            print(f"Added to local_open_list: {u_sent}")
 
     def handle_reconstruct_message(self, content):
         """

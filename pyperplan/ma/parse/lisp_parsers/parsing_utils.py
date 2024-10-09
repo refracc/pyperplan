@@ -3,7 +3,6 @@ from typing import Dict, Iterator, List
 
 from ..models import PDDLType, SignatureType, Predicate, PDDLConstant, Action
 
-
 COMPARISON_OPS = ["<=", ">=", ">", "<"]
 BINARY_OPERATORS = ["and", "or"]
 EQUALITY_OPERATOR = "="
@@ -11,6 +10,7 @@ NOT_OPERATOR = "not"
 FORALL_OPERATOR = "forall"
 ASSIGNMENT_OPS = ["assign", "increase", "decrease"]
 WHEN_OPERATOR = "when"
+
 
 def parse_signature(parameters: Iterator[str], domain_types: Dict[str, PDDLType]) -> SignatureType:
     """Parse the signature of a statement.

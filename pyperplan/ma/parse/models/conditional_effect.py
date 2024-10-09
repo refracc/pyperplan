@@ -1,10 +1,10 @@
 """Module to handle the functionality of conditional effects."""
 from typing import Union, Set
 
-from .pddl_precondition import CompoundPrecondition
-from .pddl_type import PDDLType
-from .pddl_predicate import Predicate, GroundedPredicate
 from .numerical_expression import NumericalExpressionTree
+from .pddl_precondition import CompoundPrecondition
+from .pddl_predicate import Predicate, GroundedPredicate
+from .pddl_type import PDDLType
 
 
 class ConditionalEffect:

@@ -41,7 +41,8 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--max_boats", type=int, required=True, help="Maximal number of boats")
     parser.add_argument("--min_people", type=int, required=True, help="Min of people to save")
     parser.add_argument("--max_people", type=int, required=True, help="Max of people to save")
-    parser.add_argument("--max_dist_goal", type=int, required=False, help="Max distance people to be rescued", default=500)
+    parser.add_argument("--max_dist_goal", type=int, required=False, help="Max distance people to be rescued",
+                        default=500)
     parser.add_argument("--output_folder", required=True,
                         help="Path to the directory containing the generated problems")
 

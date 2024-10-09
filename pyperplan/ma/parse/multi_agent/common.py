@@ -1,8 +1,6 @@
-from collections import defaultdict
 from typing import List
 
-from ..models import Problem, State, ActionCall, Domain, Operator, GroundedPredicate, \
-    NOP_ACTION
+from ..models import Problem, State, ActionCall, Domain, Operator, NOP_ACTION
 
 
 def create_initial_state(problem: Problem) -> State:

@@ -1,8 +1,8 @@
 """Module that represents a state definition in a PDDL trajectory."""
 from typing import Dict, Set
 
-from .pddl_object import PDDLObject
 from .pddl_function import PDDLFunction
+from .pddl_object import PDDLObject
 from .pddl_predicate import GroundedPredicate
 
 

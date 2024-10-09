@@ -45,7 +45,8 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def generate_multiple_problems(
-        min_counters: int, max_counters: int, max_int: int, output_folder: Path, total_num_problems: int = 200) -> NoReturn:
+        min_counters: int, max_counters: int, max_int: int, output_folder: Path,
+        total_num_problems: int = 200) -> NoReturn:
     """Generate multiple problems based on the input arguments.
 
     :param min_counters: the minimal number of counters possible in the problems.

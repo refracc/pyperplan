@@ -20,7 +20,8 @@ def generate_instance(instance_name: str, num_counters: int, max_int: int) -> st
     template = get_problem_template(TEMPLATE_FILE_PATH)
     i, j, k = random.sample(range(num_counters), 3)
     final_values = [f"(= (* (value c{i}) (value c{j})) (value c{k}))",
-                    *[f"(= (value c{m}) {random.randint(0, max_int)})" for m in range(num_counters) if m not in [i, j, k]]]
+                    *[f"(= (value c{m}) {random.randint(0, max_int)})" for m in range(num_counters) if
+                      m not in [i, j, k]]]
     template_mapping = {
         "instance_name": instance_name,
         "domain_name": "fo-counters-rnd",

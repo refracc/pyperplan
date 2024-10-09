@@ -3,11 +3,11 @@ import logging
 from pathlib import Path
 from typing import List, Dict, Union
 
-from ..models import Domain, PDDLType, Predicate, PDDLConstant, PDDLFunction, Action, CompoundPrecondition
 from .effects_parser import EffectsParser
 from .parsing_utils import parse_signature
 from .pddl_tokenizer import PDDLTokenizer
 from .preconditions_parser import PreconditionsParser
+from ..models import Domain, PDDLType, Predicate, PDDLConstant, PDDLFunction, Action, CompoundPrecondition
 
 ObjectType = PDDLType(name="object", parent=None)
 

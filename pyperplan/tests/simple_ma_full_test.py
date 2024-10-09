@@ -1,5 +1,5 @@
-from pyperplan.pddl.pddl import *
 from pyperplan.ma.node import *
+from pyperplan.pddl.pddl import *
 
 
 def setup_environment():
@@ -27,7 +27,6 @@ def setup_environment():
                                                   agent="1", private_parts=[]),
                   public_predicates={'at', 'connected'}, domain=domain, goal_state=goal_state)
     return agent, initial_state, goal_state, domain
-
 
 
 def test_predicate_creation():

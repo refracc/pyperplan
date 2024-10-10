@@ -1,14 +1,14 @@
 """Module test for the trajectory parser."""
 from pytest import fixture
 
-from ...ma.parse.lisp_parsers import DomainParser, ProblemParser, TrajectoryParser
-from ...ma.parse.models import Domain, Problem, MultiAgentObservation
 from .consts import TEST_NUMERIC_DEPOT_DOMAIN, TEST_NUMERIC_DEPOT_PROBLEM, \
     TEST_NUMERIC_DEPOT_TRAJECTORY, FARMLAND_NUMERIC_DOMAIN, FARMLAND_NUMERIC_PROBLEM, FARMLAND_NUMERIC_TRAJECTORY, \
     WOODWORKING_COMBINED_DOMAIN_PATH, WOODWORKING_COMBINED_PROBLEM_PATH, WOODWORKING_COMBINED_TRAJECTORY_PATH, \
     DEPOT_MA_PROBLEM_PATH, DEPOT_MA_DOMAIN_PATH, DEPOT_MA_TRAJECTORY_PATH, LOGISTICS_MA_DOMAIN_PATH, \
     LOGISTICS_MA_PROBLEM_PATH, LOGISTICS_MA_TRAJECTORY_PATH, STARCRAFT_DOMAIN_PATH, STARCRAFT_TRAJECTORY_PATH
 from ..multi_agent_tests.consts import WOODWORKING_AGENT_NAMES
+from ...ma.parse.lisp_parsers import DomainParser, ProblemParser, TrajectoryParser
+from ...ma.parse.models import Domain, Problem, MultiAgentObservation
 
 
 @fixture()

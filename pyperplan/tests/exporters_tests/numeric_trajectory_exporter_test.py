@@ -4,14 +4,14 @@ from typing import List
 
 from pytest import fixture
 
-from ...ma.parse.exporters import TrajectoryExporter
-from ...ma.parse.lisp_parsers import DomainParser, ProblemParser
-from ...ma.parse.models import Domain, State, Problem
 from .consts import TEST_DISCRETE_DOMAIN_PATH, TEST_DISCRETE_PROBLEM_PATH, TEST_DISCRETE_PLAN_PATH, \
     TEST_NUMERIC_DOMAIN_PATH, TEST_NUMERIC_PROBLEM_PATH, TEST_NUMERIC_PLAN_PATH, TEST_FAULTY_NUMERIC_PLAN_PATH, \
     TEST_DISCRETE_TRAJECTORY_FILE_PATH, TEST_NUMERIC_TRAJECTORY_FILE_PATH, TEST_CONDITIONAL_DOMAIN_PATH, \
     TEST_CONDITIONAL_PROBLEM_PATH, TEST_CONDITIONAL_PLAN_PATH, TEST_MINECRAFT_DOMAIN_PATH, TEST_MINECRAFT_PROBLEM_PATH, \
     TEST_MINECRAFT_PLAN_PATH, TEST_MICONIC_DOMAIN_PATH, TEST_MICONIC_PROBLEM_PATH, TEST_MICONIC_PLAN_PATH
+from ...ma.parse.exporters import TrajectoryExporter
+from ...ma.parse.lisp_parsers import DomainParser, ProblemParser
+from ...ma.parse.models import Domain, State, Problem
 
 
 @fixture()

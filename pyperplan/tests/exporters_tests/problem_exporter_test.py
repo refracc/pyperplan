@@ -3,10 +3,10 @@ from pathlib import Path
 
 from pytest import fixture
 
+from .consts import TEST_MINECRAFT_DOMAIN_PATH, TEST_MINECRAFT_PROBLEM_PATH
 from ...ma.parse.exporters import ProblemExporter
 from ...ma.parse.lisp_parsers import DomainParser, ProblemParser
 from ...ma.parse.models import Problem, Domain
-from .consts import TEST_MINECRAFT_DOMAIN_PATH, TEST_MINECRAFT_PROBLEM_PATH
 
 
 @fixture

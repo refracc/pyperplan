@@ -1,5 +1,5 @@
-from ...ma.parse.lisp_parsers import PDDLTokenizer
 from .consts import TEST_NUMERIC_PROBLEM
+from ...ma.parse.lisp_parsers import PDDLTokenizer
 
 
 def test_simple_parsing():

@@ -1,8 +1,8 @@
 """Module test for the multi-agent to single agent domain convertion."""
 from pytest import fixture
 
-from ...ma.parse.multi_agent import MultiAgentDomainsConverter
 from .consts import MULTI_AGENT_DATA_DIRECTORY, BLOCKS_MULTI_AGENT_DATA_DIRECTORY
+from ...ma.parse.multi_agent import MultiAgentDomainsConverter
 
 
 @fixture()
@@ -26,7 +26,7 @@ def test_locate_domains_returns_all_private_and_public_predicates(domain_convert
     domain = domain_converter.locate_domains()
     assert "grind-treatment-change" in domain.predicates
     assert "boardsize-successor" in domain.predicates
-    assert len(domain.predicates) == 14 + 1 # 14 original predicates + 1 dummy predicate
+    assert len(domain.predicates) == 14 + 1  # 14 original predicates + 1 dummy predicate
 
 
 def test_locate_domains_returns_agents_actions(domain_converter: MultiAgentDomainsConverter):

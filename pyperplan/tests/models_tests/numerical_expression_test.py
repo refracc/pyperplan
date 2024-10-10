@@ -1,11 +1,11 @@
 import pytest
 from anytree import RenderTree, PreOrderIter, AnyNode
 
+from .consts import ZENO_DOMAIN_PATH, DEPOT_NUMERIC_DOMAIN_PATH
 from ...ma.parse.lisp_parsers import PDDLTokenizer, DomainParser
 from ...ma.parse.models import construct_expression_tree, PDDLFunction, PDDLType, calculate, evaluate_expression, \
     NumericalExpressionTree
 from ...ma.parse.models.numerical_expression import COMPARISON_OPERATORS
-from .consts import ZENO_DOMAIN_PATH, DEPOT_NUMERIC_DOMAIN_PATH
 
 SIMPLE_EXPRESSION = ['assign', ['amount', '?jug1'], '0']
 COMPLEX_EXPRESSION = ['>=', ['-', ['capacity', '?jug2'], ['amount', '?jug2']], ['amount', '?jug1']]

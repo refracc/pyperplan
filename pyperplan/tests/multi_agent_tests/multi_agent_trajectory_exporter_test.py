@@ -3,12 +3,12 @@
 import pytest
 from pytest import fixture
 
-from ...ma.parse.lisp_parsers import DomainParser, ProblemParser
-from ...ma.parse.models import Domain, State, Problem
-from ...ma.parse.multi_agent import MultiAgentTrajectoryExporter
 from .consts import COMBINED_DOMAIN_PATH, COMBINED_PROBLEM_PATH, WOODWORKING_PARSED_PLAN_PATH, \
     WOODWORKING_SHORT_PARSED_PLAN_PATH, DEPOT_MA_DOMAIN_PATH, DEPOT_MA_PROBLEM_PATH, DEPOT_MA_SOLUTION_PATH, \
     DEPOT_MA_CONCURRENT_PROBLEM_PATH
+from ...ma.parse.lisp_parsers import DomainParser, ProblemParser
+from ...ma.parse.models import Domain, State, Problem
+from ...ma.parse.multi_agent import MultiAgentTrajectoryExporter
 
 
 @fixture()

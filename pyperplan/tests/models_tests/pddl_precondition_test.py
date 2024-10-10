@@ -1,11 +1,11 @@
 """Module that tests the functionality of the pddl_precondition module."""
 from pytest import fixture
 
+from .consts import TEST_HARD_NUMERIC_DOMAIN, HARD_TEST_NUMERIC_DOMAIN, \
+    DOMAIN_TO_TEST_INEQUALITY_REMOVAL, DOMAIN_TO_TEST_BOTH_TYPES_OF_INEQUALITY
 from ...ma.parse.lisp_parsers import DomainParser
 from ...ma.parse.models import Domain, construct_expression_tree, NumericalExpressionTree
 from ...ma.parse.models.pddl_precondition import Precondition
-from .consts import TEST_HARD_NUMERIC_DOMAIN, HARD_TEST_NUMERIC_DOMAIN, \
-    DOMAIN_TO_TEST_INEQUALITY_REMOVAL, DOMAIN_TO_TEST_BOTH_TYPES_OF_INEQUALITY
 
 
 @fixture()

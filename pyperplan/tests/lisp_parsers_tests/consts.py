@@ -30,9 +30,7 @@ MICONIC_LEARNED_DOMAIN_PATH = Path(CWD) / "learned_domain_miconic.pddl"
 STARCRAFT_DOMAIN_PATH = Path(CWD) / "starcraft_domain.pddl"
 STARCRAFT_TRAJECTORY_PATH = Path(CWD) / "starcraft_trajectory.trajectory"
 
-
 UMT2_DOMAIN_PATH = Path(CWD) / "UMT2_domain.pddl"
-
 
 TEST_PREDICATES_FOR_CONDITIONAL_DOMAIN = """((on ?c1 - card ?c2 - cardposition)
     (clear ?c - cardposition)
@@ -67,7 +65,6 @@ TEST_PREDICATES_FOR_UNIVERSAL_QUANTIFIER_DOMAIN = """(
     (lift-at ?floor - floor)
 )
 """
-
 
 TEST_TYPES_FOR_CONDITIONAL_DOMAIN = """(cardposition - object
     card_or_tableau - cardposition

@@ -33,7 +33,7 @@ class DomainParser:
     def parse_types(self, types: List[str]) -> Dict[str, PDDLType]:
         """Parse the types of the domain.
 
-        :param types: the list containing the
+        :param types: the list containing the types
         :return: a mapping between the type name and the appropriate PDDLType object.
         """
         self.logger.info("Starting to parse the types in the domain!")

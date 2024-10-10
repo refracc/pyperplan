@@ -1,5 +1,3 @@
-from queue import Queue
-
 import pytest
 
 from pyperplan.pddl.pddl import *

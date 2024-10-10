@@ -1,10 +1,10 @@
 """module to test the problem parsing functionality."""
 from pytest import fixture, raises, fail
 
-from ...ma.parse.lisp_parsers import DomainParser, ProblemParser, PDDLTokenizer
-from ...ma.parse.models import Domain
 from .consts import TEST_NUMERIC_DOMAIN, TEST_NUMERIC_PROBLEM, ZENOTRAVEL_DOMAIN_PATH, \
     ZENOTRAVEL_PROBLEM_PATH
+from ...ma.parse.lisp_parsers import DomainParser, ProblemParser, PDDLTokenizer
+from ...ma.parse.models import Domain
 
 test_objects_ast = ['num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6', 'num7', 'num8', 'num9', 'num10', 'num11',
                     'num12', 'num13', 'num14', 'num15', 'num16', '-', 'num', 'stage1', 'stage2', 'stage3', 'stage4',

@@ -1,9 +1,9 @@
 """Module test for the multi-agent to single agent problem convertion."""
 from pytest import fixture
 
-from ...ma.parse.multi_agent import MultiAgentProblemsConverter
 from .consts import MULTI_AGENT_DATA_DIRECTORY, COMBINED_DOMAIN_PATH, \
     ANOTHER_MULTI_AGENT_DATA_DIRECTORY, LOGISTICS_MA_DOMAIN_PATH
+from ...ma.parse.multi_agent import MultiAgentProblemsConverter
 
 
 @fixture()

@@ -2,13 +2,13 @@
 import pytest
 from pytest import fixture
 
-from ...ma.parse.lisp_parsers import DomainParser, ProblemParser
-from ...ma.parse.models import Domain, Problem
-from ...ma.parse.multi_agent import PlanConverter
 from .consts import SOKOBAN_DOMAIN_FILE_PATH, SOKOBAN_UNPARSED_PLAN_PATH, \
     WOODWORKING_UNPARSED_PLAN_PATH, WOODWORKING_AGENT_NAMES, COMBINED_PROBLEM_PATH, \
     SOKOBAN_PROBLEM_PATH, COMBINED_DOMAIN_PATH, SOKOBAN_PROBLEM_WITH_INTERACTING_ACTIONS_PATH, \
     SOKOBAN_UNPARSED_PLAN_WITH_INTERACTING_ACTIONS_PATH
+from ...ma.parse.lisp_parsers import DomainParser, ProblemParser
+from ...ma.parse.models import Domain, Problem
+from ...ma.parse.multi_agent import PlanConverter
 
 SOKOBAN_AGENT_NAMES = ["player-01", "player-02"]
 

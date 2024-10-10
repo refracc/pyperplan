@@ -3,14 +3,14 @@ from typing import Dict, Set, List
 
 from pytest import fixture, fail
 
+from .consts import TEST_HARD_NUMERIC_DOMAIN, TEST_NUMERIC_DOMAIN, SPIDER_DOMAIN_PATH, \
+    NURIKABE_DOMAIN_PATH, NURIKABE_PROBLEM_PATH, MICONIC_NESTED_DOMAIN_PATH, MICONIC_NESTED_PROBLEM_PATH, \
+    MICONIC_DOMAIN_PATH, MICONIC_TRAJECTORY_PATH
+from ..lisp_parsers_tests.consts import SPIDER_PROBLEM_PATH
 from ...ma.parse.lisp_parsers import DomainParser, ProblemParser, PDDLTokenizer, TrajectoryParser
 from ...ma.parse.models import Domain, Action, GroundedPredicate, PDDLFunction, State, Problem, Precondition, \
     NumericalExpressionTree, Observation
 from ...ma.parse.models.grounded_precondition import GroundedPrecondition
-from ..lisp_parsers_tests.consts import SPIDER_PROBLEM_PATH
-from .consts import TEST_HARD_NUMERIC_DOMAIN, TEST_NUMERIC_DOMAIN, SPIDER_DOMAIN_PATH, \
-    NURIKABE_DOMAIN_PATH, NURIKABE_PROBLEM_PATH, MICONIC_NESTED_DOMAIN_PATH, MICONIC_NESTED_PROBLEM_PATH, \
-    MICONIC_DOMAIN_PATH, MICONIC_TRAJECTORY_PATH
 
 TEST_LIFTED_SIGNATURE_ITEMS = ["?s", "?d", "?i", "?m"]
 TEST_GROUNDED_ACTION_CALL = ["s1", "test_direction", "test_instrument", "test_mode"]

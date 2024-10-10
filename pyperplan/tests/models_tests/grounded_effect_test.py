@@ -3,13 +3,13 @@ from typing import Dict, Set
 
 from pytest import fixture, fail, raises
 
-from ...ma.parse.lisp_parsers import DomainParser, ProblemParser
-from ...ma.parse.models import Domain, Action, GroundedPredicate, PDDLFunction, State, Problem
-from ...ma.parse.models.grounded_effect import GroundedEffect
-from ..lisp_parsers_tests.consts import SPIDER_PROBLEM_PATH
 from .consts import TEST_HARD_NUMERIC_DOMAIN, TEST_NUMERIC_DOMAIN, SPIDER_DOMAIN_PATH, \
     NURIKABE_DOMAIN_PATH, NURIKABE_PROBLEM_PATH, MINECRAFT_LARGE_DOMAIN_PATH, MINECRAFT_LARGE_PROBLEM_PATH, \
     HARD_DRIVERLOG_DOMAIN_PATH, HARD_DRIVERLOG_PROBLEM_PATH
+from ..lisp_parsers_tests.consts import SPIDER_PROBLEM_PATH
+from ...ma.parse.lisp_parsers import DomainParser, ProblemParser
+from ...ma.parse.models import Domain, Action, GroundedPredicate, PDDLFunction, State, Problem
+from ...ma.parse.models.grounded_effect import GroundedEffect
 
 TEST_LIFTED_SIGNATURE_ITEMS = ["?s", "?d", "?i", "?m"]
 TEST_GROUNDED_ACTION_CALL = ["s1", "test_direction", "test_instrument", "test_mode"]

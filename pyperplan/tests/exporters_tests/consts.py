@@ -20,7 +20,6 @@ TEST_MINECRAFT_DOMAIN_PATH = Path(CWD, "minecraft_domain.pddl")
 TEST_MINECRAFT_PROBLEM_PATH = Path(CWD, "minecraft_problem.pddl")
 TEST_MINECRAFT_PLAN_PATH = Path(CWD, "minecraft_pfile0.solution")
 
-
 TEST_MICONIC_DOMAIN_PATH = Path(CWD, "domain_miconic.pddl")
 TEST_MICONIC_PROBLEM_PATH = Path(CWD, "miconic_problem.pddl")
 TEST_MICONIC_PLAN_PATH = Path(CWD, "miconic_solution.solution")

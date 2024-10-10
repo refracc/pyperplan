@@ -3,13 +3,13 @@ from typing import List, Dict, Set
 
 from pytest import fixture, fail
 
+from .consts import TEST_HARD_NUMERIC_DOMAIN, TEST_NUMERIC_DOMAIN, SPIDER_DOMAIN_PATH, \
+    NURIKABE_DOMAIN_PATH, NURIKABE_PROBLEM_PATH
+from ..lisp_parsers_tests.consts import SPIDER_PROBLEM_PATH
 from ...ma.parse.lisp_parsers import DomainParser, PDDLTokenizer, ProblemParser
 from ...ma.parse.models import Domain, Action, Operator, GroundedPredicate, PDDLFunction, State, Problem, \
     NumericalExpressionTree
 from ...ma.parse.models.grounding_utils import ground_numeric_calculation_tree, ground_numeric_expressions
-from ..lisp_parsers_tests.consts import SPIDER_PROBLEM_PATH
-from .consts import TEST_HARD_NUMERIC_DOMAIN, TEST_NUMERIC_DOMAIN, SPIDER_DOMAIN_PATH, \
-    NURIKABE_DOMAIN_PATH, NURIKABE_PROBLEM_PATH
 
 TEST_LIFTED_SIGNATURE_ITEMS = ["?s", "?d", "?i", "?m"]
 TEST_GROUNDED_ACTION_CALL = ["s1", "test_direction", "test_instrument", "test_mode"]

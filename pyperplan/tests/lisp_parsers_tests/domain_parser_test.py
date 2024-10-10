@@ -1,12 +1,12 @@
 from pytest import fixture, raises, fail
 
-from ...ma.parse.lisp_parsers import DomainParser, PDDLTokenizer
-from ...ma.parse.models import PDDLType, Predicate, Action, CompoundPrecondition
 from .consts import TEST_PARSING_FILE_PATH, TEST_WOODWORKING_DOMAIN_PATH, \
     TEST_NUMERIC_DEPOT_DOMAIN_PATH, PLANT_WATERING_DOMAIN, TEST_CONSTANTS_FOR_CONDITIONAL_DOMAIN, \
     TEST_TYPES_FOR_CONDITIONAL_DOMAIN, TEST_PREDICATES_FOR_CONDITIONAL_DOMAIN, SPIDER_DOMAIN_PATH, \
     TYPES_FOR_UNIVERSAL_CONDITIONAL_DOMAIN, TEST_PREDICATES_FOR_UNIVERSAL_QUANTIFIER_DOMAIN, UMT2_DOMAIN_PATH, \
     MICONIC_LEARNED_DOMAIN_PATH
+from ...ma.parse.lisp_parsers import DomainParser, PDDLTokenizer
+from ...ma.parse.models import PDDLType, Predicate, Action
 
 test_types_with_no_parent = ['acolour', 'awood', 'woodobj', 'machine', 'surface', 'treatmentstatus', 'aboardsize',
                              'apartsize']

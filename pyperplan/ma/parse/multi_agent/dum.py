@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 from pyperplan.ma.parse.multi_agent import MultiAgentDomainsConverter

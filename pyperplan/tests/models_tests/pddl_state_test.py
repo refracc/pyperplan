@@ -1,8 +1,8 @@
 from pytest import fixture
 
+from .consts import TEST_NUMERIC_DOMAIN, TEST_NUMERIC_PROBLEM, SPIDER_DOMAIN_PATH, SPIDER_PROBLEM_PATH
 from ...ma.parse.lisp_parsers import ProblemParser, DomainParser
 from ...ma.parse.models import Domain, Problem, State
-from .consts import TEST_NUMERIC_DOMAIN, TEST_NUMERIC_PROBLEM, SPIDER_DOMAIN_PATH, SPIDER_PROBLEM_PATH
 
 
 @fixture()

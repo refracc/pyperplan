@@ -4,7 +4,7 @@ from collections import deque
 from pathlib import Path
 from typing import List, Optional
 
-from ..lisp_parsers import Expression
+from .pddl_parser_types import Expression
 
 
 class PDDLTokenizer:

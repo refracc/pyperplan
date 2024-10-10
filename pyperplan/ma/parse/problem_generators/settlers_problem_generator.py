@@ -5,16 +5,16 @@ from collections import OrderedDict
 from queue import Queue
 
 
-class typeStatus(enum.Enum):
+class TypeStatus(enum.Enum):
     OFF = 0
     ON = 1
 
 
-typing = typeStatus
+typing = TypeStatus
 st = str()
 
 
-class probTypes(enum.Enum):
+class ProblemTypes(enum.Enum):
     STRIPS = 0
     NUMERIC = 1
     SIMPLETIME = 2
@@ -23,7 +23,7 @@ class probTypes(enum.Enum):
     HARDNUMERIC = 5
 
 
-probType = probTypes
+probType = ProblemTypes
 
 
 def rnd(limit=-1):
@@ -140,14 +140,14 @@ class Place(ProblemObject):
         global typing
         global st
         st += f"\tlocation{self.__place}"
-        if typing == typeStatus.ON:
+        if typing == TypeStatus.ON:
             st += " - place"
         st += "\n"
 
     def init(self):
         global typing
         global st
-        if typing == typeStatus.OFF:
+        if typing == TypeStatus.OFF:
             st += f"\t(place location{self.__place})\n"
         if self.__mountain:
             st += f"\t(mountain location{self.__place})\n"
@@ -189,7 +189,6 @@ def random_select(s):
         while i > 0:
             i -= 1
         return val
-    return val
 
 
 links = set()
@@ -349,7 +348,7 @@ class Map(ProblemObject):
         global st
         for p in self.__Places:
             p.init()
-        if typing == typeStatus.OFF:
+        if typing == TypeStatus.OFF:
             st += "\t(resource iron)\n\t(resource wood)\n\t(resource timber)\n\t(resource ore)\n\t(resource stone)\n\t(resource coal)\n"
 
         for k, v in self.__road.items():
@@ -389,14 +388,14 @@ class Vehicle(ProblemObject):
         global st
         global typing
         st += f"\tvehicle{self.__vnum}"
-        if typing == typeStatus.ON:
+        if typing == TypeStatus.ON:
             st += " - vehicle"
         st += "\n"
 
     def init(self):
         global typing
         global st
-        if typing == typeStatus.OFF:
+        if typing == TypeStatus.OFF:
             st += f"\t(vehicle vehicle{self.__vnum})\n"
         st += f"\t(potential vehicle{self.__vnum})\n"
 
@@ -410,8 +409,8 @@ class Vehicle(ProblemObject):
 def main(argc, argv):
     global typing
     global probType
-    typing = typeStatus.ON;
-    probType = probTypes.STRIPS;
+    typing = TypeStatus.ON
+    probType = ProblemTypes.STRIPS
     global o
     global st
     if argc < 4:
@@ -422,7 +421,7 @@ def main(argc, argv):
     argc -= 1
     if argv[0][0] == '-':
         if argv[0][1] == 'u':
-            typing = typeStatus.OFF
+            typing = TypeStatus.OFF
         argv = argv[1:]
         argc -= 1
     random.seed(int(argv[0]))

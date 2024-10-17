@@ -1,0 +1,32 @@
+2024-10-17 11:25:23,886 INFO     using search: iterative_deepening_search
+2024-10-17 11:25:23,886 INFO     using heuristic: None
+2024-10-17 11:25:23,886 INFO     Parsing Domain /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/freecell/domain.pddl
+2024-10-17 11:25:23,888 INFO     Parsing Problem /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/freecell/task01.pddl
+2024-10-17 11:25:23,889 DEBUG    < Domain definition: freecell Predicates: ['on', 'incell', 'clear', 'cellspace', 'colspace', 'home', 'bottomcol', 'canstack', 'suit', 'value', 'successor'] Actions: ['move', 'move-b', 'sendtofree', 'sendtofree-b', 'sendtonewcol', 'sendtohome', 'sendtohome-b', 'homefromfreecell', 'colfromfreecell', 'newcolfromfreecell'] Constants: [] >
+2024-10-17 11:25:23,889 INFO     11 Predicates parsed
+2024-10-17 11:25:23,889 INFO     10 Actions parsed
+2024-10-17 11:25:23,889 INFO     21 Objects parsed
+2024-10-17 11:25:23,889 INFO     0 Constants parsed
+2024-10-17 11:25:23,889 INFO     Grounding start: freecell2-4
+2024-10-17 11:25:23,889 DEBUG    Grounding move
+2024-10-17 11:25:23,893 DEBUG    Grounding move-b
+2024-10-17 11:25:23,897 DEBUG    Grounding sendtofree
+2024-10-17 11:25:23,917 DEBUG    Grounding sendtofree-b
+2024-10-17 11:25:23,928 DEBUG    Grounding sendtonewcol
+2024-10-17 11:25:23,945 DEBUG    Grounding sendtohome
+2024-10-17 11:25:24,169 DEBUG    Grounding sendtohome-b
+2024-10-17 11:25:24,332 DEBUG    Grounding homefromfreecell
+2024-10-17 11:25:24,462 DEBUG    Grounding colfromfreecell
+2024-10-17 11:25:24,464 DEBUG    Grounding newcolfromfreecell
+2024-10-17 11:25:24,484 INFO     Relevance analysis removed 0 facts
+2024-10-17 11:25:24,485 INFO     Grounding end: freecell2-4
+2024-10-17 11:25:24,485 INFO     526 Variables created
+2024-10-17 11:25:24,485 INFO     4656 Operators created
+2024-10-17 11:25:24,485 INFO     Search start: freecell2-4
+2024-10-17 11:35:57,263 INFO     Goal reached. Start extraction of solution.
+2024-10-17 11:35:57,263 INFO     iterative_deepening_search: depth=8 planlength=8 
+2024-10-17 11:35:57,263 INFO     17495126 Nodes expanded
+2024-10-17 11:35:57,263 INFO     Search end: freecell2-4
+2024-10-17 11:35:57,263 INFO     Search time: 6.3e+02
+2024-10-17 11:35:57,264 INFO     Plan length: 8
+2024-10-17 11:35:57,265 INFO     validate could not be found on the PATH so the plan can not be validated.

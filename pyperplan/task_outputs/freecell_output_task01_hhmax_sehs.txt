@@ -1,0 +1,35 @@
+2024-10-17 11:36:07,887 INFO     using search: enforced_hillclimbing_search
+2024-10-17 11:36:07,887 INFO     using heuristic: hMaxHeuristic
+2024-10-17 11:36:07,887 INFO     Parsing Domain /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/freecell/domain.pddl
+2024-10-17 11:36:07,888 INFO     Parsing Problem /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/freecell/task01.pddl
+2024-10-17 11:36:07,889 DEBUG    < Domain definition: freecell Predicates: ['on', 'incell', 'clear', 'cellspace', 'colspace', 'home', 'bottomcol', 'canstack', 'suit', 'value', 'successor'] Actions: ['move', 'move-b', 'sendtofree', 'sendtofree-b', 'sendtonewcol', 'sendtohome', 'sendtohome-b', 'homefromfreecell', 'colfromfreecell', 'newcolfromfreecell'] Constants: [] >
+2024-10-17 11:36:07,889 INFO     11 Predicates parsed
+2024-10-17 11:36:07,889 INFO     10 Actions parsed
+2024-10-17 11:36:07,889 INFO     21 Objects parsed
+2024-10-17 11:36:07,889 INFO     0 Constants parsed
+2024-10-17 11:36:07,889 INFO     Grounding start: freecell2-4
+2024-10-17 11:36:07,889 DEBUG    Grounding move
+2024-10-17 11:36:07,893 DEBUG    Grounding move-b
+2024-10-17 11:36:07,896 DEBUG    Grounding sendtofree
+2024-10-17 11:36:07,917 DEBUG    Grounding sendtofree-b
+2024-10-17 11:36:07,929 DEBUG    Grounding sendtonewcol
+2024-10-17 11:36:07,944 DEBUG    Grounding sendtohome
+2024-10-17 11:36:08,156 DEBUG    Grounding sendtohome-b
+2024-10-17 11:36:08,311 DEBUG    Grounding homefromfreecell
+2024-10-17 11:36:08,437 DEBUG    Grounding colfromfreecell
+2024-10-17 11:36:08,439 DEBUG    Grounding newcolfromfreecell
+2024-10-17 11:36:08,459 INFO     Relevance analysis removed 0 facts
+2024-10-17 11:36:08,460 INFO     Grounding end: freecell2-4
+2024-10-17 11:36:08,460 INFO     526 Variables created
+2024-10-17 11:36:08,460 INFO     4656 Operators created
+2024-10-17 11:36:08,464 INFO     Search start: freecell2-4
+2024-10-17 11:36:08,465 INFO     Initial h value: 3.000000
+2024-10-17 11:36:08,494 DEBUG    Found new best h: 2.000000 after 4 expansions
+2024-10-17 11:36:09,150 DEBUG    Found new best h: 1.000000 after 172 expansions
+2024-10-17 11:36:09,208 DEBUG    Found new best h: 0.000000 after 214 expansions
+2024-10-17 11:36:09,208 INFO     Goal reached. Start extraction of solution.
+2024-10-17 11:36:09,208 INFO     117 Nodes expanded
+2024-10-17 11:36:09,208 INFO     Search end: freecell2-4
+2024-10-17 11:36:09,208 INFO     Search time: 0.74
+2024-10-17 11:36:09,209 INFO     Plan length: 10
+2024-10-17 11:36:09,210 INFO     validate could not be found on the PATH so the plan can not be validated.

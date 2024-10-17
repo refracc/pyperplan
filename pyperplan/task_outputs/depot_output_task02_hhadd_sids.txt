@@ -1,0 +1,20 @@
+2024-10-17 11:22:17,934 INFO     using search: iterative_deepening_search
+2024-10-17 11:22:17,934 INFO     using heuristic: None
+2024-10-17 11:22:17,934 INFO     Parsing Domain /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/depot/domain.pddl
+2024-10-17 11:22:17,934 INFO     Parsing Problem /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/depot/task02.pddl
+2024-10-17 11:22:17,935 DEBUG    < Domain definition: depot Predicates: ['at', 'on', 'in', 'lifting', 'available', 'clear', 'place', 'locatable', 'depot', 'distributor', 'truck', 'hoist', 'surface', 'pallet', 'crate'] Actions: ['drive', 'lift', 'drop', 'load', 'unload'] Constants: [] >
+2024-10-17 11:22:17,935 INFO     15 Predicates parsed
+2024-10-17 11:22:17,935 INFO     5 Actions parsed
+2024-10-17 11:22:17,935 INFO     15 Objects parsed
+2024-10-17 11:22:17,935 INFO     0 Constants parsed
+2024-10-17 11:22:17,935 INFO     Grounding start: depotprob7512
+2024-10-17 11:22:17,935 DEBUG    Grounding drive
+2024-10-17 11:22:17,936 DEBUG    Grounding lift
+2024-10-17 11:22:17,939 DEBUG    Grounding drop
+2024-10-17 11:22:17,941 DEBUG    Grounding load
+2024-10-17 11:22:17,942 DEBUG    Grounding unload
+2024-10-17 11:22:17,944 INFO     Relevance analysis removed 0 facts
+2024-10-17 11:22:17,944 INFO     Grounding end: depotprob7512
+2024-10-17 11:22:17,944 INFO     94 Variables created
+2024-10-17 11:22:17,944 INFO     660 Operators created
+2024-10-17 11:22:17,944 INFO     Search start: depotprob7512

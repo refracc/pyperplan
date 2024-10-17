@@ -1,0 +1,25 @@
+2024-10-17 11:36:09,244 INFO     using search: iterative_deepening_search
+2024-10-17 11:36:09,244 INFO     using heuristic: None
+2024-10-17 11:36:09,244 INFO     Parsing Domain /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/freecell/domain.pddl
+2024-10-17 11:36:09,246 INFO     Parsing Problem /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/freecell/task01.pddl
+2024-10-17 11:36:09,246 DEBUG    < Domain definition: freecell Predicates: ['on', 'incell', 'clear', 'cellspace', 'colspace', 'home', 'bottomcol', 'canstack', 'suit', 'value', 'successor'] Actions: ['move', 'move-b', 'sendtofree', 'sendtofree-b', 'sendtonewcol', 'sendtohome', 'sendtohome-b', 'homefromfreecell', 'colfromfreecell', 'newcolfromfreecell'] Constants: [] >
+2024-10-17 11:36:09,246 INFO     11 Predicates parsed
+2024-10-17 11:36:09,246 INFO     10 Actions parsed
+2024-10-17 11:36:09,246 INFO     21 Objects parsed
+2024-10-17 11:36:09,246 INFO     0 Constants parsed
+2024-10-17 11:36:09,246 INFO     Grounding start: freecell2-4
+2024-10-17 11:36:09,246 DEBUG    Grounding move
+2024-10-17 11:36:09,250 DEBUG    Grounding move-b
+2024-10-17 11:36:09,254 DEBUG    Grounding sendtofree
+2024-10-17 11:36:09,272 DEBUG    Grounding sendtofree-b
+2024-10-17 11:36:09,283 DEBUG    Grounding sendtonewcol
+2024-10-17 11:36:09,298 DEBUG    Grounding sendtohome
+2024-10-17 11:36:09,509 DEBUG    Grounding sendtohome-b
+2024-10-17 11:36:09,664 DEBUG    Grounding homefromfreecell
+2024-10-17 11:36:09,794 DEBUG    Grounding colfromfreecell
+2024-10-17 11:36:09,796 DEBUG    Grounding newcolfromfreecell
+2024-10-17 11:36:09,816 INFO     Relevance analysis removed 0 facts
+2024-10-17 11:36:09,816 INFO     Grounding end: freecell2-4
+2024-10-17 11:36:09,816 INFO     526 Variables created
+2024-10-17 11:36:09,816 INFO     4656 Operators created
+2024-10-17 11:36:09,816 INFO     Search start: freecell2-4

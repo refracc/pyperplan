@@ -95,12 +95,7 @@ class DomainParser:
         return constants
 
     def _parse_predicate(self, predicate_ast: List[str], domain_types: Dict[str, PDDLType]) -> Predicate:
-        """Parse a single predicate from an AST representation in the PDDL domain.
-
-        :param predicate_ast: the predicate in the form of an AST list of strings.
-        :param domain_types: the types that were extracted from the domain.
-        :return: the predicate object that represents the list of strings that were given.
-        """
+        """Parse a single predicate from an AST representation in the PDDL domain."""
         self.logger.info(f"Parsing the predicate represented by the AST - {predicate_ast}")
         predicate_name = predicate_ast[0]
         if (len(predicate_ast[1:]) % 3) != 0:
@@ -112,22 +107,21 @@ class DomainParser:
         self.logger.debug(f"Finished extracting the predicate - {extracted_predicate}")
         return extracted_predicate
 
-    def parse_predicates(self, predicates_ast: List[List[str]],
-                         domain_types: Dict[str, PDDLType]) -> Dict[str, Predicate]:
-        """Parses the predicates that appear in the predicates parsed AST.
-
-        :param predicates_ast: the AST that contains the predicates of the domain.
-        :param domain_types: the types that exist in the domain.
-        :return: a mapping between the predicate name and the predicate itself.
-        """
+    def parse_predicates(self, predicates_ast: List[List[str]], domain_types: Dict[str, PDDLType]) -> Dict[
+        str, Predicate]:
+        """Parses the predicates that appear in the predicates parsed AST."""
         self.logger.debug("Assuming that all the predicates defined in the domain are positive.")
         predicates = {}
         for predicate in predicates_ast:
             if predicate[0] == ":private":
+                # Make sure to access each private predicate correctly
                 for private_predicate in predicate[1:]:
-                    extracted_private_predicate = self._parse_predicate(private_predicate, domain_types)
-                    predicates[extracted_private_predicate.name] = extracted_private_predicate
-
+                    # Each private predicate should be a list of strings, so ensure you call _parse_predicate correctly
+                    if isinstance(private_predicate, list):
+                        extracted_private_predicate = self._parse_predicate(private_predicate, domain_types)
+                        predicates[extracted_private_predicate.name] = extracted_private_predicate
+                    else:
+                        self.logger.warning(f"Invalid format for private predicate: {private_predicate}")
                 continue
 
             extracted_predicate = self._parse_predicate(predicate, domain_types)

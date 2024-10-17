@@ -1,0 +1,38 @@
+2024-10-17 11:17:20,455 INFO     using search: weighted_astar_search
+2024-10-17 11:17:20,455 INFO     using heuristic: LandmarkHeuristic
+2024-10-17 11:17:20,455 INFO     Parsing Domain /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/movie/domain.pddl
+2024-10-17 11:17:20,455 INFO     Parsing Problem /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/movie/task01.pddl
+2024-10-17 11:17:20,455 DEBUG    < Domain definition: movie-strips Predicates: ['movie-rewound', 'counter-at-two-hours', 'counter-at-other-than-two-hours', 'counter-at-zero', 'have-chips', 'have-dip', 'have-pop', 'have-cheese', 'have-crackers', 'chips', 'dip', 'pop', 'cheese', 'crackers'] Actions: ['rewind-movie-2', 'rewind-movie', 'reset-counter', 'get-chips', 'get-dip', 'get-pop', 'get-cheese', 'get-crackers'] Constants: [] >
+2024-10-17 11:17:20,455 INFO     14 Predicates parsed
+2024-10-17 11:17:20,455 INFO     8 Actions parsed
+2024-10-17 11:17:20,455 INFO     25 Objects parsed
+2024-10-17 11:17:20,456 INFO     0 Constants parsed
+2024-10-17 11:17:20,456 INFO     Grounding start: strips-movie-x-1
+2024-10-17 11:17:20,456 DEBUG    Grounding rewind-movie-2
+2024-10-17 11:17:20,456 DEBUG    Grounding rewind-movie
+2024-10-17 11:17:20,456 DEBUG    Grounding reset-counter
+2024-10-17 11:17:20,456 DEBUG    Grounding get-chips
+2024-10-17 11:17:20,456 DEBUG    Grounding get-dip
+2024-10-17 11:17:20,457 DEBUG    Grounding get-pop
+2024-10-17 11:17:20,457 DEBUG    Grounding get-cheese
+2024-10-17 11:17:20,458 DEBUG    Grounding get-crackers
+2024-10-17 11:17:20,459 INFO     Relevance analysis removed 0 facts
+2024-10-17 11:17:20,459 INFO     Grounding end: strips-movie-x-1
+2024-10-17 11:17:20,459 INFO     7 Variables created
+2024-10-17 11:17:20,459 INFO     27 Operators created
+2024-10-17 11:17:20,460 INFO     Search start: strips-movie-x-1
+2024-10-17 11:17:20,460 INFO     Initial h value: 7.000000
+2024-10-17 11:17:20,460 DEBUG    Found new best h: 7 after 0 expansions
+2024-10-17 11:17:20,460 DEBUG    Found new best h: 6 after 1 expansions
+2024-10-17 11:17:20,460 DEBUG    Found new best h: 5 after 2 expansions
+2024-10-17 11:17:20,460 DEBUG    Found new best h: 4 after 3 expansions
+2024-10-17 11:17:20,460 DEBUG    Found new best h: 3 after 4 expansions
+2024-10-17 11:17:20,460 DEBUG    Found new best h: 2 after 5 expansions
+2024-10-17 11:17:20,460 DEBUG    Found new best h: 1 after 6 expansions
+2024-10-17 11:17:20,460 DEBUG    Found new best h: 0 after 7 expansions
+2024-10-17 11:17:20,460 INFO     Goal reached. Start extraction of solution.
+2024-10-17 11:17:20,460 INFO     8 Nodes expanded
+2024-10-17 11:17:20,460 INFO     Search end: strips-movie-x-1
+2024-10-17 11:17:20,460 INFO     Search time: 0.00058
+2024-10-17 11:17:20,460 INFO     Plan length: 7
+2024-10-17 11:17:20,461 INFO     validate could not be found on the PATH so the plan can not be validated.

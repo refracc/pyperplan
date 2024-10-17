@@ -1,0 +1,27 @@
+2024-10-17 11:18:19,991 INFO     using search: iterative_deepening_search
+2024-10-17 11:18:19,991 INFO     using heuristic: None
+2024-10-17 11:18:19,991 INFO     Parsing Domain /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/depot/domain.pddl
+2024-10-17 11:18:19,992 INFO     Parsing Problem /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/depot/task01.pddl
+2024-10-17 11:18:19,992 DEBUG    < Domain definition: depot Predicates: ['at', 'on', 'in', 'lifting', 'available', 'clear', 'place', 'locatable', 'depot', 'distributor', 'truck', 'hoist', 'surface', 'pallet', 'crate'] Actions: ['drive', 'lift', 'drop', 'load', 'unload'] Constants: [] >
+2024-10-17 11:18:19,992 INFO     15 Predicates parsed
+2024-10-17 11:18:19,992 INFO     5 Actions parsed
+2024-10-17 11:18:19,992 INFO     13 Objects parsed
+2024-10-17 11:18:19,992 INFO     0 Constants parsed
+2024-10-17 11:18:19,992 INFO     Grounding start: depotprob1818
+2024-10-17 11:18:19,992 DEBUG    Grounding drive
+2024-10-17 11:18:19,993 DEBUG    Grounding lift
+2024-10-17 11:18:19,995 DEBUG    Grounding drop
+2024-10-17 11:18:19,996 DEBUG    Grounding load
+2024-10-17 11:18:19,997 DEBUG    Grounding unload
+2024-10-17 11:18:19,998 INFO     Relevance analysis removed 0 facts
+2024-10-17 11:18:19,998 INFO     Grounding end: depotprob1818
+2024-10-17 11:18:19,998 INFO     58 Variables created
+2024-10-17 11:18:19,998 INFO     264 Operators created
+2024-10-17 11:18:19,998 INFO     Search start: depotprob1818
+2024-10-17 11:19:40,391 INFO     Goal reached. Start extraction of solution.
+2024-10-17 11:19:40,391 INFO     iterative_deepening_search: depth=10 planlength=10 
+2024-10-17 11:19:40,391 INFO     19790133 Nodes expanded
+2024-10-17 11:19:40,391 INFO     Search end: depotprob1818
+2024-10-17 11:19:40,391 INFO     Search time: 8e+01
+2024-10-17 11:19:40,391 INFO     Plan length: 10
+2024-10-17 11:19:40,392 INFO     validate could not be found on the PATH so the plan can not be validated.

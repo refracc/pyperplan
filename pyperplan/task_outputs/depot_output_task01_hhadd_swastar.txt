@@ -1,0 +1,38 @@
+2024-10-17 11:14:35,675 INFO     using search: weighted_astar_search
+2024-10-17 11:14:35,675 INFO     using heuristic: hAddHeuristic
+2024-10-17 11:14:35,675 INFO     Parsing Domain /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/depot/domain.pddl
+2024-10-17 11:14:35,676 INFO     Parsing Problem /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/depot/task01.pddl
+2024-10-17 11:14:35,676 DEBUG    < Domain definition: depot Predicates: ['at', 'on', 'in', 'lifting', 'available', 'clear', 'place', 'locatable', 'depot', 'distributor', 'truck', 'hoist', 'surface', 'pallet', 'crate'] Actions: ['drive', 'lift', 'drop', 'load', 'unload'] Constants: [] >
+2024-10-17 11:14:35,676 INFO     15 Predicates parsed
+2024-10-17 11:14:35,676 INFO     5 Actions parsed
+2024-10-17 11:14:35,676 INFO     13 Objects parsed
+2024-10-17 11:14:35,676 INFO     0 Constants parsed
+2024-10-17 11:14:35,676 INFO     Grounding start: depotprob1818
+2024-10-17 11:14:35,676 DEBUG    Grounding drive
+2024-10-17 11:14:35,677 DEBUG    Grounding lift
+2024-10-17 11:14:35,679 DEBUG    Grounding drop
+2024-10-17 11:14:35,680 DEBUG    Grounding load
+2024-10-17 11:14:35,680 DEBUG    Grounding unload
+2024-10-17 11:14:35,681 INFO     Relevance analysis removed 0 facts
+2024-10-17 11:14:35,681 INFO     Grounding end: depotprob1818
+2024-10-17 11:14:35,681 INFO     58 Variables created
+2024-10-17 11:14:35,681 INFO     264 Operators created
+2024-10-17 11:14:35,681 INFO     Search start: depotprob1818
+2024-10-17 11:14:35,681 INFO     Initial h value: 11.000000
+2024-10-17 11:14:35,681 DEBUG    Found new best h: 11 after 0 expansions
+2024-10-17 11:14:35,682 DEBUG    Found new best h: 10 after 1 expansions
+2024-10-17 11:14:35,683 DEBUG    Found new best h: 9 after 2 expansions
+2024-10-17 11:14:35,683 DEBUG    Found new best h: 8 after 3 expansions
+2024-10-17 11:14:35,684 DEBUG    Found new best h: 7 after 4 expansions
+2024-10-17 11:14:35,684 DEBUG    Found new best h: 5 after 5 expansions
+2024-10-17 11:14:35,685 DEBUG    Found new best h: 4 after 6 expansions
+2024-10-17 11:14:35,686 DEBUG    Found new best h: 3 after 7 expansions
+2024-10-17 11:14:35,686 DEBUG    Found new best h: 2 after 8 expansions
+2024-10-17 11:14:35,686 DEBUG    Found new best h: 1 after 9 expansions
+2024-10-17 11:14:35,687 DEBUG    Found new best h: 0 after 10 expansions
+2024-10-17 11:14:35,687 INFO     Goal reached. Start extraction of solution.
+2024-10-17 11:14:35,687 INFO     11 Nodes expanded
+2024-10-17 11:14:35,687 INFO     Search end: depotprob1818
+2024-10-17 11:14:35,687 INFO     Search time: 0.0058
+2024-10-17 11:14:35,687 INFO     Plan length: 10
+2024-10-17 11:14:35,687 INFO     validate could not be found on the PATH so the plan can not be validated.

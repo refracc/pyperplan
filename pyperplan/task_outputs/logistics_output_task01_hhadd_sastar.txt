@@ -1,0 +1,49 @@
+2024-10-17 11:14:35,637 INFO     using search: astar_search
+2024-10-17 11:14:35,637 INFO     using heuristic: hAddHeuristic
+2024-10-17 11:14:35,637 INFO     Parsing Domain /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/logistics/domain.pddl
+2024-10-17 11:14:35,638 INFO     Parsing Problem /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/logistics/task01.pddl
+2024-10-17 11:14:35,638 DEBUG    < Domain definition: logistics Predicates: ['in-city', 'at', 'in'] Actions: ['load-truck', 'load-airplane', 'unload-truck', 'unload-airplane', 'drive-truck', 'fly-airplane'] Constants: [] >
+2024-10-17 11:14:35,638 INFO     3 Predicates parsed
+2024-10-17 11:14:35,638 INFO     6 Actions parsed
+2024-10-17 11:14:35,638 INFO     15 Objects parsed
+2024-10-17 11:14:35,638 INFO     0 Constants parsed
+2024-10-17 11:14:35,638 INFO     Grounding start: logistics-4-0
+2024-10-17 11:14:35,638 DEBUG    Grounding load-truck
+2024-10-17 11:14:35,638 DEBUG    Grounding load-airplane
+2024-10-17 11:14:35,638 DEBUG    Grounding unload-truck
+2024-10-17 11:14:35,639 DEBUG    Grounding unload-airplane
+2024-10-17 11:14:35,639 DEBUG    Grounding drive-truck
+2024-10-17 11:14:35,639 DEBUG    Grounding fly-airplane
+2024-10-17 11:14:35,640 INFO     Relevance analysis removed 14 facts
+2024-10-17 11:14:35,640 INFO     Grounding end: logistics-4-0
+2024-10-17 11:14:35,640 INFO     54 Variables created
+2024-10-17 11:14:35,640 INFO     106 Operators created
+2024-10-17 11:14:35,640 INFO     Search start: logistics-4-0
+2024-10-17 11:14:35,640 INFO     Initial h value: 24.000000
+2024-10-17 11:14:35,640 DEBUG    Found new best h: 24 after 0 expansions
+2024-10-17 11:14:35,640 DEBUG    Found new best h: 23 after 1 expansions
+2024-10-17 11:14:35,641 DEBUG    Found new best h: 22 after 2 expansions
+2024-10-17 11:14:35,641 DEBUG    Found new best h: 21 after 3 expansions
+2024-10-17 11:14:35,641 DEBUG    Found new best h: 19 after 4 expansions
+2024-10-17 11:14:35,642 DEBUG    Found new best h: 18 after 5 expansions
+2024-10-17 11:14:35,642 DEBUG    Found new best h: 16 after 6 expansions
+2024-10-17 11:14:35,642 DEBUG    Found new best h: 15 after 7 expansions
+2024-10-17 11:14:35,643 DEBUG    Found new best h: 14 after 8 expansions
+2024-10-17 11:14:35,643 DEBUG    Found new best h: 13 after 9 expansions
+2024-10-17 11:14:35,643 DEBUG    Found new best h: 12 after 10 expansions
+2024-10-17 11:14:35,644 DEBUG    Found new best h: 11 after 11 expansions
+2024-10-17 11:14:35,644 DEBUG    Found new best h: 9 after 12 expansions
+2024-10-17 11:14:35,644 DEBUG    Found new best h: 8 after 13 expansions
+2024-10-17 11:14:35,645 DEBUG    Found new best h: 7 after 14 expansions
+2024-10-17 11:14:35,645 DEBUG    Found new best h: 6 after 15 expansions
+2024-10-17 11:14:35,645 DEBUG    Found new best h: 5 after 16 expansions
+2024-10-17 11:14:35,646 DEBUG    Found new best h: 4 after 17 expansions
+2024-10-17 11:14:35,646 DEBUG    Found new best h: 2 after 18 expansions
+2024-10-17 11:14:35,646 DEBUG    Found new best h: 1 after 19 expansions
+2024-10-17 11:14:35,646 DEBUG    Found new best h: 0 after 20 expansions
+2024-10-17 11:14:35,646 INFO     Goal reached. Start extraction of solution.
+2024-10-17 11:14:35,646 INFO     21 Nodes expanded
+2024-10-17 11:14:35,646 INFO     Search end: logistics-4-0
+2024-10-17 11:14:35,646 INFO     Search time: 0.0066
+2024-10-17 11:14:35,646 INFO     Plan length: 20
+2024-10-17 11:14:35,647 INFO     validate could not be found on the PATH so the plan can not be validated.

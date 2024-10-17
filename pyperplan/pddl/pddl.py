@@ -19,8 +19,8 @@
 This module contains all data structures needed to represent a PDDL domain and
 possibly a task definition.
 """
-from queue import Queue
 from heapq import heappop, heappush
+from queue import Queue
 
 from pyperplan.ma.node import SearchNode
 

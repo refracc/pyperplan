@@ -20,10 +20,10 @@ Classes and methods for grounding a schematic PDDL task to a STRIPS planning
 task.
 """
 
-from collections import defaultdict
 import itertools
 import logging
 import re
+from collections import defaultdict
 
 from .task import Operator, Task
 
@@ -397,7 +397,9 @@ def ground_shared_elements(domain, problem_objects, initial_state):
 
     return shared_operators, statics, type_map
 
-def ground_agent_problem(agent, shared_operators, remove_statics_from_initial_state=True, remove_irrelevant_operators=True):
+
+def ground_agent_problem(agent, shared_operators, remove_statics_from_initial_state=True,
+                         remove_irrelevant_operators=True):
     init = _get_partial_state(agent.initial_node.projected_state)
     goals = _get_partial_state(agent.goal_state)
     facts = _collect_facts(shared_operators) | goals
@@ -411,7 +413,8 @@ def ground_agent_problem(agent, shared_operators, remove_statics_from_initial_st
     return Task(agent.id, facts, init, goals, shared_operators)
 
 
-def multi_agent_ground(agents, domain, problem_objects, remove_statics_from_initial_state=True, remove_irrelevant_operators=True):
+def multi_agent_ground(agents, domain, problem_objects, remove_statics_from_initial_state=True,
+                       remove_irrelevant_operators=True):
     initial_state = set()
     for agent in agents:
         initial_state |= _get_partial_state(agent.initial_node.projected_state)
@@ -420,8 +423,8 @@ def multi_agent_ground(agents, domain, problem_objects, remove_statics_from_init
 
     all_tasks = []
     for agent in agents:
-        task = ground_agent_problem(agent, shared_operators, remove_statics_from_initial_state, remove_irrelevant_operators)
+        task = ground_agent_problem(agent, shared_operators, remove_statics_from_initial_state,
+                                    remove_irrelevant_operators)
         all_tasks.append(task)
 
     return all_tasks
-

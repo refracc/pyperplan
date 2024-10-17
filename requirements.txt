@@ -1,3 +1,7 @@
 setuptools
 pytest
 tox
+sympy
+anytree
+networkx
+numpy

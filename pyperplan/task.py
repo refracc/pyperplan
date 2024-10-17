@@ -140,4 +140,3 @@ class Task:
     def __repr__(self):
         string = "<Task {0}, vars: {1}, operators: {2}, agents: {3}>"
         return string.format(self.name, len(self.facts), len(self.operators), len(self.agents))
-

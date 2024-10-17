@@ -1,5 +1,5 @@
-from pyperplan.pddl.pddl import *
 from pyperplan.ma.node import *
+from pyperplan.pddl.pddl import *
 
 
 def setup_environment():
@@ -27,7 +27,6 @@ def setup_environment():
                                                   agent="1", private_parts=[]),
                   public_predicates={'at', 'connected'}, domain=domain, goal_state=goal_state)
     return agent, initial_state, goal_state, domain
-
 
 
 def test_predicate_creation():
@@ -139,14 +138,11 @@ def test_search_node_hashing():
 
 
 def test_solve_simple_problem():
-    # Setup environment
     agent, initial_state, goal_state, domain = setup_environment()
 
-    # Define initial and goal states as frozensets
-    initial_state = frozenset(['StateA'])  # Starting state
-    goal_state = frozenset(['StateB'])      # Goal state
+    initial_state = frozenset(['StateA'])
+    goal_state = frozenset(['StateB'])
 
-    # Define the action with correct precondition as a frozenset
     move_to_B = Action(
         name='move_to_B',
         signature={},
@@ -154,10 +150,8 @@ def test_solve_simple_problem():
         effect=Effect(addlist=['StateB'], dellist=[])
     )
 
-    # Add action to domain
     domain.actions.append(move_to_B)
 
-    # Create problem instance
     problem = Problem(
         name="simple_problem",
         domain=domain,
@@ -167,7 +161,6 @@ def test_solve_simple_problem():
         agents=[agent]
     )
 
-    # Initialize the search node
     initial_node = SearchNode(
         projected_state=initial_state,
         parent=None,
@@ -179,19 +172,18 @@ def test_solve_simple_problem():
     )
     agent.local_open_list.add(initial_node)
 
-    explored_states = set()  # Set to track explored states
+    explored_states = set()
 
     while agent.search_active:
         if not agent.local_open_list:
-            print("Debug: No solution found.")  # Debugging output
-            return  # Exit if no solution found
+            print("Debug: No solution found.")
+            return
 
         current_node = min(agent.local_open_list, key=lambda node: node.g + node.h)
         agent.local_open_list.remove(current_node)
 
-        print(f"Current Node: {current_node.projected_state}")  # Debugging output
+        print(f"Current Node: {current_node.projected_state}")
 
-        # Check if we have reached the goal state
         if current_node.projected_state == goal_state:
             solution = []
             node = current_node
@@ -199,19 +191,18 @@ def test_solve_simple_problem():
                 solution.append(node.action)
                 node = node.parent
             solution.reverse()
-            print(f"Solution found: {solution}")  # Debugging output
+            print(f"Solution found: {solution}")
             assert len(solution) == 1, "Expected one action in the solution path."
             return
 
-        # Get applicable actions
         applicable = agent.applicable_actions(current_node.projected_state)
-        print(f"Applicable Actions: {[action.name for action in applicable]}")  # Debugging output
+        print(f"Applicable Actions: {[action.name for action in applicable]}")
 
         for action in applicable:
             new_state = action.apply(current_node.projected_state)
-            print(f"New State After Applying Action '{action.name}': {new_state}")  # Debugging output
+            print(f"New State After Applying Action '{action.name}': {new_state}")
 
-            if new_state not in explored_states:  # Prevent cycles
+            if new_state not in explored_states:
                 new_node = SearchNode(
                     projected_state=new_state,
                     parent=current_node,
@@ -222,6 +213,6 @@ def test_solve_simple_problem():
                     private_parts=[]
                 )
                 agent.local_open_list.add(new_node)
-                print(f"New Node Added: {new_node.projected_state}")  # Debugging output
+                print(f"New Node Added: {new_node.projected_state}")
 
-        explored_states.add(current_node.projected_state)  # Mark the current state as explored
+        explored_states.add(current_node.projected_state)  # make this the agent's closed list.

@@ -1,6 +1,6 @@
 import pytest
+
 from pyperplan.pddl.pddl import *
-from queue import Queue
 
 
 def setup_environment():

@@ -201,7 +201,7 @@ class DomainParser:
     def parse_action(self, action_ast: List[Union[str, List[str]]], domain_types: Dict[str, PDDLType],
                      domain_functions: Dict[str, PDDLFunction],
                      domain_predicates: Dict[str, Predicate],
-                     domain_constants: Dict[str, PDDLConstant] = {}) -> Action:
+                     domain_constants=None) -> Action:
         """Parse a single action AST and returns the object that represent a single action.
 
         :param action_ast: the AST representation of the action.
@@ -212,6 +212,8 @@ class DomainParser:
             preconditions / effects.
         :return: the action object that is generated using the data from the domain AST.
         """
+        if domain_constants is None:
+            domain_constants = {}
         self.logger.info("Starting to parse a new action!")
         new_action = Action()
         new_action.name = action_ast[0].lower()

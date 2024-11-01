@@ -100,3 +100,9 @@ Please cite Pyperplan using
       url =          "https://doi.org/10.5281/zenodo.3700819",
       howpublished = "\url{https://doi.org/10.5281/zenodo.3700819}"
     }
+
+# To do
+- stick table up on git
+- fix cronjob for adding/committing
+- compilations/grounding for MA problems
+- divided datasets

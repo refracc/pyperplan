@@ -38,8 +38,9 @@ else
     echo "✅ Downward repository already exists, skipping clone and build."
 fi
 
-# Iterate through directories and run tasks
-for dir in "${directories[@]}"; do
+# Function to run tasks for a directory
+run_tasks_for_directory() {
+    local dir="$1"
     echo "🌟 Processing directory: $dir 🌟"
 
     # Find all domain and task files in the directory
@@ -49,7 +50,7 @@ for dir in "${directories[@]}"; do
     if [ ${#domains[@]} -gt 0 ] && [ ${#tasks[@]} -gt 0 ]; then
         if [ ${#domains[@]} -eq 1 ]; then
             # If there is only 1 domain, pair it with all tasks in the directory
-            for task_file in "${tasks[@]}"; do
+            for task_file in "${tasks[@]}" | head -n 10; do
                 domain_file="${domains[0]}"  # Only one domain, so pick the first one
                 for heuristic in "${heuristics[@]}"; do
                     # Define the output file path with directory name included
@@ -73,7 +74,7 @@ for dir in "${directories[@]}"; do
 
             if [ "$num_domains" -eq "$num_tasks" ]; then
                 # If domains and tasks are the same count, run them in pairs
-                for i in "${!domains[@]}"; do
+                for i in "${!domains[@]}" | head -n 10; do
                     domain_file="${domains[$i]}"
                     task_file="${tasks[$i]}"
 
@@ -99,9 +100,16 @@ for dir in "${directories[@]}"; do
     else
         echo "⚠️ No domain or task files found in directory $dir"
     fi
-done
+}
+
+# Start processing directories asynchronously with a maximum of 3 at a time
+export -f run_tasks_for_directory  # Make the function available for parallel execution
 
 echo "🚀 Script execution started! Output will be saved in the $output_dir directory."
 
+# Use GNU parallel to process up to 3 directories at the same time
+parallel -j 3 run_tasks_for_directory ::: "${directories[@]}"
+
 # Log completion message
 echo "✅ All tasks completed. You can find the results in the $output_dir directory."
+

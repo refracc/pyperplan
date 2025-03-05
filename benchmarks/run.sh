@@ -24,6 +24,20 @@ heuristics=(
 output_dir="output"
 mkdir -p "$output_dir"
 
+downward_dir="downward"
+if [ ! -d "$downward_dir" ]; then
+    echo "🌱 Cloning Downward repository from GitHub..."
+    git clone https://github.com/aibasel/downward.git "$downward_dir"
+
+    # Change into the downward directory and run the build script
+    echo "🔧 Installing Downward dependencies and building..."
+    cd "$downward_dir"
+    python3 build.py
+    cd ..
+else
+    echo "✅ Downward repository already exists, skipping clone and build."
+fi
+
 # Iterate through directories and run tasks
 for dir in "${directories[@]}"; do
     echo "🌟 Processing directory: $dir 🌟"

@@ -24,19 +24,6 @@ heuristics=(
 output_dir="output"
 mkdir -p "$output_dir"
 
-# Function to create a screen for parallel processing
-run_in_screen() {
-    local screen_name=$1
-    local domain_file=$2
-    local task_file=$3
-    local heuristic=$4
-    local output_file=$5
-
-    # Create a new screen to run the command in parallel
-    screen -dmS "$screen_name" bash -c \
-    "../downward/fast-downward.py $domain_file $task_file --search \"$heuristic\" > $output_file 2>&1; echo 'Finished: $domain_file $task_file with $heuristic' >> $output_dir/log.txt"
-}
-
 # Iterate through directories and run tasks
 for dir in "${directories[@]}"; do
     echo "🌟 Processing directory: $dir 🌟"
@@ -59,9 +46,10 @@ for dir in "${directories[@]}"; do
 
                     echo "⚙️ Running domain: $domain_file, task: $task_file, heuristic: $heuristic..."
 
-                    # Run the task in a new screen
-                    screen_name="$dir-$(basename "$domain_file")-$(basename "$task_file")-$(basename "$heuristic_name")"
-                    run_in_screen "$screen_name" "$domain_file" "$task_file" "$heuristic" "$output_file"
+                    # Run the task and save output to the file
+                    ./fast-downward.py "$domain_file" "$task_file" --search "$heuristic" > "$output_file" 2>&1
+
+                    echo "✅ Output saved to: $output_file"
                 done
             done
         else
@@ -84,9 +72,10 @@ for dir in "${directories[@]}"; do
 
                         echo "⚙️ Running domain: $domain_file, task: $task_file, heuristic: $heuristic..."
 
-                        # Run the task in a new screen
-                        screen_name="$dir-$(basename "$domain_file")-$(basename "$task_file")-$(basename "$heuristic_name")"
-                        run_in_screen "$screen_name" "$domain_file" "$task_file" "$heuristic" "$output_file"
+                        # Run the task and save output to the file
+                        ./fast-downward.py "$domain_file" "$task_file" --search "$heuristic" > "$output_file" 2>&1
+
+                        echo "✅ Output saved to: $output_file"
                     done
                 done
             else
@@ -98,7 +87,7 @@ for dir in "${directories[@]}"; do
     fi
 done
 
-echo "🚀 Script execution started! Check the screens for real-time logs. Output will be saved in the $output_dir directory."
+echo "🚀 Script execution started! Output will be saved in the $output_dir directory."
 
 # Log completion message
-echo "✅ All tasks started! You can track the progress in the respective screen sessions."
+echo "✅ All tasks completed. You can find the results in the $output_dir directory."

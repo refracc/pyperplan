@@ -2,7 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/benchmarks/multi-agent/universal-pddl-parser-multiagent" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/benchmarks/multi-agent/universal-pddl-parser-multiagent/universal-pddl-parser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/benchmarks/multi-agent/downward" vcs="Git" />
   </component>
 </project>

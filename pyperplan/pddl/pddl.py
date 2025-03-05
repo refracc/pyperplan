@@ -19,6 +19,7 @@
 This module contains all data structures needed to represent a PDDL domain and
 possibly a task definition.
 """
+import time
 from heapq import heappop, heappush
 from queue import Queue
 
@@ -201,6 +202,7 @@ def send_message(message_type, content, recipient):
 
 class Agent:
     def __init__(self, id, initial_node, public_predicates, domain, goal_state):
+        self.problem = None
         self.id = id
         self.initial_node = initial_node
         self.public_predicates = public_predicates
@@ -213,6 +215,10 @@ class Agent:
         self.busy = False
         self.domain = domain
         self.goal_state = goal_state
+        self.nodes_expanded = 0  # Counter for nodes expanded
+        self.start_time = None  # Start time of the search
+        self.end_time = None  # End time of the search
+
 
     def applicable_actions(self, state):
         applicable = set()
@@ -244,6 +250,9 @@ class Agent:
         self.local_open_list.update(new_nodes)
         if distributed:
             self.distributed_open_list.update(new_nodes)
+
+        self.nodes_expanded += len(new_nodes)  # Increment the nodes expanded counter
+
 
     def local_heuristic(self, state):
         """
@@ -313,58 +322,88 @@ class Agent:
         """
         Start the search process.
         """
+        self.start_time = time.time()  # Record the start time
         self.problem = problem
         self.a_star_search(problem)
+        self.end_time = time.time()  # Record the end time
 
     def a_star_search(self, problem):
         """
         Perform a synchronous A* search for the agent.
         """
+        # Constants for message types
+        PLAN_FOUND = "plan_found"
+        TERMINATE = "terminate"
+
+        # Helper to initialize g and h
+        def initialise_node(node, parent_g=None):
+            """Initialise g and h values for a node."""
+            if node.g is None:
+                node.g = parent_g + problem.cost(parent_g, node) if parent_g is not None else 0
+            if node.h is None:
+                node.h = self.local_heuristic(node.projected_state)
+
+        # Initialize open and closed lists
         open_list = []
         closed_list = set()
         initial_node = self.initial_node
 
-        # Ensure g and h are properly initialised
-        initial_node.g = initial_node.g if initial_node.g is not None else 0
-        initial_node.h = initial_node.h if initial_node.h is not None else self.local_heuristic(
-            initial_node.projected_state)
-
+        # Ensure the initial node is properly initialized
+        initialise_node(initial_node)
         heappush(open_list, (initial_node.g + initial_node.h, initial_node))
 
         while open_list:
             # Process communication first
             self.process_comm(problem)
 
+            # Get the node with the lowest f = g + h
             _, current_node = heappop(open_list)
             current_state = frozenset(current_node.projected_state)
 
+            # Goal reached: reconstruct the plan and notify
             if self._goal_reached(current_state):
-                # Reconstruct the plan and send the "plan_found" message
                 plan = self.reconstruct(current_node, current_node.g, self.id)
-                self.send_message("plan_found", plan, problem)
+                self.send_message(PLAN_FOUND, plan, problem)
                 break
 
+            # Skip if the current state is already processed
             if current_state in closed_list:
                 continue
 
+            # Mark the current state as closed and expand it
             closed_list.add(current_state)
             self.expand(current_node, distributed=True)
 
             for successor in self.local_open_list:
                 successor_state = frozenset(successor.projected_state)
 
-                # Ensure g and h are initialised for the successor
-                successor.g = successor.g if successor.g is not None else current_node.g + problem.cost(current_node,
-                                                                                                        successor)
-                successor.h = successor.h if successor.h is not None else self.local_heuristic(
-                    successor.projected_state)
+                # Ensure successor g and h are initialized
+                initialise_node(successor, current_node.g)
 
+                # Add successor to the open list if it is not already processed
                 if successor_state not in closed_list:
                     heappush(open_list, (successor.g + successor.h, successor))
 
-        # Final message to terminate if a plan is found
+        # Send termination message when a plan is found
         if self.plans.get(self.id):
-            self.send_message("terminate", self.plans[self.id], problem)
+            self.send_message(TERMINATE, self.plans[self.id], problem)
+
+    def get_metrics(self):
+        """
+        Return the metrics for the agent's search process.
+        Time taken is converted to milliseconds and rounded to 3 decimal places.
+        """
+        if self.end_time and self.start_time:
+            time_taken_ms = (self.end_time - self.start_time) * 1000  # Convert to milliseconds
+            time_taken_ms = round(time_taken_ms, 4)  # Round to 3 decimal places
+        else:
+            time_taken_ms = None
+
+        return {
+            "agent_id": self.id,
+            "nodes_expanded": self.nodes_expanded,
+            "time_taken_ms": time_taken_ms,  # Time in milliseconds
+        }
 
     def send_message(self, message_type, content, problem):
         """

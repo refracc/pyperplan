@@ -38,16 +38,16 @@ for dir in "${directories[@]}"; do
             for task_file in "${tasks[@]}"; do
                 domain_file="${domains[0]}"  # Only one domain, so pick the first one
                 for heuristic in "${heuristics[@]}"; do
-                    # Define the output file path
+                    # Define the output file path with directory name included
                     base_name=$(basename "$domain_file" .pddl)
                     task_name=$(basename "$task_file" .pddl)
                     heuristic_name=$(echo "$heuristic" | sed 's/[[:space:]]//g') # Remove spaces in heuristic name
-                    output_file="$output_dir/$base_name-$task_name-$heuristic_name.txt"
+                    output_file="$output_dir/$dir-$base_name-$task_name-$heuristic_name.txt"
 
                     echo "⚙️ Running domain: $domain_file, task: $task_file, heuristic: $heuristic..."
 
-                    # Run the task and save output to the file
-                    ./fast-downward.py "$domain_file" "$task_file" --search "$heuristic" > "$output_file" 2>&1
+                    # Run the task and save output to the file, overwrite existing files
+                    ./downward/fast-downward.py "$domain_file" "$task_file" --search "$heuristic" > "$output_file" 2>&1
 
                     echo "✅ Output saved to: $output_file"
                 done
@@ -64,16 +64,16 @@ for dir in "${directories[@]}"; do
                     task_file="${tasks[$i]}"
 
                     for heuristic in "${heuristics[@]}"; do
-                        # Define the output file path
+                        # Define the output file path with directory name included
                         base_name=$(basename "$domain_file" .pddl)
                         task_name=$(basename "$task_file" .pddl)
                         heuristic_name=$(echo "$heuristic" | sed 's/[[:space:]]//g') # Remove spaces in heuristic name
-                        output_file="$output_dir/$base_name-$task_name-$heuristic_name.txt"
+                        output_file="$output_dir/$dir-$base_name-$task_name-$heuristic_name.txt"
 
                         echo "⚙️ Running domain: $domain_file, task: $task_file, heuristic: $heuristic..."
 
-                        # Run the task and save output to the file
-                        ./fast-downward.py "$domain_file" "$task_file" --search "$heuristic" > "$output_file" 2>&1
+                        # Run the task and save output to the file, overwrite existing files
+                        ./downward/fast-downward.py "$domain_file" "$task_file" --search "$heuristic" > "$output_file" 2>&1
 
                         echo "✅ Output saved to: $output_file"
                     done

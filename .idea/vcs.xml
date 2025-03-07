@@ -2,7 +2,17 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+<<<<<<< Updated upstream
     <mapping directory="$PROJECT_DIR$/benchmarks/multi-agent/universal-pddl-parser-multiagent" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/benchmarks/multi-agent/universal-pddl-parser-multiagent/universal-pddl-parser" vcs="Git" />
+=======
+<<<<<<< HEAD
+    <mapping directory="$PROJECT_DIR$/benchmarks/downward" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/benchmarks/multi-agent/downward" vcs="Git" />
+=======
+    <mapping directory="$PROJECT_DIR$/benchmarks/multi-agent/universal-pddl-parser-multiagent" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/benchmarks/multi-agent/universal-pddl-parser-multiagent/universal-pddl-parser" vcs="Git" />
+>>>>>>> 310176d413ed4a7503d8742e96166cd7c854c68d
+>>>>>>> Stashed changes
   </component>
 </project>

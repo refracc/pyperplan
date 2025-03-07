@@ -308,7 +308,8 @@ class Agent:
         if sender not in self.plans:
             self.plans[sender] = {}
 
-        self.plans[sender][t] = u.action
+        # Store action name instead of object
+        self.plans[sender][t] = u.action.name if u.action else None
 
         if t == 0:
             return self.plans[sender]

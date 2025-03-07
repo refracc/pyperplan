@@ -21,6 +21,7 @@ class ProblemGenerator:
             agent.start_search(problem)
 
     def _serialize_problem(self, problem: Problem) -> dict:
+        """Convert problem data to JSON-serializable format"""
         return {
             "problem_id": problem.name,
             "domain": problem.domain.name,
@@ -30,19 +31,22 @@ class ProblemGenerator:
             "agents": [
                 {
                     "id": agent.id,
-                    "plan": list(agent.plans.get(agent.id, [])),
+                    # Extract sorted action names from the plan
+                    "plan": [
+                        action
+                        for time, action in sorted(agent.plans.get(agent.id, {}).items())
+                        if action is not None
+                    ],
                     "metrics": agent.get_metrics()
                 }
                 for agent in problem.agents
             ],
-            # New domain/problem stats
             "domain_actions": len(problem.domain.actions),
             "initial_facts": len(problem.initial_state),
             "goal_facts": len(problem.goal),
             "num_agents": len(problem.agents),
             "num_locations": len(problem.objects),
         }
-
 
     def _save_problem(self, problem: Problem):
         """Save problem data to JSON file"""

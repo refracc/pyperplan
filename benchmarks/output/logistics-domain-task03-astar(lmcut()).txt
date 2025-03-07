@@ -1,0 +1,99 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /home/rpgsbs/r01sa23/miniconda3/bin/python3 /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/translate/translate.py logistics/domain.pddl logistics/task03.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.000s CPU, 0.002s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.000s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.004s wall-clock]
+Preparing model... [0.000s CPU, 0.001s wall-clock]
+Generated 33 rules.
+Computing model... [0.000s CPU, 0.002s wall-clock]
+198 relevant atoms
+156 auxiliary atoms
+354 final queue length
+399 total queue pushes
+Completing instantiation... [0.010s CPU, 0.004s wall-clock]
+Instantiating: [0.010s CPU, 0.011s wall-clock]
+Computing fact groups...
+Finding invariants...
+6 initial candidates
+Finding invariants: [0.000s CPU, 0.001s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+0 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.000s CPU, 0.002s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.000s CPU, 0.000s wall-clock]
+Translating task: [0.000s CPU, 0.005s wall-clock]
+0 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+9 propositions removed
+Detecting unreachable propositions: [0.000s CPU, 0.001s wall-clock]
+Reordering and filtering variables...
+7 of 9 variables necessary.
+0 of 9 mutex groups necessary.
+54 of 78 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.000s CPU, 0.000s wall-clock]
+Translator variables: 7
+Translator derived variables: 0
+Translator facts: 34
+Translator goal facts: 4
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 54
+Translator axioms: 0
+Translator task size: 255
+Translator peak memory: 33536 KB
+Writing output... [0.000s CPU, 0.000s wall-clock]
+Done! [0.010s CPU, 0.023s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/downward --search 'astar(lmcut())' --sas-file 'output/logistics-domain-task03-astar(lmcut())-output.sas' --internal-plan-file sas_plan < output.sas
+[t=0.000136s, 9984 KB] reading input...
+[t=0.000374s, 9984 KB] done reading input!
+[t=0.001622s, 10248 KB] Initializing landmark cut heuristic...
+[t=0.001726s, 10248 KB] Building successor generator...done!
+[t=0.001813s, 10248 KB] peak memory difference for successor generator creation: 0 KB
+[t=0.001831s, 10248 KB] time for successor generation creation: 0.000015s
+[t=0.001849s, 10248 KB] Variables: 17
+[t=0.001870s, 10248 KB] FactPairs: 34
+[t=0.001886s, 10248 KB] Bytes per state: 4
+unknown option --sas-file
+Usage error occurred.
+Peak memory: 10248 KB
+Remove intermediate file output.sas
+Traceback (most recent call last):
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/./downward/fast-downward.py", line 5, in <module>
+    main()
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/driver/main.py", line 43, in main
+    args.sas_file.unlink()
+  File "/home/rpgsbs/r01sa23/miniconda3/lib/python3.11/pathlib.py", line 1147, in unlink
+    os.unlink(self)
+FileNotFoundError: [Errno 2] No such file or directory: 'output.sas'

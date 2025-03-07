@@ -1,0 +1,99 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /home/rpgsbs/r01sa23/miniconda3/bin/python3 /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/translate/translate.py rovers/domain.pddl rovers/task05.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.000s CPU, 0.017s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.007s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.010s CPU, 0.008s wall-clock]
+Preparing model... [0.000s CPU, 0.001s wall-clock]
+Generated 90 rules.
+Computing model... [0.000s CPU, 0.010s wall-clock]
+310 relevant atoms
+417 auxiliary atoms
+727 final queue length
+945 total queue pushes
+Completing instantiation... [0.000s CPU, 0.008s wall-clock]
+Instantiating: [0.010s CPU, 0.036s wall-clock]
+Computing fact groups...
+Finding invariants...
+35 initial candidates
+Finding invariants: [0.010s CPU, 0.002s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+38 uncovered facts
+Choosing groups: [0.000s CPU, 0.009s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.010s CPU, 0.012s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.000s CPU, 0.000s wall-clock]
+Translating task: [0.000s CPU, 0.014s wall-clock]
+61 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+15 propositions removed
+Detecting unreachable propositions: [0.010s CPU, 0.002s wall-clock]
+Reordering and filtering variables...
+25 of 44 variables necessary.
+0 of 9 mutex groups necessary.
+111 of 144 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.000s CPU, 0.001s wall-clock]
+Translator variables: 25
+Translator derived variables: 0
+Translator facts: 53
+Translator goal facts: 7
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 111
+Translator axioms: 0
+Translator task size: 545
+Translator peak memory: 33548 KB
+Writing output... [0.000s CPU, 0.001s wall-clock]
+Done! [0.030s CPU, 0.083s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/downward --search 'lazy_greedy([hff], preferred=[hff])' --sas-file 'output/rovers-domain-task05-lazy_greedy([hff],preferred=[hff])-output.sas' --internal-plan-file sas_plan < output.sas
+[t=0.000167s, 9984 KB] reading input...
+[t=0.000811s, 9984 KB] done reading input!
+Traceback:
+  Start semantic analysis
+  -> Checking Plugin: lazy_greedy
+  -> Checking the keyword argument 'preferred'.
+  -> Adding casting node
+
+Cannot convert from type 'list of symbol' to type 'list of Evaluator'
+
+Usage error occurred.
+Peak memory: 10248 KB
+Remove intermediate file output.sas
+Traceback (most recent call last):
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/./downward/fast-downward.py", line 5, in <module>
+    main()
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/driver/main.py", line 43, in main
+    args.sas_file.unlink()
+  File "/home/rpgsbs/r01sa23/miniconda3/lib/python3.11/pathlib.py", line 1147, in unlink
+    os.unlink(self)
+FileNotFoundError: [Errno 2] No such file or directory: 'output.sas'

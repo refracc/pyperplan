@@ -1,0 +1,90 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /home/rpgsbs/r01sa23/miniconda3/bin/python3 /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/translate/translate.py woodworking/domain.pddl woodworking/task08.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.000s CPU, 0.011s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.004s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.010s CPU, 0.009s wall-clock]
+Preparing model... [0.000s CPU, 0.010s wall-clock]
+Generated 198 rules.
+Computing model... [0.030s CPU, 0.079s wall-clock]
+2021 relevant atoms
+3875 auxiliary atoms
+5896 final queue length
+11097 total queue pushes
+Completing instantiation... [0.050s CPU, 0.118s wall-clock]
+Instantiating: [0.090s CPU, 0.221s wall-clock]
+Computing fact groups...
+Finding invariants...
+24 initial candidates
+Finding invariants: [0.000s CPU, 0.005s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.001s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+119 uncovered facts
+Choosing groups: [0.010s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.010s CPU, 0.008s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.000s CPU, 0.002s wall-clock]
+Translating task: [0.040s CPU, 0.050s wall-clock]
+1125 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+56 propositions removed
+Detecting unreachable propositions: [0.030s CPU, 0.023s wall-clock]
+Reordering and filtering variables...
+118 of 126 variables necessary.
+23 of 40 mutex groups necessary.
+1566 of 1566 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.010s CPU, 0.010s wall-clock]
+Translator variables: 118
+Translator derived variables: 0
+Translator facts: 288
+Translator goal facts: 32
+Translator mutex groups: 23
+Translator total mutex groups size: 66
+Translator operators: 1566
+Translator axioms: 0
+Translator task size: 12817
+Translator peak memory: 42028 KB
+Writing output... [0.010s CPU, 0.010s wall-clock]
+Done! [0.190s CPU, 0.337s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/downward --search 'lazy_greedy([hff], preferred=[hff])' --sas-file 'output/woodworking-domain-task08-lazy_greedy([hff],preferred=[hff])-output.sas' --internal-plan-file sas_plan < output.sas
+Traceback (most recent call last):
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/./downward/fast-downward.py", line 5, in <module>
+    main()
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/driver/main.py", line 40, in main
+    (exitcode, continue_execution) = run_components.run_search(args)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/driver/run_components.py", line 130, in run_search
+    call.check_call(
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/driver/call.py", line 62, in check_call
+    with open(stdin) as stdin_file:
+         ^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'output.sas'

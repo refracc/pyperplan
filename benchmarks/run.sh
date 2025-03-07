@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Define directories
 directories=(
     "parcprinter" "airport" "pegsol"
@@ -29,7 +27,6 @@ if [ ! -d "$downward_dir" ]; then
     echo "🌱 Cloning Downward repository from GitHub..."
     git clone https://github.com/aibasel/downward.git "$downward_dir"
 
-    # Change into the downward directory and run the build script
     echo "🔧 Installing Downward dependencies and building..."
     cd "$downward_dir"
     python3 build.py
@@ -38,78 +35,52 @@ else
     echo "✅ Downward repository already exists, skipping clone and build."
 fi
 
-# Function to run tasks for a directory
 run_tasks_for_directory() {
     local dir="$1"
     echo "🌟 Processing directory: $dir 🌟"
 
-    # Find all domain and task files in the directory
-    domains=($dir/domain*.pddl)
-    tasks=($dir/task*.pddl)
+    mapfile -t domains < <(find "$dir" -maxdepth 1 -name 'domain*.pddl' | sort)
+    mapfile -t tasks < <(find "$dir" -maxdepth 1 -name 'task*.pddl' | sort)
 
     if [ ${#domains[@]} -gt 0 ] && [ ${#tasks[@]} -gt 0 ]; then
         if [ ${#domains[@]} -eq 1 ]; then
-            # If there is only 1 domain, pair it with all tasks in the directory
-            for task_file in "${tasks[@]}" | head -n 10; do
-                domain_file="${domains[0]}"  # Only one domain, so pick the first one
+            for task_file in "${tasks[@]:0:10}"; do
+                domain_file="${domains[0]}"
                 for heuristic in "${heuristics[@]}"; do
-                    # Define the output file path with directory name included
                     base_name=$(basename "$domain_file" .pddl)
                     task_name=$(basename "$task_file" .pddl)
-                    heuristic_name=$(echo "$heuristic" | sed 's/[[:space:]]//g') # Remove spaces in heuristic name
+                    heuristic_name=$(echo "$heuristic" | sed 's/[[:space:]]//g')
                     output_file="$output_dir/$dir-$base_name-$task_name-$heuristic_name.txt"
+                    sas_file="$output_dir/$dir-$base_name-$task_name-$heuristic_name-output.sas"
+
+                    # Create a unique directory for each task
+                    task_output_dir="$output_dir/$dir-$base_name-$task_name-$heuristic_name"
+                    mkdir -p "$task_output_dir"
 
                     echo "⚙️ Running domain: $domain_file, task: $task_file, heuristic: $heuristic..."
-
-                    # Run the task and save output to the file, overwrite existing files
-                    ./downward/fast-downward.py "$domain_file" "$task_file" --search "$heuristic" > "$output_file" 2>&1
-
-                    echo "✅ Output saved to: $output_file"
+                    ./downward/fast-downward.py "$domain_file" "$task_file" --search "$heuristic" --sas-file "$sas_file" > "$output_file" 2>&1 &
                 done
             done
-        else
-            # If there are multiple domains, pair each domain with its corresponding task
-            num_domains=${#domains[@]}
-            num_tasks=${#tasks[@]}
-
-            if [ "$num_domains" -eq "$num_tasks" ]; then
-                # If domains and tasks are the same count, run them in pairs
-                for i in "${!domains[@]}" | head -n 10; do
-                    domain_file="${domains[$i]}"
-                    task_file="${tasks[$i]}"
-
-                    for heuristic in "${heuristics[@]}"; do
-                        # Define the output file path with directory name included
-                        base_name=$(basename "$domain_file" .pddl)
-                        task_name=$(basename "$task_file" .pddl)
-                        heuristic_name=$(echo "$heuristic" | sed 's/[[:space:]]//g') # Remove spaces in heuristic name
-                        output_file="$output_dir/$dir-$base_name-$task_name-$heuristic_name.txt"
-
-                        echo "⚙️ Running domain: $domain_file, task: $task_file, heuristic: $heuristic..."
-
-                        # Run the task and save output to the file, overwrite existing files
-                        ./downward/fast-downward.py "$domain_file" "$task_file" --search "$heuristic" > "$output_file" 2>&1
-
-                        echo "✅ Output saved to: $output_file"
-                    done
-                done
-            else
-                echo "❌ Mismatch between number of domains ($num_domains) and tasks ($num_tasks) in directory $dir"
-            fi
         fi
+        wait
     else
         echo "⚠️ No domain or task files found in directory $dir"
     fi
 }
 
-# Start processing directories asynchronously with a maximum of 3 at a time
-export -f run_tasks_for_directory  # Make the function available for parallel execution
+# Parallel execution in batches of 3
+echo "🚀 Starting parallel execution..."
 
-echo "🚀 Script execution started! Output will be saved in the $output_dir directory."
+parallel_jobs=()
 
-# Use GNU parallel to process up to 3 directories at the same time
-parallel -j 3 run_tasks_for_directory ::: "${directories[@]}"
+for dir in "${directories[@]}"; do
+    run_tasks_for_directory "$dir" &
+    parallel_jobs+=("$!")
 
-# Log completion message
-echo "✅ All tasks completed. You can find the results in the $output_dir directory."
+    if [ ${#parallel_jobs[@]} -eq 3 ]; then
+        wait "${parallel_jobs[@]}"
+        parallel_jobs=()
+    fi
+done
 
+wait "${parallel_jobs[@]}"

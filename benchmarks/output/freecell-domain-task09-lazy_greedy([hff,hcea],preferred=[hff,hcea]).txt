@@ -1,0 +1,95 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /home/rpgsbs/r01sa23/miniconda3/bin/python3 /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/translate/translate.py freecell/domain.pddl freecell/task09.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.010s CPU, 0.014s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.001s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.017s wall-clock]
+Preparing model... [0.000s CPU, 0.013s wall-clock]
+Generated 125 rules.
+Computing model... [0.060s CPU, 0.222s wall-clock]
+7521 relevant atoms
+3380 auxiliary atoms
+10901 final queue length
+32725 total queue pushes
+Completing instantiation... [0.230s CPU, 0.575s wall-clock]
+Instantiating: [0.290s CPU, 0.831s wall-clock]
+Computing fact groups...
+Finding invariants...
+15 initial candidates
+Finding invariants: [0.010s CPU, 0.016s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.010s CPU, 0.007s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+36 uncovered facts
+Choosing groups: [0.000s CPU, 0.001s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.020s CPU, 0.026s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.004s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.010s CPU, 0.017s wall-clock]
+Translating task: [0.240s CPU, 0.477s wall-clock]
+2827 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+6 propositions removed
+Detecting unreachable propositions: [0.140s CPU, 0.202s wall-clock]
+Reordering and filtering variables...
+70 of 70 variables necessary.
+64 of 130 mutex groups necessary.
+6997 of 6997 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.030s CPU, 0.031s wall-clock]
+Translator variables: 70
+Translator derived variables: 0
+Translator facts: 296
+Translator goal facts: 4
+Translator mutex groups: 64
+Translator total mutex groups size: 324
+Translator operators: 6997
+Translator axioms: 0
+Translator task size: 56677
+Translator peak memory: 69528 KB
+Writing output... [0.030s CPU, 0.034s wall-clock]
+Done! [0.770s CPU, 1.631s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/downward --search 'lazy_greedy([hff, hcea], preferred=[hff, hcea])' --sas-file 'output/freecell-domain-task09-lazy_greedy([hff,hcea],preferred=[hff,hcea])-output.sas' --internal-plan-file sas_plan < output.sas
+[t=0.000150s, 9984 KB] reading input...
+[t=0.033415s, 12856 KB] done reading input!
+Traceback:
+  Start semantic analysis
+  -> Checking Plugin: lazy_greedy
+  -> Checking the keyword argument 'preferred'.
+  -> Adding casting node
+
+Cannot convert from type 'list of symbol' to type 'list of Evaluator'
+
+Usage error occurred.
+Peak memory: 13120 KB
+Remove intermediate file output.sas
+search exit code: 33
+
+Driver aborting after search
+INFO     Planner time: 0.91s

@@ -1,0 +1,141 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /home/rpgsbs/r01sa23/miniconda3/bin/python3 /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/translate/translate.py transport/domain.pddl transport/task08.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.000s CPU, 0.002s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.008s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.001s wall-clock]
+Preparing model... [0.010s CPU, 0.001s wall-clock]
+Generated 26 rules.
+Computing model... [0.050s CPU, 0.157s wall-clock]
+5998 relevant atoms
+5041 auxiliary atoms
+11039 final queue length
+21350 total queue pushes
+Completing instantiation... [0.140s CPU, 0.287s wall-clock]
+Instantiating: [0.200s CPU, 0.456s wall-clock]
+Computing fact groups...
+Finding invariants...
+9 initial candidates
+Finding invariants: [0.000s CPU, 0.007s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.001s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+0 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.000s CPU, 0.009s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.010s CPU, 0.014s wall-clock]
+Translating task: [0.110s CPU, 0.149s wall-clock]
+0 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+15 propositions removed
+Detecting unreachable propositions: [0.090s CPU, 0.084s wall-clock]
+Reordering and filtering variables...
+15 of 15 variables necessary.
+0 of 15 mutex groups necessary.
+5442 of 5442 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.010s CPU, 0.013s wall-clock]
+Translator variables: 15
+Translator derived variables: 0
+Translator facts: 330
+Translator goal facts: 9
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 5442
+Translator axioms: 0
+Translator task size: 32232
+Translator peak memory: 54480 KB
+Writing output... [0.010s CPU, 0.016s wall-clock]
+Done! [0.430s CPU, 0.736s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/downward --search 'astar(ipdb())' --sas-file 'output/transport-domain-task08-astar(ipdb())-output.sas' --internal-plan-file sas_plan < output.sas
+[t=0.000100s, 9984 KB] reading input...
+[t=0.015909s, 11944 KB] done reading input!
+[t=0.016851s, 12340 KB] Initializing canonical PDB heuristic...
+[t=0.016881s, 12340 KB] Generating patterns using: hill climbing pattern collection generator
+[t=0.022149s, 12340 KB] Done calculating initial pattern collection: 0.005302s
+[t=0.022198s, 12340 KB] Average operator cost: 1.000000
+[t=0.022224s, 12340 KB] building causal graph...done! [t=0.000716s]
+[t=0.063867s, 12760 KB] Done calculating initial candidate PDBs
+[t=0.077363s, 13672 KB] found a better pattern with improvement 122
+[t=0.131873s, 15004 KB] found a better pattern with improvement 84
+[t=0.185889s, 16136 KB] found a better pattern with improvement 76
+[t=1.315324s, 48408 KB] found a better pattern with improvement 63
+[t=1.369729s, 48408 KB] found a better pattern with improvement 51
+[t=2.479148s, 78896 KB] found a better pattern with improvement 50
+[t=3.563978s, 108328 KB] found a better pattern with improvement 57
+[t=3.586179s, 108328 KB] found a better pattern with improvement 42
+[t=3.608435s, 108328 KB] found a better pattern with improvement 38
+[t=3.633001s, 108328 KB] found a better pattern with improvement 39
+[t=3.693890s, 108328 KB] found a better pattern with improvement 42
+[t=3.723346s, 108328 KB] found a better pattern with improvement 38
+[t=3.791980s, 108328 KB] found a better pattern with improvement 39
+[t=3.830814s, 108328 KB] found a better pattern with improvement 27
+[t=4.854076s, 136704 KB] found a better pattern with improvement 28
+[t=4.935418s, 136704 KB] found a better pattern with improvement 25
+[t=5.971438s, 164008 KB] found a better pattern with improvement 33
+[t=7.124756s, 193440 KB] found a better pattern with improvement 29
+[t=8.296353s, 222776 KB] found a better pattern with improvement 23
+[t=8.383546s, 222776 KB] found a better pattern with improvement 14
+[t=8.473099s, 222776 KB] found a better pattern with improvement 14
+[t=8.564884s, 222776 KB] Improvement below threshold. Stop hill climbing.
+[t=8.564930s, 222776 KB] Hill climbing iterations: 22
+[t=8.564938s, 222776 KB] Hill climbing generated patterns: 228
+[t=8.564945s, 222776 KB] Hill climbing rejected patterns: 186
+[t=8.564951s, 222776 KB] Hill climbing maximum PDB size: 729000
+[t=8.564956s, 222776 KB] Hill climbing time: 8.542763s
+[t=8.570154s, 222776 KB] hill climbing pattern collection generator number of patterns: 31
+[t=8.570188s, 222776 KB] hill climbing pattern collection generator total PDB size: 5642760
+[t=8.570195s, 222776 KB] hill climbing pattern collection generator computation time: 8.553263s
+[t=8.570202s, 222776 KB] Running dominance pruning...
+[t=8.570249s, 222776 KB] Pruned 178 of 209 pattern cliques
+[t=8.570255s, 222776 KB] Pruned 3 of 31 PDBs
+[t=8.570260s, 222776 KB] Dominance pruning took 0.000058s
+[t=8.570273s, 222776 KB] Canonical PDB heuristic number of patterns: 28
+[t=8.570280s, 222776 KB] Canonical PDB heuristic total PDB size: 5616840
+[t=8.570285s, 222776 KB] Canonical PDB heuristic computation time: 8.553423s
+[t=8.570309s, 222776 KB] Building successor generator...done!
+[t=8.571492s, 222776 KB] peak memory difference for successor generator creation: 0 KB
+[t=8.571499s, 222776 KB] time for successor generation creation: 0.001153s
+[t=8.571537s, 222776 KB] Variables: 16
+[t=8.571544s, 222776 KB] FactPairs: 396
+[t=8.571549s, 222776 KB] Bytes per state: 12
+unknown option --sas-file
+Usage error occurred.
+Peak memory: 222776 KB
+Remove intermediate file output.sas
+Traceback (most recent call last):
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/./downward/fast-downward.py", line 5, in <module>
+    main()
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/driver/main.py", line 43, in main
+    args.sas_file.unlink()
+  File "/home/rpgsbs/r01sa23/miniconda3/lib/python3.11/pathlib.py", line 1147, in unlink
+    os.unlink(self)
+FileNotFoundError: [Errno 2] No such file or directory: 'output.sas'

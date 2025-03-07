@@ -1,0 +1,126 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /home/rpgsbs/r01sa23/miniconda3/bin/python3 /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/translate/translate.py scanalyzer/domain.pddl scanalyzer/task02.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.000s CPU, 0.002s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.000s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.013s wall-clock]
+Preparing model... [0.010s CPU, 0.001s wall-clock]
+Generated 51 rules.
+Computing model... [0.000s CPU, 0.026s wall-clock]
+523 relevant atoms
+876 auxiliary atoms
+1399 final queue length
+2335 total queue pushes
+Completing instantiation... [0.010s CPU, 0.022s wall-clock]
+Instantiating: [0.020s CPU, 0.063s wall-clock]
+Computing fact groups...
+Finding invariants...
+5 initial candidates
+Finding invariants: [0.010s CPU, 0.020s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+6 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.010s CPU, 0.021s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.000s CPU, 0.001s wall-clock]
+Translating task: [0.000s CPU, 0.029s wall-clock]
+0 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+6 propositions removed
+Detecting unreachable propositions: [0.020s CPU, 0.011s wall-clock]
+Reordering and filtering variables...
+12 of 12 variables necessary.
+6 of 12 mutex groups necessary.
+360 of 360 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.000s CPU, 0.002s wall-clock]
+Translator variables: 12
+Translator derived variables: 0
+Translator facts: 48
+Translator goal facts: 12
+Translator mutex groups: 6
+Translator total mutex groups size: 36
+Translator operators: 360
+Translator axioms: 0
+Translator task size: 1998
+Translator peak memory: 34568 KB
+Writing output... [0.000s CPU, 0.005s wall-clock]
+Done! [0.050s CPU, 0.133s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/downward --search 'astar(ipdb())' --sas-file 'output/scanalyzer-domain-task02-astar(ipdb())-output.sas' --internal-plan-file sas_plan < output.sas
+[t=0.000155s, 9984 KB] reading input...
+[t=0.001621s, 10120 KB] done reading input!
+[t=0.003088s, 10376 KB] Initializing canonical PDB heuristic...
+[t=0.003154s, 10376 KB] Generating patterns using: hill climbing pattern collection generator
+[t=0.003815s, 10376 KB] Done calculating initial pattern collection: 0.000673s
+[t=0.003847s, 10376 KB] Average operator cost: 1.000000
+[t=0.003863s, 10376 KB] building causal graph...done! [t=0.000107s]
+[t=0.007779s, 10376 KB] Done calculating initial candidate PDBs
+[t=0.015756s, 10508 KB] found a better pattern with improvement 182
+[t=0.025692s, 10508 KB] found a better pattern with improvement 299
+[t=0.037135s, 10508 KB] found a better pattern with improvement 487
+[t=0.051155s, 10508 KB] found a better pattern with improvement 276
+[t=0.072680s, 10640 KB] found a better pattern with improvement 380
+[t=0.129734s, 11088 KB] found a better pattern with improvement 319
+[t=0.225251s, 11936 KB] found a better pattern with improvement 314
+[t=0.422320s, 15688 KB] found a better pattern with improvement 250
+[t=0.696922s, 21072 KB] found a better pattern with improvement 232
+[t=0.992846s, 30328 KB] found a better pattern with improvement 182
+[t=1.019505s, 30328 KB] Improvement below threshold. Stop hill climbing.
+[t=1.019594s, 30328 KB] Hill climbing iterations: 11
+[t=1.019608s, 30328 KB] Hill climbing generated patterns: 105
+[t=1.019624s, 30328 KB] Hill climbing rejected patterns: 6
+[t=1.019635s, 30328 KB] Hill climbing maximum PDB size: 1492992
+[t=1.019646s, 30328 KB] Hill climbing time: 1.015811s
+[t=1.020452s, 30328 KB] hill climbing pattern collection generator number of patterns: 22
+[t=1.020496s, 30328 KB] hill climbing pattern collection generator total PDB size: 1945140
+[t=1.020510s, 30328 KB] hill climbing pattern collection generator computation time: 1.017282s
+[t=1.020522s, 30328 KB] Running dominance pruning...
+[t=1.020538s, 30328 KB] Pruned 15 of 17 pattern cliques
+[t=1.020549s, 30328 KB] Pruned 15 of 22 PDBs
+[t=1.020561s, 30328 KB] Dominance pruning took 0.000037s
+[t=1.020700s, 30328 KB] Canonical PDB heuristic number of patterns: 7
+[t=1.020716s, 30328 KB] Canonical PDB heuristic total PDB size: 1493004
+[t=1.020727s, 30328 KB] Canonical PDB heuristic computation time: 1.017615s
+[t=1.020767s, 30328 KB] Building successor generator...done!
+[t=1.020935s, 30328 KB] peak memory difference for successor generator creation: 0 KB
+[t=1.020947s, 30328 KB] time for successor generation creation: 0.000126s
+[t=1.020962s, 30328 KB] Variables: 12
+[t=1.020973s, 30328 KB] FactPairs: 48
+[t=1.020985s, 30328 KB] Bytes per state: 4
+unknown option --sas-file
+Usage error occurred.
+Peak memory: 30328 KB
+Remove intermediate file output.sas
+search exit code: 33
+
+Driver aborting after search
+INFO     Planner time: 1.15s

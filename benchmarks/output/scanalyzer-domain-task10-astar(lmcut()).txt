@@ -1,0 +1,95 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /home/rpgsbs/r01sa23/miniconda3/bin/python3 /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/translate/translate.py scanalyzer/domain.pddl scanalyzer/task10.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.010s CPU, 0.002s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.007s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.002s wall-clock]
+Preparing model... [0.000s CPU, 0.005s wall-clock]
+Generated 51 rules.
+Computing model... [0.070s CPU, 0.188s wall-clock]
+10669 relevant atoms
+4104 auxiliary atoms
+14773 final queue length
+40549 total queue pushes
+Completing instantiation... [0.270s CPU, 0.533s wall-clock]
+Instantiating: [0.350s CPU, 0.738s wall-clock]
+Computing fact groups...
+Finding invariants...
+5 initial candidates
+Finding invariants: [0.000s CPU, 0.007s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+12 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.000s CPU, 0.009s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.020s CPU, 0.013s wall-clock]
+Translating task: [0.280s CPU, 0.320s wall-clock]
+0 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+12 propositions removed
+Detecting unreachable propositions: [0.170s CPU, 0.173s wall-clock]
+Reordering and filtering variables...
+24 of 24 variables necessary.
+12 of 24 mutex groups necessary.
+9504 of 9504 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.040s CPU, 0.037s wall-clock]
+Translator variables: 24
+Translator derived variables: 0
+Translator facts: 168
+Translator goal facts: 24
+Translator mutex groups: 12
+Translator total mutex groups size: 144
+Translator operators: 9504
+Translator axioms: 0
+Translator task size: 52632
+Translator peak memory: 72548 KB
+Writing output... [0.050s CPU, 0.055s wall-clock]
+Done! [0.910s CPU, 1.347s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/downward --search 'astar(lmcut())' --sas-file 'output/scanalyzer-domain-task10-astar(lmcut())-output.sas' --internal-plan-file sas_plan < output.sas
+[t=0.000172s, 9984 KB] reading input...
+[t=0.029434s, 12356 KB] done reading input!
+[t=0.034248s, 14356 KB] Initializing landmark cut heuristic...
+[t=0.034392s, 14356 KB] Building successor generator...done!
+[t=0.036956s, 15240 KB] peak memory difference for successor generator creation: 884 KB
+[t=0.036979s, 15240 KB] time for successor generation creation: 0.002450s
+[t=0.037077s, 15240 KB] Variables: 70
+[t=0.037104s, 15240 KB] FactPairs: 295
+[t=0.037116s, 15240 KB] Bytes per state: 20
+unknown option --sas-file
+Usage error occurred.
+Peak memory: 15240 KB
+Remove intermediate file output.sas
+search exit code: 33
+
+Driver aborting after search
+INFO     Planner time: 1.04s

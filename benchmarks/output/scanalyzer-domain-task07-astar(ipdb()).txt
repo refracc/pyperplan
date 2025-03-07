@@ -1,0 +1,90 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /home/rpgsbs/r01sa23/miniconda3/bin/python3 /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/translate/translate.py scanalyzer/domain.pddl scanalyzer/task07.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.000s CPU, 0.002s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.020s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.002s wall-clock]
+Preparing model... [0.000s CPU, 0.020s wall-clock]
+Generated 51 rules.
+Computing model... [0.040s CPU, 0.153s wall-clock]
+5221 relevant atoms
+2750 auxiliary atoms
+7971 final queue length
+20371 total queue pushes
+Completing instantiation... [0.110s CPU, 0.461s wall-clock]
+Instantiating: [0.150s CPU, 0.657s wall-clock]
+Computing fact groups...
+Finding invariants...
+5 initial candidates
+Finding invariants: [0.010s CPU, 0.024s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+10 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.010s CPU, 0.025s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.000s CPU, 0.020s wall-clock]
+Translating task: [0.120s CPU, 0.339s wall-clock]
+0 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+10 propositions removed
+Detecting unreachable propositions: [0.050s CPU, 0.145s wall-clock]
+Reordering and filtering variables...
+20 of 20 variables necessary.
+10 of 20 mutex groups necessary.
+4500 of 4500 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.020s CPU, 0.036s wall-clock]
+Translator variables: 20
+Translator derived variables: 0
+Translator facts: 120
+Translator goal facts: 20
+Translator mutex groups: 10
+Translator total mutex groups size: 100
+Translator operators: 4500
+Translator axioms: 0
+Translator task size: 25010
+Translator peak memory: 52408 KB
+Writing output... [0.020s CPU, 0.053s wall-clock]
+Done! [0.380s CPU, 1.271s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/builds/release/bin/downward --search 'astar(ipdb())' --sas-file 'output/scanalyzer-domain-task07-astar(ipdb())-output.sas' --internal-plan-file sas_plan < output.sas
+Traceback (most recent call last):
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/./downward/fast-downward.py", line 5, in <module>
+    main()
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/driver/main.py", line 40, in main
+    (exitcode, continue_execution) = run_components.run_search(args)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/driver/run_components.py", line 130, in run_search
+    call.check_call(
+  File "/home/rpgsbs/r01sa23/Documents/pyperplan/benchmarks/downward/driver/call.py", line 62, in check_call
+    with open(stdin) as stdin_file:
+         ^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'output.sas'

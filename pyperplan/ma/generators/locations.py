@@ -192,7 +192,7 @@ if __name__ == "__main__":
     generator = ProblemGenerator(output_dir="experiment_data")
 
     generator.generate_and_save(
-        num_problems=16,
+        num_problems=10,
         num_agents_range=(2, 5),
         num_locations_range=(4, 20)
     )

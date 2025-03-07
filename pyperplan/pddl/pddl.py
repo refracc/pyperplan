@@ -218,6 +218,10 @@ class Agent:
         self.nodes_expanded = 0  # Counter for nodes expanded
         self.start_time = None  # Start time of the search
         self.end_time = None  # End time of the search
+        self.heuristic_calls = 0
+        self.applicable_actions_count = 0
+        self.nodes_generated = 0
+        self.plan_length = None
 
 
     def applicable_actions(self, state):
@@ -228,31 +232,25 @@ class Agent:
         return applicable
 
     def expand(self, node, distributed):
-        """
-        Expand the given search node to generate successor nodes.
-        :param node: The search node to expand.
-        :param distributed: Whether we are using the distributed or local heuristic function.
-        :return: None
-        """
         applicable = self.applicable_actions(node.projected_state)
+        self.applicable_actions_count += len(applicable)  # Track applicable actions
         new_nodes = set()
 
         for action in applicable:
             new_proj_state = action.apply(node.projected_state)
-            new_priv_parts = node.private_parts  # Update if necessary for the specific problem
+            new_priv_parts = node.private_parts
             new_node = node.apply_action(action, new_proj_state, new_priv_parts)
-            new_node.g = node.g + 1  # Increment the cost
-            new_node.h = self.local_heuristic(
-                new_proj_state) if not distributed else self.dist_heuristic(
-                new_proj_state)  # Update heuristic if needed
+            new_node.g = node.g + 1
+            new_node.h = self.local_heuristic(new_proj_state) if not distributed else self.dist_heuristic(
+                new_proj_state)
             new_nodes.add(new_node)
 
+        self.nodes_generated += len(new_nodes)  # Track nodes generated
         self.local_open_list.update(new_nodes)
         if distributed:
             self.distributed_open_list.update(new_nodes)
 
-        self.nodes_expanded += len(new_nodes)  # Increment the nodes expanded counter
-
+        self.nodes_expanded += len(new_nodes)
 
     def local_heuristic(self, state):
         """
@@ -260,6 +258,7 @@ class Agent:
         :param state: The current state (set of predicates).
         :return: The heuristic value (integer).
         """
+        self.heuristic_calls += 1
         relaxed_plan = self._compute_relaxed_plan(state)
         heuristic_value = len(relaxed_plan)
 
@@ -364,6 +363,7 @@ class Agent:
             if self._goal_reached(current_state):
                 plan = self.reconstruct(current_node, current_node.g, self.id)
                 self.send_message(PLAN_FOUND, plan, problem)
+                self.plan_length = current_node.g  # Track plan length
                 break
 
             # Skip if the current state is already processed
@@ -383,10 +383,10 @@ class Agent:
                 # Add successor to the open list if it is not already processed
                 if successor_state not in closed_list:
                     heappush(open_list, (successor.g + successor.h, successor))
-
         # Send termination message when a plan is found
         if self.plans.get(self.id):
             self.send_message(TERMINATE, self.plans[self.id], problem)
+
 
     def get_metrics(self):
         """
@@ -402,7 +402,11 @@ class Agent:
         return {
             "agent_id": self.id,
             "nodes_expanded": self.nodes_expanded,
-            "time_taken_ms": time_taken_ms,  # Time in milliseconds
+            "time_taken_ms": time_taken_ms,
+            "heuristic_calls": self.heuristic_calls,
+            "applicable_actions_count": self.applicable_actions_count,
+            "nodes_generated": self.nodes_generated,
+            "plan_length": self.plan_length,
         }
 
     def send_message(self, message_type, content, problem):

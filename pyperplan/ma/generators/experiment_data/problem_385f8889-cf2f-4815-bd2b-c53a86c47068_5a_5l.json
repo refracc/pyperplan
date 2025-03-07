@@ -1,5 +1,5 @@
 {
-  "problem_id": "f9b10feb-8537-471b-8c6c-c986241f188e_5a_5l",
+  "problem_id": "385f8889-cf2f-4815-bd2b-c53a86c47068_5a_5l",
   "domain": "multi_agent_movement",
   "objects": {
     "A": "location",
@@ -9,21 +9,21 @@
     "E": "location"
   },
   "initial_state": [
-    "connected(B, C)",
+    "at_agent4(D)",
     "connected(A, B)",
-    "connected(D, E)",
+    "at_agent5(E)",
+    "connected(B, C)",
+    "at_agent2(B)",
+    "at_agent3(C)",
     "connected(C, D)",
     "at_agent1(A)",
-    "at_agent4(D)",
-    "at_agent5(E)",
-    "at_agent2(B)",
-    "at_agent3(C)"
+    "connected(D, E)"
   ],
   "goal": [
     "at_agent5(E)",
     "at_agent3(E)",
-    "at_agent1(C)",
     "at_agent2(D)",
+    "at_agent1(C)",
     "at_agent4(E)"
   ],
   "agents": [
@@ -37,7 +37,11 @@
       "metrics": {
         "agent_id": 1,
         "nodes_expanded": 2,
-        "time_taken_ms": 0.0441
+        "time_taken_ms": 0.025,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
       }
     },
     {
@@ -50,7 +54,11 @@
       "metrics": {
         "agent_id": 2,
         "nodes_expanded": 2,
-        "time_taken_ms": 0.0439
+        "time_taken_ms": 0.025,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
       }
     },
     {
@@ -63,7 +71,11 @@
       "metrics": {
         "agent_id": 3,
         "nodes_expanded": 2,
-        "time_taken_ms": 0.0489
+        "time_taken_ms": 0.0262,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
       }
     },
     {
@@ -76,7 +88,11 @@
       "metrics": {
         "agent_id": 4,
         "nodes_expanded": 1,
-        "time_taken_ms": 0.0412
+        "time_taken_ms": 0.0257,
+        "heuristic_calls": 1,
+        "applicable_actions_count": 1,
+        "nodes_generated": 1,
+        "plan_length": 1
       }
     },
     {
@@ -89,8 +105,17 @@
       "metrics": {
         "agent_id": 5,
         "nodes_expanded": 0,
-        "time_taken_ms": 0.0379
+        "time_taken_ms": 0.0231,
+        "heuristic_calls": 0,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": 0
       }
     }
-  ]
+  ],
+  "domain_actions": 20,
+  "initial_facts": 9,
+  "goal_facts": 5,
+  "num_agents": 5,
+  "num_locations": 5
 }

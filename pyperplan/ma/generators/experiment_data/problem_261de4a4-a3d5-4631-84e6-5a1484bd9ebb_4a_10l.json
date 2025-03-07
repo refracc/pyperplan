@@ -1,0 +1,112 @@
+{
+  "problem_id": "261de4a4-a3d5-4631-84e6-5a1484bd9ebb_4a_10l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location",
+    "G": "location",
+    "H": "location",
+    "I": "location",
+    "J": "location"
+  },
+  "initial_state": [
+    "at_agent4(D)",
+    "connected(A, B)",
+    "connected(B, C)",
+    "at_agent2(B)",
+    "at_agent3(C)",
+    "connected(F, G)",
+    "connected(H, I)",
+    "connected(G, H)",
+    "connected(C, D)",
+    "connected(E, F)",
+    "at_agent1(A)",
+    "connected(I, J)",
+    "connected(D, E)"
+  ],
+  "goal": [
+    "at_agent3(E)",
+    "at_agent2(D)",
+    "at_agent4(F)",
+    "at_agent1(C)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0248,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 2,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.026,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 3,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 3,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.03,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 4,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 4,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.031,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    }
+  ],
+  "domain_actions": 36,
+  "initial_facts": 13,
+  "goal_facts": 4,
+  "num_agents": 4,
+  "num_locations": 10
+}

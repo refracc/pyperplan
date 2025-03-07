@@ -1,0 +1,81 @@
+{
+  "problem_id": "5bf88cb3-cebd-460c-ba51-f876e063fbaa_3a_4l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location"
+  },
+  "initial_state": [
+    "at_agent1(A)",
+    "connected(C, D)",
+    "connected(B, C)",
+    "connected(A, B)",
+    "at_agent3(C)",
+    "at_agent2(B)"
+  ],
+  "goal": [
+    "at_agent2(D)",
+    "at_agent3(D)",
+    "at_agent1(C)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0191,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 2,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0198,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 3,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 3,
+        "nodes_expanded": 1,
+        "time_taken_ms": 0.0172,
+        "heuristic_calls": 1,
+        "applicable_actions_count": 1,
+        "nodes_generated": 1,
+        "plan_length": 1
+      }
+    }
+  ],
+  "domain_actions": 9,
+  "initial_facts": 6,
+  "goal_facts": 3,
+  "num_agents": 3,
+  "num_locations": 4
+}

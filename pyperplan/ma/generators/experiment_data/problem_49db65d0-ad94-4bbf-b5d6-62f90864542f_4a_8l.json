@@ -1,0 +1,108 @@
+{
+  "problem_id": "49db65d0-ad94-4bbf-b5d6-62f90864542f_4a_8l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location",
+    "G": "location",
+    "H": "location"
+  },
+  "initial_state": [
+    "connected(G, H)",
+    "at_agent3(C)",
+    "connected(D, E)",
+    "at_agent1(A)",
+    "connected(B, C)",
+    "connected(C, D)",
+    "connected(E, F)",
+    "connected(F, G)",
+    "connected(A, B)",
+    "at_agent2(B)",
+    "at_agent4(D)"
+  ],
+  "goal": [
+    "at_agent4(F)",
+    "at_agent2(D)",
+    "at_agent3(E)",
+    "at_agent1(C)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0238,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 2,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0241,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 3,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 3,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0272,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 4,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 4,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0288,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    }
+  ],
+  "domain_actions": 28,
+  "initial_facts": 11,
+  "goal_facts": 4,
+  "num_agents": 4,
+  "num_locations": 8
+}

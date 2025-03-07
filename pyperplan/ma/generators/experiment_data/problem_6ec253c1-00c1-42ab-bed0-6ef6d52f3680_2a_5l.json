@@ -1,0 +1,64 @@
+{
+  "problem_id": "6ec253c1-00c1-42ab-bed0-6ef6d52f3680_2a_5l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location"
+  },
+  "initial_state": [
+    "at_agent1(A)",
+    "connected(C, D)",
+    "connected(B, C)",
+    "connected(A, B)",
+    "at_agent2(B)",
+    "connected(D, E)"
+  ],
+  "goal": [
+    "at_agent2(D)",
+    "at_agent1(C)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0198,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 2,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0203,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    }
+  ],
+  "domain_actions": 8,
+  "initial_facts": 6,
+  "goal_facts": 2,
+  "num_agents": 2,
+  "num_locations": 5
+}

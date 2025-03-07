@@ -1,0 +1,103 @@
+{
+  "problem_id": "5d9d2dc3-0992-4815-b5e4-1bf1b91804ef_3a_15l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location",
+    "G": "location",
+    "H": "location",
+    "I": "location",
+    "J": "location",
+    "K": "location",
+    "L": "location",
+    "M": "location",
+    "N": "location",
+    "O": "location"
+  },
+  "initial_state": [
+    "at_agent2(B)",
+    "at_agent3(C)",
+    "connected(F, G)",
+    "connected(H, I)",
+    "connected(C, D)",
+    "connected(N, O)",
+    "at_agent1(A)",
+    "connected(K, L)",
+    "connected(I, J)",
+    "connected(D, E)",
+    "connected(M, N)",
+    "connected(A, B)",
+    "connected(B, C)",
+    "connected(J, K)",
+    "connected(G, H)",
+    "connected(L, M)",
+    "connected(E, F)"
+  ],
+  "goal": [
+    "at_agent3(E)",
+    "at_agent2(D)",
+    "at_agent1(C)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0248,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 2,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0262,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    },
+    {
+      "id": 3,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 3,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0298,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 2,
+        "nodes_generated": 2,
+        "plan_length": 2
+      }
+    }
+  ],
+  "domain_actions": 42,
+  "initial_facts": 17,
+  "goal_facts": 3,
+  "num_agents": 3,
+  "num_locations": 15
+}

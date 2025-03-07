@@ -1,0 +1,91 @@
+{
+  "problem_id": "ed039cd3-44df-4e8d-93f8-a42cdc0781d9_4a_10l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location",
+    "G": "location",
+    "H": "location",
+    "I": "location",
+    "J": "location"
+  },
+  "initial_state": [
+    "connected(B, C)",
+    "connected(H, I)",
+    "connected(A, B)",
+    "connected(F, G)",
+    "connected(D, E)",
+    "connected(C, D)",
+    "at_agent1(A)",
+    "at_agent4(D)",
+    "connected(E, F)",
+    "at_agent2(B)",
+    "connected(G, H)",
+    "connected(I, J)",
+    "at_agent3(C)"
+  ],
+  "goal": [
+    "at_agent4(F)",
+    "at_agent1(C)",
+    "at_agent2(D)",
+    "at_agent3(E)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0739
+      }
+    },
+    {
+      "id": 2,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0629
+      }
+    },
+    {
+      "id": 3,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 3,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.052
+      }
+    },
+    {
+      "id": 4,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 4,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0572
+      }
+    }
+  ]
+}

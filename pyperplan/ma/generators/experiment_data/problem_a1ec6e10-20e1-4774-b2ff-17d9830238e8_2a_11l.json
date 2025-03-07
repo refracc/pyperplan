@@ -1,0 +1,63 @@
+{
+  "problem_id": "a1ec6e10-20e1-4774-b2ff-17d9830238e8_2a_11l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location",
+    "G": "location",
+    "H": "location",
+    "I": "location",
+    "J": "location",
+    "K": "location"
+  },
+  "initial_state": [
+    "connected(B, C)",
+    "connected(H, I)",
+    "connected(A, B)",
+    "connected(F, G)",
+    "connected(D, E)",
+    "connected(C, D)",
+    "at_agent1(A)",
+    "connected(E, F)",
+    "at_agent2(B)",
+    "connected(G, H)",
+    "connected(I, J)",
+    "connected(J, K)"
+  ],
+  "goal": [
+    "at_agent1(C)",
+    "at_agent2(D)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0319
+      }
+    },
+    {
+      "id": 2,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.036
+      }
+    }
+  ]
+}

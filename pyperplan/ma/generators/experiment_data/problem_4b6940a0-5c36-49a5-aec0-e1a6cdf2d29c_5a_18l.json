@@ -1,0 +1,122 @@
+{
+  "problem_id": "4b6940a0-5c36-49a5-aec0-e1a6cdf2d29c_5a_18l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location",
+    "G": "location",
+    "H": "location",
+    "I": "location",
+    "J": "location",
+    "K": "location",
+    "L": "location",
+    "M": "location",
+    "N": "location",
+    "O": "location",
+    "P": "location",
+    "Q": "location",
+    "R": "location"
+  },
+  "initial_state": [
+    "connected(A, B)",
+    "at_agent1(A)",
+    "connected(K, L)",
+    "connected(E, F)",
+    "connected(N, O)",
+    "at_agent3(C)",
+    "connected(L, M)",
+    "connected(H, I)",
+    "connected(B, C)",
+    "connected(Q, R)",
+    "connected(F, G)",
+    "connected(D, E)",
+    "connected(C, D)",
+    "at_agent4(D)",
+    "at_agent5(E)",
+    "at_agent2(B)",
+    "connected(G, H)",
+    "connected(I, J)",
+    "connected(P, Q)",
+    "connected(O, P)",
+    "connected(M, N)",
+    "connected(J, K)"
+  ],
+  "goal": [
+    "at_agent4(F)",
+    "at_agent3(E)",
+    "at_agent1(C)",
+    "at_agent5(G)",
+    "at_agent2(D)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.067
+      }
+    },
+    {
+      "id": 2,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0751
+      }
+    },
+    {
+      "id": 3,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 3,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0823
+      }
+    },
+    {
+      "id": 4,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 4,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.0849
+      }
+    },
+    {
+      "id": 5,
+      "plan": [
+        2,
+        1,
+        0
+      ],
+      "metrics": {
+        "agent_id": 5,
+        "nodes_expanded": 2,
+        "time_taken_ms": 0.087
+      }
+    }
+  ]
+}

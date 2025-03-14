@@ -239,6 +239,8 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
 if __name__ == "__main__":
     generator = ProblemGenerator(output_dir="experiment_data")
 
+    # Generate problems of increasing difficulty, this should be done on a file-by-file basis.
+
     generator.generate_and_save(
         num_problems=50,
         num_agents_range=(1, 7),

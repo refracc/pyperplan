@@ -36,6 +36,8 @@ for file in "$dir"/*.json; do
     avg_applicable_actions_per_agent=$(echo "$total_applicable_actions / $num_agents" | bc -l)
     avg_nodes_generated_per_agent=$(echo "$total_nodes_generated / $num_agents" | bc -l)
 
+    # post-grounding stats (actions etc.)
+
     # Append all data to CSV
     echo "$problem_id,$domain,$num_agents,$total_time,$total_plan_length,$total_nodes_expanded,$total_heuristic_calls,$total_applicable_actions,$total_nodes_generated,$total_objects,$translator_variables,$translator_derived_variables,$translator_facts,$translator_goal_facts,$translator_operators,$translator_axioms,$translator_task_size,$avg_time_per_agent,$avg_plan_length_per_agent,$avg_nodes_expanded_per_agent,$avg_heuristic_calls_per_agent,$avg_applicable_actions_per_agent,$avg_nodes_generated_per_agent" >> "$output_file"
   fi

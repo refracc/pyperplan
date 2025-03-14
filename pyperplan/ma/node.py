@@ -29,12 +29,17 @@ class SearchNode:
         self.private_parts = private_parts
 
     def apply_action(self, action, new_proj_state, new_priv_parts):
+        # Ensure new_proj_state is correctly applied as a frozenset or set
+        if not isinstance(new_proj_state, frozenset):
+            print(f"Error: new_proj_state is not a frozenset: {new_proj_state}")
+
         new_state = self.state_manager.add_state(new_proj_state)  # Use state manager for new state
+        new_h = self.agent.local_heuristic(new_proj_state)  # Recompute heuristic for new state
         return SearchNode(
             new_state,
             self,
             action,
-            self.h,
+            new_h,  # Use the new heuristic value
             self.g + 1,
             self.agent,
             new_priv_parts

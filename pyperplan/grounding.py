@@ -384,17 +384,18 @@ def _get_partial_state(atoms):
     return frozenset(_get_fact(atom) for atom in atoms)
 
 
-def ground_shared_elements(domain, problem_objects, initial_state):
+def ground_shared_elements(domain, problem_objects, agent_initial_state):
     actions = domain.actions.values() if isinstance(domain.actions, dict) else domain.actions
     predicates = domain.predicates.values() if isinstance(domain.predicates, dict) else domain.predicates
 
-    objects = problem_objects
+    objects = problem_objects.copy()
     objects.update(domain.constants)
 
     statics = _get_statics(predicates, actions)
     type_map = _create_type_map(objects)
-    shared_operators = _ground_actions(actions, type_map, statics, initial_state)
 
+    # Use agent_initial_state instead of a combined initial state
+    shared_operators = _ground_actions(actions, type_map, statics, agent_initial_state)
     return shared_operators, statics, type_map
 
 
@@ -415,16 +416,19 @@ def ground_agent_problem(agent, shared_operators, remove_statics_from_initial_st
 
 def multi_agent_ground(agents, domain, problem_objects, remove_statics_from_initial_state=True,
                        remove_irrelevant_operators=True):
-    initial_state = set()
-    for agent in agents:
-        initial_state |= _get_partial_state(agent.initial_node.projected_state)
-
-    shared_operators, statics, type_map = ground_shared_elements(domain, problem_objects, initial_state)
-
     all_tasks = []
     for agent in agents:
-        task = ground_agent_problem(agent, shared_operators, remove_statics_from_initial_state,
-                                    remove_irrelevant_operators)
-        all_tasks.append(task)
+        # Use the agent's projected_state as the initial state for grounding
+        initial_state = _get_partial_state(agent.initial_node.projected_state)
 
+        # Ground operators specifically for this agent's view
+        shared_operators, statics, type_map = ground_shared_elements(
+            domain, problem_objects, initial_state
+        )
+
+        # Create the task for this agent
+        task = ground_agent_problem(
+            agent, shared_operators, remove_statics_from_initial_state, remove_irrelevant_operators
+        )
+        all_tasks.append(task)
     return all_tasks

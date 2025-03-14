@@ -201,7 +201,7 @@ def send_message(message_type, content, recipient):
 
 
 class Agent:
-    def __init__(self, id, initial_node, public_predicates, domain, goal_state):
+    def __init__(self, id, initial_node, public_predicates, domain, main_goal_state, sub_goals):
         self.problem = None
         self.id = id
         self.initial_node = initial_node
@@ -214,10 +214,11 @@ class Agent:
         self.plans = {}
         self.busy = False
         self.domain = domain
-        self.goal_state = goal_state
-        self.nodes_expanded = 0  # Counter for nodes expanded
-        self.start_time = None  # Start time of the search
-        self.end_time = None  # End time of the search
+        self.main_goal_state = main_goal_state  # The main goal
+        self.sub_goals = sub_goals  # List or set of sub-goals for this agent
+        self.nodes_expanded = 0
+        self.start_time = None
+        self.end_time = None
         self.heuristic_calls = 0
         self.applicable_actions_count = 0
         self.nodes_generated = 0
@@ -231,26 +232,26 @@ class Agent:
                 applicable.add(action)
         return applicable
 
-    def expand(self, node, distributed):
+    def expand(self, node, distributed=False):
+        """
+        Expand the current node by generating possible successor states,
+        considering sub-goals.
+        """
         applicable = self.applicable_actions(node.projected_state)
-        self.applicable_actions_count += len(applicable)  # Track applicable actions
         new_nodes = set()
 
         for action in applicable:
+            # Ensure new_proj_state is correctly applied as a set or complex object
             new_proj_state = action.apply(node.projected_state)
             new_priv_parts = node.private_parts
             new_node = node.apply_action(action, new_proj_state, new_priv_parts)
-            new_node.g = node.g + 1
-            new_node.h = self.local_heuristic(new_proj_state) if not distributed else self.dist_heuristic(
-                new_proj_state)
             new_nodes.add(new_node)
 
-        self.nodes_generated += len(new_nodes)  # Track nodes generated
+        # Update local open list for future expansion
         self.local_open_list.update(new_nodes)
+
         if distributed:
             self.distributed_open_list.update(new_nodes)
-
-        self.nodes_expanded += len(new_nodes)
 
     def local_heuristic(self, state):
         """
@@ -259,6 +260,11 @@ class Agent:
         :return: The heuristic value (integer).
         """
         self.heuristic_calls += 1
+
+        # Check that the state is of type frozenset (expected structure)
+        if not isinstance(state, frozenset):
+            print(f"Error: Expected frozenset, but got {type(state)}. State: {state}")
+
         relaxed_plan = self._compute_relaxed_plan(state)
         heuristic_value = len(relaxed_plan)
 
@@ -291,11 +297,41 @@ class Agent:
 
     def _goal_reached(self, state):
         """
-        Checks if the given state satisfies the goal condition.
+        Checks if all sub-goals are reached and, if so, the main goal.
         :param state: The current state (set of predicates).
-        :return: True if the goal is reached, False otherwise.
+        :return: True if all sub-goals are reached and the main goal is achieved.
         """
-        return self.goal_state.issubset(state)
+        all_sub_goals_satisfied = all(sub_goal in state for sub_goal in self.sub_goals)
+        return all_sub_goals_satisfied and self.main_goal_state in state  # Ensure main goal is in state
+
+    def send_sub_goal_update(self, sub_goal):
+        """
+        Send a message to all other agents that a sub-goal has been achieved.
+        """
+        for agent in self.problem.agents:
+            if agent.id != self.id:
+                message = {
+                    'type': 'sub_goal_achieved',
+                    'sub_goal': sub_goal,
+                    'agent_id': self.id
+                }
+                send_message('sub_goal_update', message, agent)
+
+    def handle_sub_goal_message(self, message):
+        """
+        Handle a message indicating that another agent has achieved a sub-goal.
+        """
+        sub_goal = message['sub_goal']
+        sender_id = message['agent_id']
+
+        # Update local knowledge
+        if sub_goal in self.sub_goals:
+            self.sub_goals.remove(sub_goal)
+            print(f"Agent {self.id} received sub-goal achievement from Agent {sender_id}: {sub_goal}")
+
+        # Check if the agent can now proceed to the main goal if all sub-goals are achieved
+        if not self.sub_goals:
+            print(f"Agent {self.id} has achieved all sub-goals and can now focus on the main goal.")
 
     def dist_heuristic(self, agent, projected_state=None, tuple_=None):
         # TODO: Write heuristic.
@@ -384,6 +420,7 @@ class Agent:
                 # Add successor to the open list if it is not already processed
                 if successor_state not in closed_list:
                     heappush(open_list, (successor.g + successor.h, successor))
+
         # Send termination message when a plan is found
         if self.plans.get(self.id):
             self.send_message(TERMINATE, self.plans[self.id], problem)
@@ -433,6 +470,8 @@ class Agent:
                 self.handle_reconstruct_message(message['content'])
             elif message['type'] == 'terminate':
                 self.handle_terminate_message(message['content'])
+            elif message['type'] == 'sub_goal_update':
+                self.handle_sub_goal_message(message['content'])
 
     def handle_state_message(self, content):
         """

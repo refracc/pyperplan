@@ -1,0 +1,92 @@
+{
+  "problem_id": "a8de1a55-7baf-45e0-a892-5cc9853ae125_1a_16l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location",
+    "G": "location",
+    "H": "location",
+    "I": "location",
+    "J": "location",
+    "K": "location",
+    "L": "location",
+    "M": "location",
+    "N": "location",
+    "O": "location",
+    "P": "location"
+  },
+  "initial_state": [
+    "connected(E, I)",
+    "connected(J, K)",
+    "connected(P, N)",
+    "connected(K, F)",
+    "connected(E, K)",
+    "connected(L, H)",
+    "connected(H, L)",
+    "connected(F, P)",
+    "connected(F, K)",
+    "connected(E, L)",
+    "connected(P, F)",
+    "connected(K, E)",
+    "connected(I, E)",
+    "connected(M, L)",
+    "connected(M, O)",
+    "at_agent1(A)",
+    "connected(I, G)",
+    "connected(L, E)",
+    "connected(L, M)",
+    "connected(H, G)",
+    "connected(O, M)",
+    "connected(F, N)",
+    "connected(G, H)",
+    "connected(H, N)",
+    "connected(G, B)",
+    "connected(N, A)",
+    "connected(K, J)",
+    "connected(G, I)",
+    "connected(N, F)",
+    "connected(B, G)",
+    "connected(A, N)",
+    "connected(N, P)",
+    "connected(N, H)"
+  ],
+  "goal": [
+    "at_agent1(C)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "sub_goals": [
+        "at_agent1['C']",
+        "at_agent1['B']"
+      ],
+      "goal": "frozenset({'at_agent1(C)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 0,
+        "time_taken_ms": 0.3729,
+        "heuristic_calls": 15,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    }
+  ],
+  "domain_actions": 15,
+  "initial_facts": 33,
+  "goal_facts": 1,
+  "num_agents": 1,
+  "num_locations": 16,
+  "translator_variables": 16,
+  "translator_derived_variables": 0,
+  "translator_facts": 31,
+  "translator_goal_facts": 1,
+  "translator_operators": 15,
+  "translator_axioms": 0,
+  "translator_task_size": 46
+}

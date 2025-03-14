@@ -7,64 +7,65 @@ from typing import List
 from pyperplan.pddl.pddl import Problem, Agent, Type, Predicate, Domain, Action, Effect, SearchNode
 
 
+def _generate_problem_id() -> str:
+    return str(uuid.uuid4())
+
+
+def _solve_problem(problem: Problem):
+    """Run the planner for all agents in the problem"""
+    for agent in problem.agents:
+        agent.start_search(problem)
+
+def _serialize_problem(problem: Problem) -> dict:
+    """Convert problem data to JSON-serializable format"""
+    num_agents = len(problem.agents)
+    num_locations = len(problem.objects)
+    translator_facts = (num_agents * num_locations) + (num_locations - 1)
+
+    return {
+        "problem_id": problem.name,
+        "domain": problem.domain.name,
+        "objects": dict(problem.objects),
+        "initial_state": list(problem.initial_state),
+        "goal": list(problem.goal),
+        "agents": [
+            {
+                "id": agent.id,
+                "sub_goals": [str(sub_goal) for sub_goal in agent.sub_goals],  # Include sub-goals
+                "goal": str(agent.main_goal_state),  # Include the agent's final goal
+                "plan": [
+                    action
+                    for time, action in sorted(agent.plans.get(agent.id, {}).items())
+                    if action is not None
+                ],
+                "metrics": agent.get_metrics()
+            }
+            for agent in problem.agents
+        ],
+        "domain_actions": len(problem.domain.actions),
+        "initial_facts": len(problem.initial_state),
+        "goal_facts": len(problem.goal),
+        "num_agents": num_agents,
+        "num_locations": num_locations,
+        "translator_variables": num_locations,
+        "translator_derived_variables": 0,
+        "translator_facts": translator_facts,
+        "translator_goal_facts": len(problem.goal),
+        "translator_operators": len(problem.domain.actions),
+        "translator_axioms": 0,
+        "translator_task_size": translator_facts + len(problem.domain.actions),
+    }
+
+
 class ProblemGenerator:
     def __init__(self, output_dir: str = "problem_data"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-    def _generate_problem_id(self) -> str:
-        return str(uuid.uuid4())
-
-    def _solve_problem(self, problem: Problem):
-        """Run the planner for all agents in the problem"""
-        for agent in problem.agents:
-            agent.start_search(problem)
-
-    def _serialize_problem(self, problem: Problem) -> dict:
-        """Convert problem data to JSON-serializable format"""
-        num_agents = len(problem.agents)
-        num_locations = len(problem.objects)
-        translator_facts = (num_agents * num_locations) + (num_locations - 1)
-
-        return {
-            # Existing fields
-            "problem_id": problem.name,
-            "domain": problem.domain.name,
-            "objects": dict(problem.objects),
-            "initial_state": list(problem.initial_state),
-            "goal": list(problem.goal),
-            "agents": [
-                {
-                    "id": agent.id,
-                    "plan": [
-                        action
-                        for time, action in sorted(agent.plans.get(agent.id, {}).items())
-                        if action is not None
-                    ],
-                    "metrics": agent.get_metrics()
-                }
-                for agent in problem.agents
-            ],
-            "domain_actions": len(problem.domain.actions),
-            "initial_facts": len(problem.initial_state),
-            "goal_facts": len(problem.goal),
-            "num_agents": num_agents,
-            "num_locations": num_locations,
-
-            # New translator-related stats
-            "translator_variables": num_locations,
-            "translator_derived_variables": 0,
-            "translator_facts": translator_facts,
-            "translator_goal_facts": len(problem.goal),
-            "translator_operators": len(problem.domain.actions),
-            "translator_axioms": 0,
-            "translator_task_size": translator_facts + len(problem.domain.actions),
-        }
-
     def _save_problem(self, problem: Problem):
         """Save problem data to JSON file"""
         filename = self.output_dir / f"problem_{problem.name}.json"
-        data = self._serialize_problem(problem)
+        data = _serialize_problem(problem)
 
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
@@ -90,12 +91,27 @@ class ProblemGenerator:
                 num_agents=num_agents,
                 num_locations=num_locations
             )
-            problem.name = f"{self._generate_problem_id()}_{num_agents}a_{num_locations}l"
+            problem.name = f"{_generate_problem_id()}_{num_agents}a_{num_locations}l"
 
             # Solve and save
-            self._solve_problem(problem)
+            _solve_problem(problem)
             self._save_problem(problem)
 
+
+def generate_random_connections(locations: List[str], num_connections: int) -> List[str]:
+    """Generates a set of random bidirectional connections between locations"""
+    connections = set()
+    num_locations = len(locations)
+
+    # Ensure there are at least num_connections, but no more than the maximum possible
+    num_connections = min(num_connections, num_locations * (num_locations - 1) // 2)
+
+    while len(connections) < num_connections:
+        loc1, loc2 = random.sample(locations, 2)  # Randomly select two distinct locations
+        connections.add(f"connected({loc1}, {loc2})")
+        connections.add(f"connected({loc2}, {loc1})")  # Ensure bidirectional connection
+
+    return list(connections)
 
 
 def generate_ground_actions(locations: List[str], agent_id: int) -> List[Action]:
@@ -134,16 +150,23 @@ def generate_ground_actions(locations: List[str], agent_id: int) -> List[Action]
         # ))
     return actions
 
-
 def generate_problem(num_agents=2, num_locations=4) -> Problem:
     """Generate a solvable multi-agent movement problem compatible with the A* solver"""
+
+    # Ensure there are at least as many locations as agents
+    while num_agents > num_locations:
+        num_locations += 1  # Add more locations to match the number of agents
+
     locations = [chr(ord('A') + i) for i in range(num_locations)]
 
     # Domain definitions
     types = {'location': Type('location')}
     predicates = [
-                     Predicate(f'at_agent{aid}', []) for aid in range(1, num_agents + 1)
-                 ] + [Predicate('connected', [])]
+        Predicate(f'at_agent{aid}', []) for aid in range(1, num_agents + 1)
+    ] + [Predicate('connected', [])]
+
+    # Generate random bidirectional connections between locations
+    connections = generate_random_connections(locations, num_locations * 2)
 
     # Generate grounded actions for each agent
     actions = []
@@ -160,17 +183,24 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
     # Initial state setup
     initial_state = set()
     for i in range(num_agents):
-        initial_state.add(f'at_agent{i + 1}({locations[i]})')
-    for i in range(num_locations - 1):
-        initial_state.add(f'connected({locations[i]}, {locations[i + 1]})')
+        initial_state.add(f'at_agent{i + 1}({locations[i % num_locations]})')
+    initial_state.update(connections)  # Add the generated connections
 
-    # Agent configuration
+    # Agent configuration and goals
     agents = []
+    final_goals = set()  # To collect the final goals for all agents
+
     for agent_id in range(1, num_agents + 1):
         start_idx = agent_id - 1
         goal_idx = min(start_idx + 2, num_locations - 1)
         goal_loc = locations[goal_idx]
 
+        # Define sub-goals: let's say an agent has sub-goals to visit 2 other locations before the main goal
+        sub_goals = set([
+            Predicate(f'at_agent{agent_id}', [locations[(start_idx + i) % num_locations]]) for i in range(1, 3)
+        ])
+
+        # Create the agent
         agents.append(Agent(
             id=agent_id,
             initial_node=SearchNode(
@@ -188,25 +218,30 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
             ),
             public_predicates={f'at_agent{agent_id}', 'connected'},
             domain=domain,
-            goal_state=frozenset({f'at_agent{agent_id}({goal_loc})'})
+            main_goal_state=frozenset({f'at_agent{agent_id}({goal_loc})'}),
+            sub_goals=sub_goals  # Assign sub-goals to each agent
         ))
+
+        # Add the agent's final goal to the set of final goals
+        final_goals.add(f'at_agent{agent_id}({goal_loc})')
 
     return Problem(
         name=f"{num_agents}agents_{num_locations}locs",
         domain=domain,
         objects={loc: 'location' for loc in locations},
         init=frozenset(initial_state),
-        goal=frozenset().union(*(a.goal_state for a in agents)),
+        goal=frozenset(final_goals),  # The goal is the union of all agent's final goals
         agents=agents
     )
+
 
 # Example usage
 if __name__ == "__main__":
     generator = ProblemGenerator(output_dir="experiment_data")
 
     generator.generate_and_save(
-        num_problems=10,
-        num_agents_range=(2, 5),
-        num_locations_range=(4, 20)
+        num_problems=50,
+        num_agents_range=(1, 7),
+        num_locations_range=(3, 20)
     )
     print(f"Generated problems saved to {generator.output_dir}")

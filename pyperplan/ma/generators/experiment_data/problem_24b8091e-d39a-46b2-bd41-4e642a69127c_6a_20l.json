@@ -1,0 +1,204 @@
+{
+  "problem_id": "24b8091e-d39a-46b2-bd41-4e642a69127c_6a_20l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location",
+    "G": "location",
+    "H": "location",
+    "I": "location",
+    "J": "location",
+    "K": "location",
+    "L": "location",
+    "M": "location",
+    "N": "location",
+    "O": "location",
+    "P": "location",
+    "Q": "location",
+    "R": "location",
+    "S": "location",
+    "T": "location"
+  },
+  "initial_state": [
+    "at_agent1(A)",
+    "connected(K, P)",
+    "connected(O, P)",
+    "connected(P, O)",
+    "connected(N, E)",
+    "at_agent4(D)",
+    "connected(J, P)",
+    "connected(C, P)",
+    "connected(P, H)",
+    "connected(Q, C)",
+    "connected(T, N)",
+    "connected(C, J)",
+    "connected(L, R)",
+    "connected(N, O)",
+    "connected(D, T)",
+    "connected(Q, L)",
+    "connected(H, P)",
+    "connected(F, L)",
+    "connected(C, D)",
+    "at_agent5(E)",
+    "connected(J, T)",
+    "connected(P, K)",
+    "connected(R, L)",
+    "at_agent6(F)",
+    "connected(N, T)",
+    "connected(E, N)",
+    "at_agent3(C)",
+    "connected(L, Q)",
+    "connected(T, D)",
+    "connected(L, F)",
+    "connected(I, K)",
+    "connected(O, N)",
+    "connected(K, I)",
+    "connected(P, C)",
+    "connected(B, J)",
+    "connected(J, C)",
+    "connected(P, J)",
+    "connected(G, O)",
+    "connected(J, B)",
+    "connected(B, N)",
+    "connected(O, G)",
+    "connected(D, C)",
+    "connected(C, Q)",
+    "connected(T, J)",
+    "connected(N, B)",
+    "at_agent2(B)"
+  ],
+  "goal": [
+    "at_agent1(C)",
+    "at_agent3(E)",
+    "at_agent2(D)",
+    "at_agent4(F)",
+    "at_agent5(G)",
+    "at_agent6(H)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "sub_goals": [
+        "at_agent1['B']",
+        "at_agent1['C']"
+      ],
+      "goal": "frozenset({'at_agent1(C)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 0,
+        "time_taken_ms": 1.8482,
+        "heuristic_calls": 19,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 2,
+      "sub_goals": [
+        "at_agent2['C']",
+        "at_agent2['D']"
+      ],
+      "goal": "frozenset({'at_agent2(D)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 0,
+        "time_taken_ms": 1.6038,
+        "heuristic_calls": 18,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 3,
+      "sub_goals": [
+        "at_agent3['D']",
+        "at_agent3['E']"
+      ],
+      "goal": "frozenset({'at_agent3(E)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 3,
+        "nodes_expanded": 0,
+        "time_taken_ms": 1.5681,
+        "heuristic_calls": 17,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 4,
+      "sub_goals": [
+        "at_agent4['F']",
+        "at_agent4['E']"
+      ],
+      "goal": "frozenset({'at_agent4(F)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 4,
+        "nodes_expanded": 0,
+        "time_taken_ms": 1.2929,
+        "heuristic_calls": 16,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 5,
+      "sub_goals": [
+        "at_agent5['G']",
+        "at_agent5['F']"
+      ],
+      "goal": "frozenset({'at_agent5(G)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 5,
+        "nodes_expanded": 0,
+        "time_taken_ms": 1.2059,
+        "heuristic_calls": 15,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 6,
+      "sub_goals": [
+        "at_agent6['G']",
+        "at_agent6['H']"
+      ],
+      "goal": "frozenset({'at_agent6(H)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 6,
+        "nodes_expanded": 0,
+        "time_taken_ms": 1.148,
+        "heuristic_calls": 14,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    }
+  ],
+  "domain_actions": 114,
+  "initial_facts": 46,
+  "goal_facts": 6,
+  "num_agents": 6,
+  "num_locations": 20,
+  "translator_variables": 20,
+  "translator_derived_variables": 0,
+  "translator_facts": 139,
+  "translator_goal_facts": 6,
+  "translator_operators": 114,
+  "translator_axioms": 0,
+  "translator_task_size": 253
+}

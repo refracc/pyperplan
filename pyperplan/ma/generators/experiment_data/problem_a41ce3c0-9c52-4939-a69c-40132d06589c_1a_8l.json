@@ -1,0 +1,68 @@
+{
+  "problem_id": "a41ce3c0-9c52-4939-a69c-40132d06589c_1a_8l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location",
+    "G": "location",
+    "H": "location"
+  },
+  "initial_state": [
+    "connected(C, H)",
+    "connected(H, G)",
+    "connected(G, A)",
+    "connected(B, H)",
+    "connected(D, A)",
+    "connected(G, H)",
+    "connected(H, C)",
+    "connected(A, D)",
+    "connected(E, F)",
+    "connected(H, B)",
+    "connected(A, G)",
+    "connected(B, E)",
+    "connected(A, F)",
+    "connected(F, A)",
+    "at_agent1(A)",
+    "connected(E, B)",
+    "connected(F, E)"
+  ],
+  "goal": [
+    "at_agent1(C)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "sub_goals": [
+        "at_agent1['C']",
+        "at_agent1['B']"
+      ],
+      "goal": "frozenset({'at_agent1(C)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 0,
+        "time_taken_ms": 0.1192,
+        "heuristic_calls": 7,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    }
+  ],
+  "domain_actions": 7,
+  "initial_facts": 17,
+  "goal_facts": 1,
+  "num_agents": 1,
+  "num_locations": 8,
+  "translator_variables": 8,
+  "translator_derived_variables": 0,
+  "translator_facts": 15,
+  "translator_goal_facts": 1,
+  "translator_operators": 7,
+  "translator_axioms": 0,
+  "translator_task_size": 22
+}

@@ -1,0 +1,122 @@
+{
+  "problem_id": "e3cc6371-ba89-42e0-bdf9-fc377a865f49_4a_6l",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "A": "location",
+    "B": "location",
+    "C": "location",
+    "D": "location",
+    "E": "location",
+    "F": "location"
+  },
+  "initial_state": [
+    "connected(B, D)",
+    "at_agent1(A)",
+    "connected(D, B)",
+    "at_agent3(C)",
+    "connected(E, B)",
+    "connected(A, F)",
+    "connected(F, B)",
+    "at_agent4(D)",
+    "connected(F, E)",
+    "connected(F, A)",
+    "connected(B, E)",
+    "connected(E, F)",
+    "connected(A, D)",
+    "at_agent2(B)",
+    "connected(D, A)",
+    "connected(B, F)"
+  ],
+  "goal": [
+    "at_agent3(E)",
+    "at_agent2(D)",
+    "at_agent1(C)",
+    "at_agent4(F)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "sub_goals": [
+        "at_agent1['B']",
+        "at_agent1['C']"
+      ],
+      "goal": "frozenset({'at_agent1(C)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 0,
+        "time_taken_ms": 0.0741,
+        "heuristic_calls": 5,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 2,
+      "sub_goals": [
+        "at_agent2['C']",
+        "at_agent2['D']"
+      ],
+      "goal": "frozenset({'at_agent2(D)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 0,
+        "time_taken_ms": 0.0482,
+        "heuristic_calls": 4,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 3,
+      "sub_goals": [
+        "at_agent3['D']",
+        "at_agent3['E']"
+      ],
+      "goal": "frozenset({'at_agent3(E)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 3,
+        "nodes_expanded": 0,
+        "time_taken_ms": 0.031,
+        "heuristic_calls": 3,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 4,
+      "sub_goals": [
+        "at_agent4['F']",
+        "at_agent4['E']"
+      ],
+      "goal": "frozenset({'at_agent4(F)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 4,
+        "nodes_expanded": 0,
+        "time_taken_ms": 0.0188,
+        "heuristic_calls": 2,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    }
+  ],
+  "domain_actions": 20,
+  "initial_facts": 16,
+  "goal_facts": 4,
+  "num_agents": 4,
+  "num_locations": 6,
+  "translator_variables": 6,
+  "translator_derived_variables": 0,
+  "translator_facts": 29,
+  "translator_goal_facts": 4,
+  "translator_operators": 20,
+  "translator_axioms": 0,
+  "translator_task_size": 49
+}

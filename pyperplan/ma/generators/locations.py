@@ -22,7 +22,12 @@ class ProblemGenerator:
 
     def _serialize_problem(self, problem: Problem) -> dict:
         """Convert problem data to JSON-serializable format"""
+        num_agents = len(problem.agents)
+        num_locations = len(problem.objects)
+        translator_facts = (num_agents * num_locations) + (num_locations - 1)
+
         return {
+            # Existing fields
             "problem_id": problem.name,
             "domain": problem.domain.name,
             "objects": dict(problem.objects),
@@ -31,7 +36,6 @@ class ProblemGenerator:
             "agents": [
                 {
                     "id": agent.id,
-                    # Extract sorted action names from the plan
                     "plan": [
                         action
                         for time, action in sorted(agent.plans.get(agent.id, {}).items())
@@ -44,8 +48,17 @@ class ProblemGenerator:
             "domain_actions": len(problem.domain.actions),
             "initial_facts": len(problem.initial_state),
             "goal_facts": len(problem.goal),
-            "num_agents": len(problem.agents),
-            "num_locations": len(problem.objects),
+            "num_agents": num_agents,
+            "num_locations": num_locations,
+
+            # New translator-related stats
+            "translator_variables": num_locations,
+            "translator_derived_variables": 0,
+            "translator_facts": translator_facts,
+            "translator_goal_facts": len(problem.goal),
+            "translator_operators": len(problem.domain.actions),
+            "translator_axioms": 0,
+            "translator_task_size": translator_facts + len(problem.domain.actions),
         }
 
     def _save_problem(self, problem: Problem):

@@ -62,9 +62,9 @@ class ProblemGenerator:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-    def _save_problem(self, problem: Problem):
+    def _save_problem(self, problem: Problem, problem_name: str):
         """Save problem data to JSON file"""
-        filename = self.output_dir / f"problem_{problem.name}.json"
+        filename = self.output_dir / f"{problem_name}.json"
         data = _serialize_problem(problem)
 
         with open(filename, 'w') as f:
@@ -72,30 +72,43 @@ class ProblemGenerator:
 
     def generate_and_save(self,
                           num_problems: int = 10,
-                          num_agents_range: tuple = (2, 4),
-                          num_locations_range: tuple = (4, 8)):
+                          min_agents: int = 1,
+                          max_agents: int = 50,
+                          min_locations: int = 3,
+                          max_locations: int = 100):
         """
-        Generate and save multiple problems with random configurations
+        Generate and save multiple problems with increasing difficulty.
+
         Args:
-            num_problems: Number of problems to generate
-            num_agents_range: (min, max) agents per problem
-            num_locations_range: (min, max) locations per problem
+            num_problems: Total number of problems to generate.
+            min_agents: Minimum number of agents.
+            max_agents: Maximum number of agents.
+            min_locations: Minimum number of locations.
+            max_locations: Maximum number of locations.
         """
-        for _ in range(num_problems):
-            # Generate random problem configuration
-            num_agents = random.randint(*num_agents_range)
-            num_locations = random.randint(*num_locations_range)
+        # Compute step sizes for agents and locations
+        agent_step = max(1, (max_agents - min_agents) // num_problems)
+        location_step = max(1, (max_locations - min_locations) // num_problems)
+
+        num_agents = min_agents
+        num_locations = min_locations
+
+        for i in range(num_problems):
+            # Ensure values do not exceed the defined max
+            num_agents = min(num_agents, max_agents)
+            num_locations = min(num_locations, max_locations)
 
             # Create problem with unique ID
-            problem = generate_problem(
-                num_agents=num_agents,
-                num_locations=num_locations
-            )
-            problem.name = f"{_generate_problem_id()}_{num_agents}a_{num_locations}l"
+            problem = generate_problem(num_agents=num_agents, num_locations=num_locations)
+            problem_name = f"pb{i + 1}"  # Use pb1, pb2, pb3, etc.
 
             # Solve and save
             _solve_problem(problem)
-            self._save_problem(problem)
+            self._save_problem(problem, problem_name)
+
+            # Increment values for the next iteration
+            num_agents += agent_step
+            num_locations += location_step
 
 
 def generate_random_connections(locations: List[str], num_connections: int) -> List[str]:
@@ -157,7 +170,8 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
     while num_agents > num_locations:
         num_locations += 1  # Add more locations to match the number of agents
 
-    locations = [chr(ord('A') + i) for i in range(num_locations)]
+    # Use indexed location names instead of single letters
+    locations = [f"loc{i+1}" for i in range(num_locations)]
 
     # Domain definitions
     types = {'location': Type('location')}
@@ -171,7 +185,7 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
     # Generate grounded actions for each agent
     actions = []
     for agent_id in range(1, num_agents + 1):
-        actions.extend(generate_ground_actions(locations, agent_id))
+        actions.extend(generate_ground_actions(locations, agent_id, connections))
 
     domain = Domain(
         name='multi_agent_movement',
@@ -200,8 +214,8 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
             Predicate(f'at_agent{agent_id}', [locations[(start_idx + i) % num_locations]]) for i in range(1, 3)
         ])
 
-        # Create the agent
-        agents.append(Agent(
+        # Create the agent instance
+        agent_instance = Agent(
             id=agent_id,
             initial_node=SearchNode(
                 projected_state=frozenset({
@@ -213,14 +227,20 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
                 action=None,
                 h=0,
                 g=0,
-                agent=agent_id,
+                agent=None,  # Initially set as None or leave this for the agent
                 private_parts=set()
             ),
             public_predicates={f'at_agent{agent_id}', 'connected'},
             domain=domain,
             main_goal_state=frozenset({f'at_agent{agent_id}({goal_loc})'}),
             sub_goals=sub_goals  # Assign sub-goals to each agent
-        ))
+        )
+
+        # Add the agent's initial node information
+        agent_instance.initial_node.agent = agent_instance  # Now we assign the actual agent instance
+
+        # Add the agent to the list of agents
+        agents.append(agent_instance)
 
         # Add the agent's final goal to the set of final goals
         final_goals.add(f'at_agent{agent_id}({goal_loc})')
@@ -239,11 +259,5 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
 if __name__ == "__main__":
     generator = ProblemGenerator(output_dir="experiment_data")
 
-    # Generate problems of increasing difficulty, this should be done on a file-by-file basis.
-
-    generator.generate_and_save(
-        num_problems=50,
-        num_agents_range=(1, 7),
-        num_locations_range=(3, 20)
-    )
+    generator.generate_and_save(num_problems=25)
     print(f"Generated problems saved to {generator.output_dir}")

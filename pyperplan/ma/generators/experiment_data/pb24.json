@@ -1,0 +1,720 @@
+{
+  "problem_id": "24agents_72locs",
+  "domain": "multi_agent_movement",
+  "objects": {
+    "loc1": "location",
+    "loc2": "location",
+    "loc3": "location",
+    "loc4": "location",
+    "loc5": "location",
+    "loc6": "location",
+    "loc7": "location",
+    "loc8": "location",
+    "loc9": "location",
+    "loc10": "location",
+    "loc11": "location",
+    "loc12": "location",
+    "loc13": "location",
+    "loc14": "location",
+    "loc15": "location",
+    "loc16": "location",
+    "loc17": "location",
+    "loc18": "location",
+    "loc19": "location",
+    "loc20": "location",
+    "loc21": "location",
+    "loc22": "location",
+    "loc23": "location",
+    "loc24": "location",
+    "loc25": "location",
+    "loc26": "location",
+    "loc27": "location",
+    "loc28": "location",
+    "loc29": "location",
+    "loc30": "location",
+    "loc31": "location",
+    "loc32": "location",
+    "loc33": "location",
+    "loc34": "location",
+    "loc35": "location",
+    "loc36": "location",
+    "loc37": "location",
+    "loc38": "location",
+    "loc39": "location",
+    "loc40": "location",
+    "loc41": "location",
+    "loc42": "location",
+    "loc43": "location",
+    "loc44": "location",
+    "loc45": "location",
+    "loc46": "location",
+    "loc47": "location",
+    "loc48": "location",
+    "loc49": "location",
+    "loc50": "location",
+    "loc51": "location",
+    "loc52": "location",
+    "loc53": "location",
+    "loc54": "location",
+    "loc55": "location",
+    "loc56": "location",
+    "loc57": "location",
+    "loc58": "location",
+    "loc59": "location",
+    "loc60": "location",
+    "loc61": "location",
+    "loc62": "location",
+    "loc63": "location",
+    "loc64": "location",
+    "loc65": "location",
+    "loc66": "location",
+    "loc67": "location",
+    "loc68": "location",
+    "loc69": "location",
+    "loc70": "location",
+    "loc71": "location",
+    "loc72": "location"
+  },
+  "initial_state": [
+    "at_agent2(loc2)",
+    "connected(loc54, loc18)",
+    "connected(loc59, loc18)",
+    "connected(loc22, loc33)",
+    "at_agent8(loc8)",
+    "connected(loc61, loc60)",
+    "connected(loc36, loc22)",
+    "connected(loc49, loc45)",
+    "connected(loc4, loc65)",
+    "connected(loc10, loc68)",
+    "connected(loc11, loc57)",
+    "connected(loc25, loc48)",
+    "connected(loc23, loc3)",
+    "connected(loc65, loc61)",
+    "connected(loc18, loc54)",
+    "at_agent12(loc12)",
+    "connected(loc38, loc13)",
+    "connected(loc64, loc42)",
+    "connected(loc27, loc13)",
+    "connected(loc36, loc52)",
+    "connected(loc52, loc16)",
+    "connected(loc46, loc42)",
+    "at_agent1(loc1)",
+    "connected(loc4, loc37)",
+    "connected(loc64, loc62)",
+    "at_agent10(loc10)",
+    "connected(loc31, loc48)",
+    "connected(loc62, loc9)",
+    "connected(loc1, loc15)",
+    "connected(loc55, loc51)",
+    "connected(loc41, loc40)",
+    "connected(loc36, loc5)",
+    "connected(loc55, loc13)",
+    "connected(loc31, loc47)",
+    "connected(loc54, loc50)",
+    "at_agent5(loc5)",
+    "connected(loc56, loc60)",
+    "connected(loc33, loc71)",
+    "connected(loc48, loc46)",
+    "connected(loc29, loc35)",
+    "connected(loc60, loc61)",
+    "connected(loc58, loc34)",
+    "connected(loc22, loc36)",
+    "connected(loc67, loc21)",
+    "connected(loc41, loc53)",
+    "at_agent4(loc4)",
+    "connected(loc47, loc31)",
+    "at_agent24(loc24)",
+    "connected(loc50, loc54)",
+    "connected(loc48, loc31)",
+    "connected(loc33, loc43)",
+    "at_agent13(loc13)",
+    "connected(loc65, loc4)",
+    "connected(loc46, loc37)",
+    "connected(loc58, loc49)",
+    "connected(loc36, loc18)",
+    "connected(loc37, loc46)",
+    "connected(loc61, loc3)",
+    "connected(loc44, loc35)",
+    "connected(loc18, loc59)",
+    "connected(loc55, loc27)",
+    "connected(loc3, loc23)",
+    "connected(loc31, loc3)",
+    "connected(loc15, loc1)",
+    "connected(loc40, loc41)",
+    "connected(loc66, loc29)",
+    "connected(loc68, loc10)",
+    "at_agent21(loc21)",
+    "connected(loc72, loc25)",
+    "connected(loc7, loc61)",
+    "at_agent16(loc16)",
+    "at_agent11(loc11)",
+    "connected(loc9, loc62)",
+    "connected(loc14, loc67)",
+    "connected(loc72, loc54)",
+    "connected(loc57, loc11)",
+    "connected(loc60, loc56)",
+    "connected(loc42, loc46)",
+    "connected(loc46, loc35)",
+    "connected(loc18, loc36)",
+    "connected(loc5, loc9)",
+    "at_agent22(loc22)",
+    "connected(loc16, loc52)",
+    "connected(loc37, loc4)",
+    "connected(loc15, loc14)",
+    "connected(loc3, loc61)",
+    "connected(loc16, loc49)",
+    "connected(loc21, loc67)",
+    "connected(loc51, loc55)",
+    "connected(loc1, loc13)",
+    "connected(loc57, loc34)",
+    "connected(loc58, loc56)",
+    "connected(loc40, loc25)",
+    "connected(loc9, loc5)",
+    "connected(loc25, loc40)",
+    "at_agent7(loc7)",
+    "connected(loc35, loc44)",
+    "connected(loc45, loc49)",
+    "at_agent19(loc19)",
+    "connected(loc61, loc65)",
+    "connected(loc29, loc64)",
+    "connected(loc61, loc7)",
+    "connected(loc42, loc64)",
+    "connected(loc66, loc14)",
+    "connected(loc3, loc63)",
+    "connected(loc64, loc25)",
+    "connected(loc19, loc57)",
+    "connected(loc33, loc22)",
+    "connected(loc72, loc37)",
+    "connected(loc44, loc63)",
+    "connected(loc63, loc44)",
+    "connected(loc53, loc41)",
+    "connected(loc46, loc48)",
+    "connected(loc66, loc59)",
+    "connected(loc47, loc50)",
+    "connected(loc34, loc58)",
+    "at_agent20(loc20)",
+    "connected(loc66, loc51)",
+    "connected(loc28, loc68)",
+    "connected(loc17, loc44)",
+    "connected(loc51, loc66)",
+    "connected(loc68, loc28)",
+    "connected(loc72, loc49)",
+    "connected(loc56, loc58)",
+    "connected(loc53, loc28)",
+    "connected(loc43, loc33)",
+    "connected(loc49, loc58)",
+    "connected(loc37, loc72)",
+    "connected(loc2, loc23)",
+    "connected(loc71, loc33)",
+    "connected(loc5, loc36)",
+    "connected(loc13, loc55)",
+    "connected(loc67, loc14)",
+    "connected(loc23, loc2)",
+    "connected(loc54, loc72)",
+    "connected(loc3, loc31)",
+    "connected(loc57, loc19)",
+    "connected(loc14, loc15)",
+    "connected(loc29, loc66)",
+    "connected(loc62, loc64)",
+    "connected(loc35, loc29)",
+    "at_agent9(loc9)",
+    "connected(loc44, loc17)",
+    "connected(loc49, loc16)",
+    "at_agent3(loc3)",
+    "at_agent17(loc17)",
+    "connected(loc52, loc36)",
+    "at_agent18(loc18)",
+    "connected(loc59, loc66)",
+    "connected(loc48, loc25)",
+    "connected(loc50, loc47)",
+    "connected(loc25, loc72)",
+    "connected(loc63, loc3)",
+    "connected(loc27, loc55)",
+    "at_agent23(loc23)",
+    "connected(loc34, loc57)",
+    "connected(loc13, loc27)",
+    "connected(loc13, loc38)",
+    "at_agent6(loc6)",
+    "connected(loc28, loc53)",
+    "connected(loc35, loc46)",
+    "connected(loc25, loc64)",
+    "connected(loc49, loc72)",
+    "connected(loc14, loc66)",
+    "connected(loc13, loc1)",
+    "at_agent15(loc15)",
+    "connected(loc64, loc29)",
+    "at_agent14(loc14)"
+  ],
+  "goal": [
+    "at_agent5(loc7)",
+    "at_agent9(loc11)",
+    "at_agent3(loc5)",
+    "at_agent4(loc6)",
+    "at_agent1(loc3)",
+    "at_agent15(loc17)",
+    "at_agent23(loc25)",
+    "at_agent21(loc23)",
+    "at_agent13(loc15)",
+    "at_agent16(loc18)",
+    "at_agent6(loc8)",
+    "at_agent11(loc13)",
+    "at_agent2(loc4)",
+    "at_agent17(loc19)",
+    "at_agent18(loc20)",
+    "at_agent20(loc22)",
+    "at_agent22(loc24)",
+    "at_agent10(loc12)",
+    "at_agent7(loc9)",
+    "at_agent14(loc16)",
+    "at_agent19(loc21)",
+    "at_agent12(loc14)",
+    "at_agent8(loc10)",
+    "at_agent24(loc26)"
+  ],
+  "agents": [
+    {
+      "id": 1,
+      "sub_goals": [
+        "at_agent1['loc3']",
+        "at_agent1['loc2']"
+      ],
+      "goal": "frozenset({'at_agent1(loc3)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 1,
+        "nodes_expanded": 0,
+        "time_taken_ms": 371.1691,
+        "heuristic_calls": 71,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 2,
+      "sub_goals": [
+        "at_agent2['loc4']",
+        "at_agent2['loc3']"
+      ],
+      "goal": "frozenset({'at_agent2(loc4)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 2,
+        "nodes_expanded": 0,
+        "time_taken_ms": 359.031,
+        "heuristic_calls": 70,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 3,
+      "sub_goals": [
+        "at_agent3['loc5']",
+        "at_agent3['loc4']"
+      ],
+      "goal": "frozenset({'at_agent3(loc5)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 3,
+        "nodes_expanded": 0,
+        "time_taken_ms": 347.8441,
+        "heuristic_calls": 69,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 4,
+      "sub_goals": [
+        "at_agent4['loc5']",
+        "at_agent4['loc6']"
+      ],
+      "goal": "frozenset({'at_agent4(loc6)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 4,
+        "nodes_expanded": 0,
+        "time_taken_ms": 339.5109,
+        "heuristic_calls": 68,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 5,
+      "sub_goals": [
+        "at_agent5['loc6']",
+        "at_agent5['loc7']"
+      ],
+      "goal": "frozenset({'at_agent5(loc7)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 5,
+        "nodes_expanded": 0,
+        "time_taken_ms": 327.5549,
+        "heuristic_calls": 67,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 6,
+      "sub_goals": [
+        "at_agent6['loc7']",
+        "at_agent6['loc8']"
+      ],
+      "goal": "frozenset({'at_agent6(loc8)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 6,
+        "nodes_expanded": 0,
+        "time_taken_ms": 317.261,
+        "heuristic_calls": 66,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 7,
+      "sub_goals": [
+        "at_agent7['loc8']",
+        "at_agent7['loc9']"
+      ],
+      "goal": "frozenset({'at_agent7(loc9)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 7,
+        "nodes_expanded": 0,
+        "time_taken_ms": 307.0099,
+        "heuristic_calls": 65,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 8,
+      "sub_goals": [
+        "at_agent8['loc9']",
+        "at_agent8['loc10']"
+      ],
+      "goal": "frozenset({'at_agent8(loc10)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 8,
+        "nodes_expanded": 0,
+        "time_taken_ms": 297.4989,
+        "heuristic_calls": 64,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 9,
+      "sub_goals": [
+        "at_agent9['loc11']",
+        "at_agent9['loc10']"
+      ],
+      "goal": "frozenset({'at_agent9(loc11)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 9,
+        "nodes_expanded": 0,
+        "time_taken_ms": 289.144,
+        "heuristic_calls": 63,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 10,
+      "sub_goals": [
+        "at_agent10['loc12']",
+        "at_agent10['loc11']"
+      ],
+      "goal": "frozenset({'at_agent10(loc12)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 10,
+        "nodes_expanded": 0,
+        "time_taken_ms": 280.9579,
+        "heuristic_calls": 62,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 11,
+      "sub_goals": [
+        "at_agent11['loc13']",
+        "at_agent11['loc12']"
+      ],
+      "goal": "frozenset({'at_agent11(loc13)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 11,
+        "nodes_expanded": 0,
+        "time_taken_ms": 272.1379,
+        "heuristic_calls": 61,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 12,
+      "sub_goals": [
+        "at_agent12['loc13']",
+        "at_agent12['loc14']"
+      ],
+      "goal": "frozenset({'at_agent12(loc14)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 12,
+        "nodes_expanded": 0,
+        "time_taken_ms": 263.4242,
+        "heuristic_calls": 60,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 13,
+      "sub_goals": [
+        "at_agent13['loc14']",
+        "at_agent13['loc15']"
+      ],
+      "goal": "frozenset({'at_agent13(loc15)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 13,
+        "nodes_expanded": 0,
+        "time_taken_ms": 255.0321,
+        "heuristic_calls": 59,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 14,
+      "sub_goals": [
+        "at_agent14['loc15']",
+        "at_agent14['loc16']"
+      ],
+      "goal": "frozenset({'at_agent14(loc16)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 14,
+        "nodes_expanded": 0,
+        "time_taken_ms": 247.4549,
+        "heuristic_calls": 58,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 15,
+      "sub_goals": [
+        "at_agent15['loc16']",
+        "at_agent15['loc17']"
+      ],
+      "goal": "frozenset({'at_agent15(loc17)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 15,
+        "nodes_expanded": 0,
+        "time_taken_ms": 238.7311,
+        "heuristic_calls": 57,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 16,
+      "sub_goals": [
+        "at_agent16['loc17']",
+        "at_agent16['loc18']"
+      ],
+      "goal": "frozenset({'at_agent16(loc18)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 16,
+        "nodes_expanded": 0,
+        "time_taken_ms": 233.0918,
+        "heuristic_calls": 56,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 17,
+      "sub_goals": [
+        "at_agent17['loc19']",
+        "at_agent17['loc18']"
+      ],
+      "goal": "frozenset({'at_agent17(loc19)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 17,
+        "nodes_expanded": 0,
+        "time_taken_ms": 223.1243,
+        "heuristic_calls": 55,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 18,
+      "sub_goals": [
+        "at_agent18['loc19']",
+        "at_agent18['loc20']"
+      ],
+      "goal": "frozenset({'at_agent18(loc20)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 18,
+        "nodes_expanded": 0,
+        "time_taken_ms": 214.8371,
+        "heuristic_calls": 54,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 19,
+      "sub_goals": [
+        "at_agent19['loc21']",
+        "at_agent19['loc20']"
+      ],
+      "goal": "frozenset({'at_agent19(loc21)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 19,
+        "nodes_expanded": 0,
+        "time_taken_ms": 207.4168,
+        "heuristic_calls": 53,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 20,
+      "sub_goals": [
+        "at_agent20['loc21']",
+        "at_agent20['loc22']"
+      ],
+      "goal": "frozenset({'at_agent20(loc22)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 20,
+        "nodes_expanded": 0,
+        "time_taken_ms": 200.501,
+        "heuristic_calls": 52,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 21,
+      "sub_goals": [
+        "at_agent21['loc22']",
+        "at_agent21['loc23']"
+      ],
+      "goal": "frozenset({'at_agent21(loc23)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 21,
+        "nodes_expanded": 0,
+        "time_taken_ms": 192.9822,
+        "heuristic_calls": 51,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 22,
+      "sub_goals": [
+        "at_agent22['loc23']",
+        "at_agent22['loc24']"
+      ],
+      "goal": "frozenset({'at_agent22(loc24)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 22,
+        "nodes_expanded": 0,
+        "time_taken_ms": 185.9488,
+        "heuristic_calls": 50,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 23,
+      "sub_goals": [
+        "at_agent23['loc24']",
+        "at_agent23['loc25']"
+      ],
+      "goal": "frozenset({'at_agent23(loc25)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 23,
+        "nodes_expanded": 0,
+        "time_taken_ms": 178.9091,
+        "heuristic_calls": 49,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    },
+    {
+      "id": 24,
+      "sub_goals": [
+        "at_agent24['loc25']",
+        "at_agent24['loc26']"
+      ],
+      "goal": "frozenset({'at_agent24(loc26)'})",
+      "plan": [],
+      "metrics": {
+        "agent_id": 24,
+        "nodes_expanded": 0,
+        "time_taken_ms": 170.6059,
+        "heuristic_calls": 48,
+        "applicable_actions_count": 0,
+        "nodes_generated": 0,
+        "plan_length": null
+      }
+    }
+  ],
+  "domain_actions": 1704,
+  "initial_facts": 168,
+  "goal_facts": 24,
+  "num_agents": 24,
+  "num_locations": 72,
+  "translator_variables": 72,
+  "translator_derived_variables": 0,
+  "translator_facts": 1799,
+  "translator_goal_facts": 24,
+  "translator_operators": 1704,
+  "translator_axioms": 0,
+  "translator_task_size": 3503
+}

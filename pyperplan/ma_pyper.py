@@ -1,5 +1,6 @@
 from pyperplan.pddl.pddl import *
 
+
 def create_dummy_problem():
     # Define types
     types = {'location': Type('location')}
@@ -100,6 +101,7 @@ def create_dummy_problem():
 
     return problem
 
+
 def create_independent_exploration_problem():
     # Define types
     types = {'area': Type('area')}
@@ -198,6 +200,7 @@ def create_independent_exploration_problem():
         agents=[robot1, robot2]
     )
     return problem
+
 
 def create_independent_package_delivery_problem():
     # Define types
@@ -313,6 +316,7 @@ def create_independent_package_delivery_problem():
     )
     return problem
 
+
 # Run the problem
 if __name__ == "__main__":
     print("Solving Problem 1: Dummy Blocks World")
@@ -322,7 +326,6 @@ if __name__ == "__main__":
         print(f"Agent {agent.id} plan: {agent.plans.get(agent.id)}")
         metrics = agent.get_metrics()
         print(f"Agent {agent.id} metrics: {metrics}")
-
 
     print("\n\nSolving Problem 2: Exploration")
     problem = create_independent_exploration_problem()

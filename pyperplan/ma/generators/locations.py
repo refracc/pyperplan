@@ -1,7 +1,7 @@
-import uuid
 import json
-from pathlib import Path
 import random
+import uuid
+from pathlib import Path
 from typing import List
 
 from pyperplan.pddl.pddl import Problem, Agent, Type, Predicate, Domain, Action, Effect, SearchNode
@@ -15,6 +15,7 @@ def _solve_problem(problem: Problem):
     """Run the planner for all agents in the problem"""
     for agent in problem.agents:
         agent.start_search(problem)
+
 
 def _serialize_problem(problem: Problem) -> dict:
     """Convert problem data to JSON-serializable format"""
@@ -163,6 +164,7 @@ def generate_ground_actions(locations: List[str], agent_id: int) -> List[Action]
         # ))
     return actions
 
+
 def generate_problem(num_agents=2, num_locations=4) -> Problem:
     """Generate a solvable multi-agent movement problem compatible with the A* solver"""
 
@@ -171,13 +173,13 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
         num_locations += 1  # Add more locations to match the number of agents
 
     # Use indexed location names instead of single letters
-    locations = [f"loc{i+1}" for i in range(num_locations)]
+    locations = [f"loc{i + 1}" for i in range(num_locations)]
 
     # Domain definitions
     types = {'location': Type('location')}
     predicates = [
-        Predicate(f'at_agent{aid}', []) for aid in range(1, num_agents + 1)
-    ] + [Predicate('connected', [])]
+                     Predicate(f'at_agent{aid}', []) for aid in range(1, num_agents + 1)
+                 ] + [Predicate('connected', [])]
 
     # Generate random bidirectional connections between locations
     connections = generate_random_connections(locations, num_locations * 2)

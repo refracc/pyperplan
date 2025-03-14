@@ -224,7 +224,6 @@ class Agent:
         self.nodes_generated = 0
         self.plan_length = None
 
-
     def applicable_actions(self, state):
         applicable = set()
         for action in self.domain.actions:
@@ -424,7 +423,6 @@ class Agent:
         # Send termination message when a plan is found
         if self.plans.get(self.id):
             self.send_message(TERMINATE, self.plans[self.id], problem)
-
 
     def get_metrics(self):
         """

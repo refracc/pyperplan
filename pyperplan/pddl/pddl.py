@@ -201,7 +201,7 @@ def send_message(message_type, content, recipient):
 
 
 class Agent:
-    def __init__(self, id, initial_node, public_predicates, domain, main_goal_state, sub_goals):
+    def __init__(self, id, initial_node, public_predicates, domain, main_goal_state):
         self.problem = None
         self.id = id
         self.initial_node = initial_node
@@ -215,7 +215,6 @@ class Agent:
         self.busy = False
         self.domain = domain
         self.main_goal_state = main_goal_state  # The main goal
-        self.sub_goals = sub_goals  # List or set of sub-goals for this agent
         self.nodes_expanded = 0
         self.start_time = None
         self.end_time = None
@@ -300,37 +299,36 @@ class Agent:
         :param state: The current state (set of predicates).
         :return: True if all sub-goals are reached and the main goal is achieved.
         """
-        all_sub_goals_satisfied = all(sub_goal in state for sub_goal in self.sub_goals)
-        return all_sub_goals_satisfied and self.main_goal_state in state  # Ensure main goal is in state
+        return self.main_goal_state.issubset(state)
 
-    def send_sub_goal_update(self, sub_goal):
-        """
-        Send a message to all other agents that a sub-goal has been achieved.
-        """
-        for agent in self.problem.agents:
-            if agent.id != self.id:
-                message = {
-                    'type': 'sub_goal_achieved',
-                    'sub_goal': sub_goal,
-                    'agent_id': self.id
-                }
-                send_message('sub_goal_update', message, agent)
-
-    def handle_sub_goal_message(self, message):
-        """
-        Handle a message indicating that another agent has achieved a sub-goal.
-        """
-        sub_goal = message['sub_goal']
-        sender_id = message['agent_id']
-
-        # Update local knowledge
-        if sub_goal in self.sub_goals:
-            self.sub_goals.remove(sub_goal)
-            print(f"Agent {self.id} received sub-goal achievement from Agent {sender_id}: {sub_goal}")
-
-        # Check if the agent can now proceed to the main goal if all sub-goals are achieved
-        if not self.sub_goals:
-            print(f"Agent {self.id} has achieved all sub-goals and can now focus on the main goal.")
+    # def send_sub_goal_update(self, sub_goal):
+    #     """
+    #     Send a message to all other agents that a sub-goal has been achieved.
+    #     """
+    #     for agent in self.problem.agents:
+    #         if agent.id != self.id:
+    #             message = {
+    #                 'type': 'sub_goal_achieved',
+    #                 'sub_goal': sub_goal,
+    #                 'agent_id': self.id
+    #             }
+    #             send_message('sub_goal_update', message, agent)
+    #
+    # def handle_sub_goal_message(self, message):
+    #     """
+    #     Handle a message indicating that another agent has achieved a sub-goal.
+    #     """
+    #     sub_goal = message['sub_goal']
+    #     sender_id = message['agent_id']
+    #
+    #     # Update local knowledge
+    #     if sub_goal in self.sub_goals:
+    #         self.sub_goals.remove(sub_goal)
+    #         print(f"Agent {self.id} received sub-goal achievement from Agent {sender_id}: {sub_goal}")
+    #
+    #     # Check if the agent can now proceed to the main goal if all sub-goals are achieved
+    #     if not self.sub_goals:
+    #         print(f"Agent {self.id} has achieved all sub-goals and can now focus on the main goal.")
 
     def dist_heuristic(self, agent, projected_state=None, tuple_=None):
         # TODO: Write heuristic.
@@ -468,8 +466,8 @@ class Agent:
                 self.handle_reconstruct_message(message['content'])
             elif message['type'] == 'terminate':
                 self.handle_terminate_message(message['content'])
-            elif message['type'] == 'sub_goal_update':
-                self.handle_sub_goal_message(message['content'])
+            # elif message['type'] == 'sub_goal_update':
+            #     self.handle_sub_goal_message(message['content'])
 
     def handle_state_message(self, content):
         """

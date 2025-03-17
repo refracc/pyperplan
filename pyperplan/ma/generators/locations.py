@@ -37,7 +37,6 @@ def _serialize_problem(problem: Problem) -> dict:
         "agents": [
             {
                 "id": agent.id,
-                "sub_goals": [str(sub_goal) for sub_goal in agent.sub_goals],
                 "goal": str(agent.main_goal_state),
                 "plan": [
                     action
@@ -216,12 +215,8 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
         goal_idx = min(start_idx + 2, num_locations - 1)
         goal_loc = locations[goal_idx]
 
-        # Define sub-goals: let's say an agent has sub-goals to visit 2 other locations before the main goal
-        sub_goals = set([
-            Predicate(f'at_agent{agent_id}', [(locations[(start_idx + i) % num_locations], ['location'])])
-            for i in range(1, 3)
-        ])
-
+        # Define the main goal predicate
+        main_goal_predicate = Predicate(f'at_agent{agent_id}', [(goal_loc, ['location'])])
         # Create the agent instance
         agent_instance = Agent(
             id=agent_id,
@@ -240,8 +235,7 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
             ),
             public_predicates={f'at_agent{agent_id}', 'connected'},
             domain=domain,
-            main_goal_state=frozenset({Predicate(f'at_agent{agent_id}', [(goal_loc, ['location'])])}),
-            sub_goals=sub_goals  # Assign sub-goals to each agent
+            main_goal_state=frozenset({main_goal_predicate}),
         )
 
         # Add the agent's initial node information

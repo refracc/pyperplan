@@ -4,6 +4,7 @@ import uuid
 from pathlib import Path
 from typing import List
 
+from pyperplan.grounding import multi_agent_ground
 from pyperplan.pddl.pddl import Problem, Agent, Type, Predicate, Domain, Action, Effect, SearchNode
 
 
@@ -23,17 +24,21 @@ def _serialize_problem(problem: Problem) -> dict:
     num_locations = len(problem.objects)
     translator_facts = (num_agents * num_locations) + (num_locations - 1)
 
+    # Convert Type objects to their names
+    objects = {obj: type_.name if isinstance(type_, Type) else str(type_)
+               for obj, type_ in problem.objects.items()}
+
     return {
         "problem_id": problem.name,
         "domain": problem.domain.name,
-        "objects": dict(problem.objects),
-        "initial_state": list(problem.initial_state),
-        "goal": list(problem.goal),
+        "objects": objects,  # Use the converted dictionary
+        "initial_state": [str(pred) for pred in problem.initial_state],
+        "goal": [str(pred) for pred in problem.goal],
         "agents": [
             {
                 "id": agent.id,
-                "sub_goals": [str(sub_goal) for sub_goal in agent.sub_goals],  # Include sub-goals
-                "goal": str(agent.main_goal_state),  # Include the agent's final goal
+                "sub_goals": [str(sub_goal) for sub_goal in agent.sub_goals],
+                "goal": str(agent.main_goal_state),
                 "plan": [
                     action
                     for time, action in sorted(agent.plans.get(agent.id, {}).items())
@@ -112,57 +117,38 @@ class ProblemGenerator:
             num_locations += location_step
 
 
-def generate_random_connections(locations: List[str], num_connections: int) -> List[str]:
+def generate_random_connections(locations: List[str], num_undirected_edges: int) -> List[str]:
     """Generates a set of random bidirectional connections between locations"""
     connections = set()
     num_locations = len(locations)
+    max_possible = num_locations * (num_locations - 1) // 2
+    num_undirected_edges = min(num_undirected_edges, max_possible)
 
-    # Ensure there are at least num_connections, but no more than the maximum possible
-    num_connections = min(num_connections, num_locations * (num_locations - 1) // 2)
+    # Build a spanning tree to ensure connectivity
+    shuffled = locations.copy()
+    random.shuffle(shuffled)
+    connected_nodes = [shuffled[0]]
+    remaining = shuffled[1:]
 
-    while len(connections) < num_connections:
-        loc1, loc2 = random.sample(locations, 2)  # Randomly select two distinct locations
-        connections.add(f"connected({loc1}, {loc2})")
-        connections.add(f"connected({loc2}, {loc1})")  # Ensure bidirectional connection
+    while remaining:
+        loc = random.choice(remaining)
+        neighbor = random.choice(connected_nodes)
+        connections.add(f"connected({loc}, {neighbor})")
+        connections.add(f"connected({neighbor}, {loc})")
+        connected_nodes.append(loc)
+        remaining.remove(loc)
+
+    # Add remaining edges
+    all_pairs = [(loc1, loc2) for i, loc1 in enumerate(locations) for loc2 in locations[i + 1:]
+                 if f"connected({loc1}, {loc2})" not in connections]
+    random.shuffle(all_pairs)
+    needed = num_undirected_edges - (num_locations - 1)
+    if needed > 0:
+        for loc1, loc2 in all_pairs[:needed]:
+            connections.add(f"connected({loc1}, {loc2})")
+            connections.add(f"connected({loc2}, {loc1})")
 
     return list(connections)
-
-
-def generate_ground_actions(locations: List[str], agent_id: int) -> List[Action]:
-    """Generate all possible grounded move actions for an agent based on location connections"""
-    actions = []
-    for i in range(len(locations) - 1):
-        from_loc = locations[i]
-        to_loc = locations[i + 1]
-
-        # Create forward action
-        actions.append(Action(
-            name=f"move_agent{agent_id}_{from_loc}_{to_loc}",
-            signature=[],
-            precondition={
-                f"at_agent{agent_id}({from_loc})",
-                f"connected({from_loc}, {to_loc})"
-            },
-            effect=Effect(
-                addlist={f"at_agent{agent_id}({to_loc})"},
-                dellist={f"at_agent{agent_id}({from_loc})"}
-            )
-        ))
-
-        # Create backward action (if bidirectional movement is allowed)
-        # actions.append(Action(
-        #     name=f"move_agent{agent_id}_{to_loc}_{from_loc}",
-        #     signature=[],
-        #     precondition={
-        #         f"at_agent{agent_id}({to_loc})",
-        #         f"connected({to_loc}, {from_loc})"
-        #     },
-        #     effect=Effect(
-        #         add={f"at_agent{agent_id}({from_loc})"},
-        #         remove={f"at_agent{agent_id}({to_loc})"}
-        #     )
-        # ))
-    return actions
 
 
 def generate_problem(num_agents=2, num_locations=4) -> Problem:
@@ -176,19 +162,31 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
     locations = [f"loc{i + 1}" for i in range(num_locations)]
 
     # Domain definitions
-    types = {'location': Type('location')}
+    types = {'location': Type('location')}  # TODO: Fix this
     predicates = [
-                     Predicate(f'at_agent{aid}', []) for aid in range(1, num_agents + 1)
-                 ] + [Predicate('connected', [])]
+                     Predicate(f'at_agent{aid}', [('?loc', ['location'])]) for aid in range(1, num_agents + 1)
+                 ] + [Predicate('connected', [('?from', ['location']), ('?to', ['location'])])]
 
     # Generate random bidirectional connections between locations
     connections = generate_random_connections(locations, num_locations * 2)
 
-    # Generate grounded actions for each agent
+    # Generate schematic actions (not grounded)
     actions = []
     for agent_id in range(1, num_agents + 1):
-        actions.extend(generate_ground_actions(locations, agent_id, connections))
+        actions.append(Action(
+            name=f"move_agent{agent_id}",
+            signature=[("?from", ["location"]), ("?to", ["location"])],
+            precondition={
+                Predicate(f"at_agent{agent_id}", [("?from", ["location"])]),
+                Predicate("connected", [("?from", ["location"]), ("?to", ["location"])])
+            },
+            effect=Effect(
+                addlist={Predicate(f"at_agent{agent_id}", [("?to", ["location"])])},
+                dellist={Predicate(f"at_agent{agent_id}", [("?from", ["location"])])}
+            )
+        ))
 
+    # Define domain with schematic actions
     domain = Domain(
         name='multi_agent_movement',
         types=types,
@@ -199,8 +197,15 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
     # Initial state setup
     initial_state = set()
     for i in range(num_agents):
-        initial_state.add(f'at_agent{i + 1}({locations[i % num_locations]})')
-    initial_state.update(connections)  # Add the generated connections
+        # Use Predicate objects with correct signature
+        initial_pred = Predicate(f'at_agent{i + 1}', [(locations[i % num_locations], ['location'])])
+        initial_state.add(initial_pred)
+
+    # Add connections as Predicate objects
+    for conn in connections:
+        parts = conn.split('(')[1].split(')')[0].split(', ')
+        loc1, loc2 = parts[0], parts[1]
+        initial_state.add(Predicate('connected', [(loc1, ['location']), (loc2, ['location'])]))
 
     # Agent configuration and goals
     agents = []
@@ -213,7 +218,8 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
 
         # Define sub-goals: let's say an agent has sub-goals to visit 2 other locations before the main goal
         sub_goals = set([
-            Predicate(f'at_agent{agent_id}', [locations[(start_idx + i) % num_locations]]) for i in range(1, 3)
+            Predicate(f'at_agent{agent_id}', [(locations[(start_idx + i) % num_locations], ['location'])])
+            for i in range(1, 3)
         ])
 
         # Create the agent instance
@@ -221,8 +227,8 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
             id=agent_id,
             initial_node=SearchNode(
                 projected_state=frozenset({
-                    f'at_agent{agent_id}({locations[start_idx]})',
-                    *(f'connected({locations[i]}, {locations[i + 1]})'
+                    Predicate(f'at_agent{agent_id}', [(locations[start_idx], ['location'])]),
+                    *(Predicate('connected', [(locations[i], ['location']), (locations[i + 1], ['location'])])
                       for i in range(num_locations - 1))
                 }),
                 parent=None,
@@ -234,7 +240,7 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
             ),
             public_predicates={f'at_agent{agent_id}', 'connected'},
             domain=domain,
-            main_goal_state=frozenset({f'at_agent{agent_id}({goal_loc})'}),
+            main_goal_state=frozenset({Predicate(f'at_agent{agent_id}', [(goal_loc, ['location'])])}),
             sub_goals=sub_goals  # Assign sub-goals to each agent
         )
 
@@ -245,21 +251,38 @@ def generate_problem(num_agents=2, num_locations=4) -> Problem:
         agents.append(agent_instance)
 
         # Add the agent's final goal to the set of final goals
-        final_goals.add(f'at_agent{agent_id}({goal_loc})')
+        final_goals.add(Predicate(f'at_agent{agent_id}', [(goal_loc, ['location'])]))
 
-    return Problem(
+    # Create problem with agents' initial states
+    problem = Problem(
         name=f"{num_agents}agents_{num_locations}locs",
         domain=domain,
-        objects={loc: 'location' for loc in locations},
-        init=frozenset(initial_state),
-        goal=frozenset(final_goals),  # The goal is the union of all agent's final goals
+        objects={loc: types['location'] for loc in locations},  # Use Type instance here
+        init=initial_state,
+        goal=final_goals,
         agents=agents
     )
+
+    # Ground actions per agent using multi_agent_ground
+    all_tasks = multi_agent_ground(
+        agents=problem.agents,
+        domain=domain,
+        problem_objects=problem.objects,
+        remove_statics_from_initial_state=True,
+        remove_irrelevant_operators=True
+    )
+
+    # Assign pre/post counts to agents
+    for agent, task in zip(problem.agents, all_tasks):
+        agent.pre_ground_actions = len(domain.actions)  # Pre-grounding count (schematic actions)
+        agent.post_ground_actions = len(task.operators)  # Post-grounding count (grounded operators)
+        agent.domain.actions = task.operators  # Replace with grounded operators
+
+    return problem
 
 
 # Example usage
 if __name__ == "__main__":
     generator = ProblemGenerator(output_dir="experiment_data")
-
     generator.generate_and_save(num_problems=25)
     print(f"Generated problems saved to {generator.output_dir}")

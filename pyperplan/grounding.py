@@ -402,7 +402,7 @@ def ground_shared_elements(domain, problem_objects, agent_initial_state):
 def ground_agent_problem(agent, shared_operators, remove_statics_from_initial_state=True,
                          remove_irrelevant_operators=True):
     init = _get_partial_state(agent.initial_node.projected_state)
-    goals = _get_partial_state(agent.goal_state)
+    goals = _get_partial_state(agent.main_goal_state)
     facts = _collect_facts(shared_operators) | goals
 
     if remove_statics_from_initial_state:
